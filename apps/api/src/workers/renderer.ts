@@ -5,7 +5,7 @@ import { renderingJobs, links, users } from '../db/schema.js';
 import { createStorage } from '../services/storage.js';
 import { renderPdf, renderImage, renderLimit } from '../services/renderer.js';
 import { isOfficeDocument, convertToPdf } from '../services/converter.js';
-import { transcodeVideo, transcodeLimit } from '../services/transcoder.js';
+import { transcodeVideo } from '../services/transcoder.js';
 import { dispatchWebhook } from '../services/webhooks.js';
 import { sendLinkReadyNotification } from '../services/email.js';
 import { logger } from '../lib/logger.js';
@@ -294,14 +294,19 @@ async function poll() {
 
     const job = await claimJob();
     if (job) {
-      // Use appropriate concurrency limiter based on file type
+      // Use concurrency limiter for document renders.
+      // Video jobs are NOT wrapped here because transcodeVideo() already
+      // applies transcodeLimit internally — wrapping again would deadlock.
       const ext = job.sourceKey.split('.').pop()?.toLowerCase() || '';
       const isVideo = (VIDEO_FILE_EXTENSIONS as readonly string[]).includes(ext);
-      const limiter = isVideo ? transcodeLimit : renderLimit;
 
-      limiter(async () => {
-        await processJob(job);
-      });
+      if (isVideo) {
+        processJob(job);
+      } else {
+        renderLimit(async () => {
+          await processJob(job);
+        });
+      }
     }
   } catch (error) {
     logger.error({ error }, 'Render worker poll error');
