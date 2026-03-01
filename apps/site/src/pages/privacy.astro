@@ -1,0 +1,67 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Privacy Policy — CloakShare" description="CloakShare privacy policy. How we handle your data." canonical="/privacy">
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <h1 class="font-mono font-bold text-4xl text-foreground mb-4">Privacy Policy</h1>
+      <p class="text-text-tertiary font-mono text-sm mb-12">Last updated: March 2026</p>
+
+      <div class="space-y-8 text-sm text-text-secondary font-sans leading-relaxed">
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">Overview</h2>
+          <p>
+            CloakShare is an open-source document sharing platform. This policy applies to the cloud-hosted
+            service at cloakshare.dev. If you self-host CloakShare, your own privacy policy applies.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">Data we collect</h2>
+          <ul class="list-disc list-inside space-y-2">
+            <li><strong>Account data</strong> — Email address and hashed password when you register.</li>
+            <li><strong>Uploaded files</strong> — Documents and videos you upload for sharing. Files are stored encrypted and deleted when you revoke the link.</li>
+            <li><strong>View analytics</strong> — Viewer email (if email-gating is enabled), device type, country, time spent, and pages viewed. This data is shown to you in your dashboard.</li>
+            <li><strong>Usage data</strong> — API request counts for billing purposes.</li>
+          </ul>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">Data we don't collect</h2>
+          <ul class="list-disc list-inside space-y-2">
+            <li>We don't use third-party analytics or tracking scripts.</li>
+            <li>We don't sell or share your data with advertisers.</li>
+            <li>We don't read your uploaded documents.</li>
+          </ul>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">Data retention</h2>
+          <p>
+            Your files are retained as long as the link is active. When you revoke a link, all rendered
+            pages and video segments are permanently deleted from storage. Account data is retained until
+            you delete your account.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">GDPR</h2>
+          <p>
+            You can request export or deletion of all your data by contacting us. We process data under
+            legitimate interest (providing the service) and consent (account creation). View analytics
+            are processed under the legitimate interest of the link creator.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">Contact</h2>
+          <p>
+            For privacy questions, email <a href="mailto:privacy@cloakshare.dev" class="text-accent hover:underline">privacy@cloakshare.dev</a>
+            or open an issue on <a href="https://github.com/cloakshare/cloakshare" class="text-accent hover:underline">GitHub</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

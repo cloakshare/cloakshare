@@ -1,0 +1,84 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Terms of Service — CloakShare" description="CloakShare terms of service." canonical="/terms">
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <h1 class="font-mono font-bold text-4xl text-foreground mb-4">Terms of Service</h1>
+      <p class="text-text-tertiary font-mono text-sm mb-12">Last updated: March 2026</p>
+
+      <div class="space-y-8 text-sm text-text-secondary font-sans leading-relaxed">
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">Acceptance</h2>
+          <p>
+            By using CloakShare ("the Service"), you agree to these terms. If you don't agree,
+            don't use the Service.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">The Service</h2>
+          <p>
+            CloakShare provides secure document and video sharing via API. You upload files, we render
+            them into secure viewer links with tracking, watermarks, and access controls. The software
+            is open source under the MIT License.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">Your responsibilities</h2>
+          <ul class="list-disc list-inside space-y-2">
+            <li>You own the content you upload, or have the right to share it.</li>
+            <li>You won't use the Service to share illegal, harmful, or infringing content.</li>
+            <li>You're responsible for keeping your API keys and credentials secure.</li>
+            <li>You won't attempt to circumvent usage limits or rate limits.</li>
+          </ul>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">Our responsibilities</h2>
+          <ul class="list-disc list-inside space-y-2">
+            <li>We'll make reasonable efforts to keep the Service available and secure.</li>
+            <li>We won't access your uploaded files except to provide the Service or when required by law.</li>
+            <li>We'll notify you of material changes to these terms.</li>
+          </ul>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">Billing</h2>
+          <p>
+            Paid plans are billed monthly via Stripe. You can cancel anytime. Refunds are handled
+            on a case-by-case basis. The free tier includes limited usage — see the
+            <a href="/pricing" class="text-accent hover:underline">pricing page</a> for details.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">Termination</h2>
+          <p>
+            You can delete your account at any time. We may suspend or terminate accounts that violate
+            these terms. On termination, your files and rendered content are permanently deleted.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">Liability</h2>
+          <p>
+            The Service is provided "as is" without warranty. We're not liable for indirect, incidental,
+            or consequential damages. Our total liability is limited to the amount you've paid us in the
+            12 months prior.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">Contact</h2>
+          <p>
+            Questions about these terms? Email <a href="mailto:legal@cloakshare.dev" class="text-accent hover:underline">legal@cloakshare.dev</a>
+            or open an issue on <a href="https://github.com/cloakshare/cloakshare" class="text-accent hover:underline">GitHub</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
