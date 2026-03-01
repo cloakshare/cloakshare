@@ -42,7 +42,7 @@ export const config = {
   // CORS origins (configurable via env)
   corsOrigins: process.env.CORS_ORIGINS
     ? process.env.CORS_ORIGINS.split(',').map(s => s.trim())
-    : ['https://cloakshare.dev', 'https://app.cloakshare.dev'],
+    : ['https://cloakshare.dev', 'https://www.cloakshare.dev', 'https://app.cloakshare.dev'],
 
   // Stripe (cloud mode only)
   stripe: {
