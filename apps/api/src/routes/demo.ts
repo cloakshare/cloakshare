@@ -87,7 +87,7 @@ demoRouter.post(
     const r2Key = `temp/${nanoid()}/${file.name}`;
     await storage.upload(r2Key, fileBuffer, file.type);
 
-    // Create link with 1-hour expiry, watermark, email gate off
+    // Create link with 1-hour expiry, watermark, email gate on
     const linkId = generateId('lnk');
     const expiresAt = new Date(Date.now() + 3600000).toISOString(); // 1 hour
 
@@ -99,7 +99,7 @@ demoRouter.post(
       fileSize: file.size,
       r2Prefix: `renders/${linkId}/`,
       expiresAt,
-      requireEmail: false,
+      requireEmail: true,
       watermarkEnabled: true,
       blockDownload: true,
       status: 'processing',

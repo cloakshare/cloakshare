@@ -497,6 +497,26 @@ function formatTime(seconds: number): string {
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
+function drawWatermark(ctx: CanvasRenderingContext2D, w: number, h: number, text: string) {
+  ctx.save();
+  ctx.font = '14px monospace';
+  ctx.fillStyle = 'rgba(128, 128, 128, 0.12)';
+  ctx.textAlign = 'center';
+  ctx.rotate(-30 * Math.PI / 180);
+
+  const spacingX = 350;
+  const spacingY = 120;
+  const extX = w * 0.5;
+  const extY = h * 0.5;
+
+  for (let y = -extY; y < h + extY; y += spacingY) {
+    for (let x = -extX; x < w + extX; x += spacingX) {
+      ctx.fillText(text, x, y);
+    }
+  }
+  ctx.restore();
+}
+
 function drawVideoWatermark() {
   if (!session?.watermark_text) return;
 
