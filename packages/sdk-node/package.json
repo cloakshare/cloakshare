@@ -1,7 +1,7 @@
 {
-  "name": "@cloak/sdk",
+  "name": "@cloakshare/sdk",
   "version": "0.1.0",
-  "description": "Official Node.js SDK for Cloak — secure document sharing",
+  "description": "Official CloakShare Node.js SDK — secure document and video sharing API",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -14,20 +14,24 @@
     }
   },
   "files": ["dist"],
+  "engines": { "node": ">=18.0.0" },
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch"
+    "test": "echo 'No tests yet'",
+    "lint": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
+    "@types/node": "^22.0.0",
     "tsup": "^8.0.0",
-    "typescript": "^5.5.0"
+    "typescript": "^5.7.0",
+    "vitest": "^2.0.0"
   },
+  "homepage": "https://docs.cloakshare.dev/sdks/node",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/cloakshare/cloakshare",
     "directory": "packages/sdk-node"
   },
-  "keywords": ["cloak", "document-sharing", "sdk", "api"]
+  "keywords": ["cloakshare", "document-sharing", "secure-links", "watermark", "api", "sdk"]
 }

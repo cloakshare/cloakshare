@@ -7,6 +7,7 @@ import { generateId, generateToken, getClientIp, parseUserAgent, formatDateForWa
 import { Errors, errorResponse, successResponse } from '../lib/errors.js';
 import { rateLimitByIp } from '../middleware/rateLimit.js';
 import { createStorage } from '../services/storage.js';
+import { generateWatermarkedPages, getWatermarkedPageOnDemand } from '../services/watermarkRenderer.js';
 import { config } from '../lib/config.js';
 import { logger } from '../lib/logger.js';
 import { LINK_STATUS } from '@cloak/shared';
@@ -282,20 +283,53 @@ viewsRouter.post(
       });
     }
 
-    // Document links: generate signed page URLs
-    const pages: { page: number; url: string }[] = [];
+    // Document links: generate page URLs
     const pageCount = link.pageCount || 0;
+    const pages: { page: number; url: string }[] = [];
 
-    for (let i = 1; i <= pageCount; i++) {
-      const r2Key = `renders/${linkId}/page-${i}.webp`;
-      const url = await storage.getSignedUrl(r2Key, 300); // 5 min expiry
-      pages.push({ page: i, url });
+    if (link.watermarkEnabled && pageCount > 0) {
+      // Server-side watermarks: generate watermarked images for this session
+      try {
+        const sessionVsId = (await db
+          .select({ id: viewerSessions.id })
+          .from(viewerSessions)
+          .where(eq(viewerSessions.token, sessionToken))
+          .get())!.id;
+
+        const watermarkedUrls = await generateWatermarkedPages(
+          linkId,
+          sessionVsId,
+          watermarkText,
+          pageCount,
+        );
+
+        for (let i = 0; i < watermarkedUrls.length; i++) {
+          pages.push({ page: i + 1, url: watermarkedUrls[i] });
+        }
+      } catch (err) {
+        // Watermark rendering failed (e.g., clean images not yet available).
+        // Fall back to clean signed URLs.
+        logger.warn({ err, linkId }, 'Watermark rendering failed, falling back to clean pages');
+        for (let i = 1; i <= pageCount; i++) {
+          const r2Key = `renders/${linkId}/page-${i}.webp`;
+          const url = await storage.getSignedUrl(r2Key, 300);
+          pages.push({ page: i, url });
+        }
+      }
+    } else {
+      // No watermark — serve clean images via signed URLs
+      for (let i = 1; i <= pageCount; i++) {
+        const r2Key = `renders/${linkId}/page-${i}.webp`;
+        const url = await storage.getSignedUrl(r2Key, 300);
+        pages.push({ page: i, url });
+      }
     }
 
     return successResponse(c, {
       session_token: sessionToken,
       viewer_email: email || 'anonymous',
       pages,
+      page_count: pageCount,
       watermark_text: watermarkText,
     });
   },
@@ -337,6 +371,72 @@ viewsRouter.post('/v1/viewer/:token/sign-segment', async (c) => {
   const url = await storage.getSignedUrl(segment_key, 60); // 60 sec expiry
 
   return c.json({ data: { url } });
+});
+
+// ============================================
+// GET /v1/viewer/:token/page/:pageNumber — On-demand watermarked page
+// ============================================
+
+viewsRouter.get('/v1/viewer/:token/page/:pageNumber', async (c) => {
+  const linkId = c.req.param('token');
+  const pageNumberStr = c.req.param('pageNumber');
+  const sessionToken = c.req.header('x-session-token');
+
+  if (!sessionToken) {
+    return errorResponse(c, Errors.unauthorized('Session token required'));
+  }
+
+  // Validate session
+  const session = await db
+    .select()
+    .from(viewerSessions)
+    .where(eq(viewerSessions.token, sessionToken))
+    .get();
+
+  if (!session || new Date(session.expiresAt) < new Date()) {
+    return c.json({ data: null, error: { code: 'SESSION_EXPIRED', message: 'Session expired. Please re-verify.' } }, 401);
+  }
+
+  if (session.linkId !== linkId) {
+    return errorResponse(c, Errors.forbidden('Session mismatch'));
+  }
+
+  const link = await db.select().from(links).where(eq(links.id, linkId)).get();
+  if (!link) return errorResponse(c, Errors.notFound('Link'));
+
+  const page = parseInt(pageNumberStr, 10);
+  if (isNaN(page) || page < 1 || page > (link.pageCount || 0)) {
+    return errorResponse(c, Errors.validation(`Page must be between 1 and ${link.pageCount}`));
+  }
+
+  // Build watermark text for this session
+  const watermarkText = link.watermarkEnabled
+    ? renderWatermarkTemplate(
+        link.watermarkTemplate || '{{email}} · {{date}} · {{session_id}}',
+        {
+          email: session.viewerEmail,
+          date: formatDateForWatermark(),
+          session_id: sessionToken.slice(0, 6),
+        },
+      )
+    : '';
+
+  if (!link.watermarkEnabled || !watermarkText) {
+    // No watermark — return clean page URL
+    const storage = createStorage();
+    const cleanKey = `renders/${linkId}/page-${page}.webp`;
+    const url = await storage.getSignedUrl(cleanKey, 300);
+    return successResponse(c, { url, page });
+  }
+
+  const signedUrl = await getWatermarkedPageOnDemand(
+    linkId,
+    session.id,
+    watermarkText,
+    page,
+  );
+
+  return successResponse(c, { url: signedUrl, page });
 });
 
 // ============================================

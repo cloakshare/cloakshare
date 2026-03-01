@@ -92,6 +92,7 @@ interface VerifyResponse {
   session_token: string;
   viewer_email: string;
   pages: { page: number; url: string }[];
+  page_count?: number;
   watermark_text: string;
   // Video-specific fields
   master_playlist_url?: string;
@@ -345,7 +346,13 @@ function setupGate(meta: LinkMetadata) {
 
 function renderPage(pageNum: number) {
   const img = pageImages.get(pageNum);
-  if (!img || !img.complete) return;
+  if (!img || !img.complete) {
+    // Page not loaded yet — try fetching on-demand for large documents
+    if (session && pageNum > session.pages.length) {
+      fetchPageOnDemand(pageNum);
+    }
+    return;
+  }
 
   const ctx = $canvas.getContext('2d')!;
   const dpr = window.devicePixelRatio || 1;
@@ -362,13 +369,8 @@ function renderPage(pageNum: number) {
   $canvas.height = displayHeight * dpr;
   ctx.scale(dpr, dpr);
 
-  // Draw page image
+  // Draw page image — watermark is already baked in server-side
   ctx.drawImage(img, 0, 0, displayWidth, displayHeight);
-
-  // Draw watermark overlay
-  if (session?.watermark_text) {
-    drawWatermark(ctx, displayWidth, displayHeight, session.watermark_text);
-  }
 
   // Update navigation
   $pageIndicator.textContent = `${pageNum} / ${totalPages}`;
@@ -376,33 +378,38 @@ function renderPage(pageNum: number) {
   $nextBtn.disabled = pageNum >= totalPages;
 }
 
-function drawWatermark(ctx: CanvasRenderingContext2D, width: number, height: number, text: string) {
-  ctx.save();
+/**
+ * Fetch a watermarked page on-demand from the server.
+ * Used for large documents where only the first pages are pre-loaded.
+ */
+async function fetchPageOnDemand(pageNum: number) {
+  if (!session) return;
 
-  const fontSize = Math.max(12, Math.min(16, width / 40));
-  ctx.font = `${fontSize}px ${getComputedStyle(document.body).fontFamily}`;
-  ctx.fillStyle = 'rgba(128, 128, 128, 0.15)';
-  ctx.textAlign = 'center';
+  try {
+    const response = await fetch(
+      `${API_URL}/v1/viewer/${linkToken}/page/${pageNum}`,
+      { headers: { 'X-Session-Token': session.session_token } },
+    );
 
-  // Tile watermark diagonally across the page
-  const angle = -Math.PI / 6; // -30 degrees
-  ctx.translate(width / 2, height / 2);
-  ctx.rotate(angle);
+    if (!response.ok) return;
 
-  const textWidth = ctx.measureText(text).width;
-  const spacingX = textWidth + 80;
-  const spacingY = fontSize * 5;
+    const json = await response.json();
+    const url = json.data?.url;
+    if (!url) return;
 
-  // Cover area larger than canvas to account for rotation
-  const diagonal = Math.sqrt(width * width + height * height);
-
-  for (let y = -diagonal; y < diagonal; y += spacingY) {
-    for (let x = -diagonal; x < diagonal; x += spacingX) {
-      ctx.fillText(text, x, y);
-    }
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = url;
+    img.onload = () => {
+      pageImages.set(pageNum, img);
+      if (currentPage === pageNum) {
+        renderPage(pageNum);
+      }
+    };
+    pageImages.set(pageNum, img);
+  } catch {
+    // Silent fail — page will remain blank until retried
   }
-
-  ctx.restore();
 }
 
 // ============================================
@@ -420,6 +427,13 @@ function goToPage(page: number) {
   pageStartTime = now;
 
   currentPage = page;
+
+  // If this page isn't loaded yet, fetch it on-demand
+  const img = pageImages.get(page);
+  if (!img || !img.complete || !img.naturalWidth) {
+    fetchPageOnDemand(page);
+  }
+
   renderPage(currentPage);
   $viewerBody.scrollTop = 0;
 }
@@ -735,7 +749,7 @@ function extractSegmentKey(url: string): string | null {
 
 function startViewer(meta: LinkMetadata, sess: VerifyResponse) {
   session = sess;
-  totalPages = meta.page_count || sess.pages.length;
+  totalPages = sess.page_count || meta.page_count || sess.pages.length;
   currentPage = 1;
   pageTimes = {};
   pageStartTime = Date.now();

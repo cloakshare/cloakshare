@@ -3,6 +3,24 @@ import type { ApiError } from '@cloak/shared';
 
 type AnyContext = Context<any>;
 
+const ERROR_DOCS: Record<string, string> = {
+  VALIDATION_ERROR: 'https://docs.cloakshare.dev/errors/validation',
+  NOT_FOUND: 'https://docs.cloakshare.dev/errors/not-found',
+  UNAUTHORIZED: 'https://docs.cloakshare.dev/errors/authentication',
+  FORBIDDEN: 'https://docs.cloakshare.dev/errors/forbidden',
+  RATE_LIMITED: 'https://docs.cloakshare.dev/errors/rate-limits',
+  FILE_TOO_LARGE: 'https://docs.cloakshare.dev/errors/file-limits',
+  INVALID_FILE_TYPE: 'https://docs.cloakshare.dev/errors/supported-types',
+  LINK_EXPIRED: 'https://docs.cloakshare.dev/errors/link-expired',
+  LINK_REVOKED: 'https://docs.cloakshare.dev/errors/link-revoked',
+  RENDER_FAILED: 'https://docs.cloakshare.dev/errors/render-failed',
+  LIMIT_REACHED: 'https://docs.cloakshare.dev/errors/plan-limits',
+  DOMAIN_NOT_ALLOWED: 'https://docs.cloakshare.dev/errors/allowed-domains',
+  INVALID_PASSWORD: 'https://docs.cloakshare.dev/errors/password-incorrect',
+  SESSION_EXPIRED: 'https://docs.cloakshare.dev/errors/session-expired',
+  INTERNAL_ERROR: 'https://docs.cloakshare.dev/errors',
+};
+
 export class AppError extends Error {
   constructor(
     public code: string,
@@ -16,7 +34,7 @@ export class AppError extends Error {
   toJSON(): ApiError & Record<string, unknown> {
     const json: ApiError & Record<string, unknown> = { code: this.code, message: this.message };
     if ((this as any).retryAfter != null) json.retry_after = (this as any).retryAfter;
-    if ((this as any).docsUrl) json.docs_url = (this as any).docsUrl;
+    json.doc_url = ERROR_DOCS[this.code] || 'https://docs.cloakshare.dev/errors';
     return json;
   }
 }

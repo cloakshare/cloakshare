@@ -3,6 +3,7 @@ import {
   PutObjectCommand,
   GetObjectCommand,
   DeleteObjectCommand,
+  HeadObjectCommand,
   ListObjectsV2Command,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
@@ -18,6 +19,7 @@ export interface StorageProvider {
   download(key: string): Promise<Buffer>;
   delete(key: string): Promise<void>;
   deletePrefix(prefix: string): Promise<void>;
+  exists(key: string): Promise<boolean>;
   getSignedUrl(key: string, expiresInSeconds: number): Promise<string>;
   getPresignedUploadUrl(key: string, contentType: string, expiresInSeconds: number): Promise<string>;
 }
@@ -61,6 +63,10 @@ class LocalStorage implements StorageProvider {
     if (existsSync(dirPath)) {
       await rm(dirPath, { recursive: true, force: true });
     }
+  }
+
+  async exists(key: string): Promise<boolean> {
+    return existsSync(this.getFilePath(key));
   }
 
   async getSignedUrl(key: string, _expiresInSeconds: number): Promise<string> {
@@ -144,6 +150,18 @@ class S3Storage implements StorageProvider {
           await this.delete(obj.Key);
         }
       }
+    }
+  }
+
+  async exists(key: string): Promise<boolean> {
+    try {
+      await this.client.send(new HeadObjectCommand({
+        Bucket: this.bucketName,
+        Key: key,
+      }));
+      return true;
+    } catch {
+      return false;
     }
   }
 

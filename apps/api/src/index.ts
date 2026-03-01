@@ -27,11 +27,13 @@ import teamsRouter from './routes/teams.js';
 import auditRouter from './routes/audit.js';
 import notificationsRouter from './routes/notifications.js';
 import demoRouter from './routes/demo.js';
+import docsRouter from './routes/docs.js';
 
 // Workers
 import { startRenderWorker, stopRenderWorker } from './workers/renderer.js';
 import { startWebhookWorker, stopWebhookWorker } from './workers/webhooks.js';
 import { startAuditRetentionWorker, stopAuditRetentionWorker } from './workers/auditRetention.js';
+import { startWatermarkCleaner, stopWatermarkCleaner } from './workers/watermarkCleaner.js';
 
 const app = new Hono<{ Variables: Variables }>();
 
@@ -151,6 +153,9 @@ app.route('/', notificationsRouter);
 // Demo (marketing site live demo)
 app.route('/', demoRouter);
 
+// API docs (OpenAPI spec + Scalar reference)
+app.route('/', docsRouter);
+
 // Internal file serving for local storage mode
 if (config.storage.provider === 'local') {
   app.get('/internal/files/*', async (c) => {
@@ -238,6 +243,7 @@ if (!process.env.VITEST) {
     startRenderWorker();
     startWebhookWorker();
     startAuditRetentionWorker();
+    startWatermarkCleaner();
   });
 
   // Graceful shutdown
@@ -246,6 +252,7 @@ if (!process.env.VITEST) {
     stopRenderWorker();
     stopWebhookWorker();
     stopAuditRetentionWorker();
+    stopWatermarkCleaner();
     server.close(() => {
       logger.info('Server closed');
       process.exit(0);
