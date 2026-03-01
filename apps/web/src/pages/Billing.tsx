@@ -96,14 +96,14 @@ export default function Billing() {
 
   return (
     <div>
-      <h1 className="font-mono font-semibold text-xl text-foreground mb-2">Plan & Billing</h1>
-      <p className="text-sm text-text-secondary font-mono mb-8">
-        You're on the <span className="text-accent">{currentPlan}</span> plan.
+      <h1 className="font-sans font-semibold text-xl text-foreground mb-2">Plan & Billing</h1>
+      <p className="text-sm text-text-secondary font-sans mb-8">
+        You're on the <span className="text-accent font-medium">{currentPlan}</span> plan.
       </p>
 
       {error && (
         <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 mb-6">
-          <p className="text-sm text-destructive font-mono">{error}</p>
+          <p className="text-sm text-destructive font-sans">{error}</p>
         </div>
       )}
 
@@ -112,15 +112,15 @@ export default function Billing() {
         <div className="bg-surface border border-border rounded-lg p-5 mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-mono font-medium text-sm text-foreground">Manage Subscription</h2>
-              <p className="text-xs text-text-tertiary font-mono mt-1">
+              <h2 className="font-sans font-medium text-sm text-foreground">Manage Subscription</h2>
+              <p className="text-xs text-text-tertiary font-sans mt-1">
                 Update payment method, change plan, or cancel
               </p>
             </div>
             <button
               onClick={handleManage}
               disabled={loading === 'manage'}
-              className="px-4 py-2 bg-elevated border border-border rounded-md text-sm font-mono text-text-secondary hover:text-text-primary hover:border-text-tertiary transition-all disabled:opacity-40"
+              className="px-4 py-2 bg-elevated border border-border rounded-md text-sm font-sans font-medium text-text-secondary hover:text-foreground hover:border-text-tertiary transition-all duration-150 disabled:opacity-40"
             >
               {loading === 'manage' ? 'Opening...' : 'Billing Portal'}
             </button>
@@ -137,20 +137,20 @@ export default function Billing() {
           return (
             <div
               key={plan.id}
-              className={`bg-surface border rounded-lg p-5 ${
+              className={`bg-surface border rounded-lg p-5 card-glow ${
                 isCurrent ? 'border-accent/40' : 'border-border'
               }`}
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="font-mono font-medium text-foreground">{plan.name}</h3>
+                  <h3 className="font-sans font-medium text-foreground">{plan.name}</h3>
                   <div className="flex items-baseline gap-1 mt-1">
                     <span className="text-2xl font-mono font-semibold text-foreground tabular-nums">{plan.price}</span>
-                    <span className="text-xs text-text-tertiary font-mono">{plan.period}</span>
+                    <span className="text-xs text-text-tertiary font-sans">{plan.period}</span>
                   </div>
                 </div>
                 {isCurrent && (
-                  <span className="text-xs font-mono px-2 py-0.5 rounded bg-accent/15 text-accent">
+                  <span className="text-xs font-sans font-medium px-2 py-0.5 rounded bg-accent/15 text-accent">
                     Current
                   </span>
                 )}
@@ -158,8 +158,10 @@ export default function Billing() {
 
               <ul className="space-y-2 mb-5">
                 {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-center gap-2 text-xs font-mono text-text-secondary">
-                    <span className="text-accent text-xs">+</span>
+                  <li key={feature} className="flex items-center gap-2 text-xs font-sans text-text-secondary">
+                    <svg className="w-3.5 h-3.5 text-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
                     {feature}
                   </li>
                 ))}
@@ -169,7 +171,7 @@ export default function Billing() {
                 <button
                   onClick={() => handleUpgrade(plan.id as 'starter' | 'growth' | 'scale')}
                   disabled={loading === plan.id}
-                  className="w-full px-4 py-2 bg-accent text-background font-mono font-medium text-sm rounded-md hover:bg-accent/90 transition-colors disabled:opacity-40"
+                  className="w-full px-4 py-2 bg-accent text-background font-sans font-medium text-sm rounded-md hover:bg-accent-hover hover:-translate-y-px hover:shadow-glow active:translate-y-0 transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none"
                 >
                   {loading === plan.id ? 'Redirecting...' : 'Upgrade'}
                 </button>
@@ -178,7 +180,7 @@ export default function Billing() {
                 <button
                   onClick={handleManage}
                   disabled={loading === 'manage'}
-                  className="w-full px-4 py-2 bg-elevated border border-border rounded-md text-sm font-mono text-text-secondary hover:text-text-primary transition-colors disabled:opacity-40"
+                  className="w-full px-4 py-2 bg-elevated border border-border rounded-md text-sm font-sans font-medium text-text-secondary hover:text-foreground hover:bg-hover transition-all duration-150 disabled:opacity-40"
                 >
                   Manage
                 </button>

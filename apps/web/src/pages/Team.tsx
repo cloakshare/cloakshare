@@ -19,6 +19,13 @@ interface Invite {
   expires_at: string;
 }
 
+const roleBadge: Record<string, string> = {
+  owner: 'bg-accent/15 text-accent',
+  admin: 'bg-warning/15 text-warning',
+  member: 'bg-elevated text-text-secondary',
+  viewer: 'bg-elevated text-text-tertiary',
+};
+
 export default function Team() {
   const { user, activeOrg } = useAuth();
   const [members, setMembers] = useState<Member[]>([]);
@@ -100,21 +107,29 @@ export default function Team() {
   if (loading) {
     return (
       <div>
-        <h1 className="font-mono font-semibold text-xl text-foreground mb-8">Team</h1>
-        <p className="text-muted">Loading...</p>
+        <h1 className="font-sans font-semibold text-xl text-foreground mb-8">Team</h1>
+        <div className="space-y-3">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="bg-surface border border-border rounded-lg p-4 flex items-center gap-3">
+              <div className="skeleton w-8 h-8 rounded-full" />
+              <div className="skeleton h-4 w-32 rounded" />
+              <div className="skeleton h-3 w-16 rounded ml-auto" />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
 
   return (
     <div>
-      <h1 className="font-mono font-semibold text-xl text-foreground mb-2">Team</h1>
+      <h1 className="font-sans font-semibold text-xl text-foreground mb-2">Team</h1>
       {activeOrg && (
-        <p className="text-sm text-muted mb-8">{activeOrg.name} &middot; {activeOrg.plan} plan</p>
+        <p className="text-sm text-text-secondary font-sans mb-8">{activeOrg.name} &middot; <span className="text-accent font-medium">{activeOrg.plan}</span> plan</p>
       )}
 
       {error && (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3 mb-6 text-red-400 text-sm">
+        <div className="bg-destructive/10 border border-destructive/30 rounded-lg px-4 py-3 mb-6 text-destructive text-sm font-sans">
           {error}
         </div>
       )}
@@ -122,25 +137,25 @@ export default function Team() {
       {/* Invite form */}
       {canInvite && (
         <div className="bg-surface border border-border rounded-lg p-5 mb-8">
-          <h2 className="font-mono font-medium text-foreground mb-4">Invite member</h2>
+          <h2 className="font-sans font-medium text-sm text-foreground mb-4">Invite member</h2>
           <form onSubmit={handleInvite} className="flex gap-3 items-end">
             <div className="flex-1">
-              <label className="block text-sm text-muted mb-1">Email</label>
+              <label className="block text-[13px] text-text-secondary mb-2 font-sans font-medium">Email</label>
               <input
                 type="email"
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
                 placeholder="teammate@company.com"
-                className="w-full bg-background border border-border rounded px-3 py-2 text-foreground text-sm font-mono focus:outline-none focus:border-accent"
+                className="w-full bg-input border border-border rounded-md px-3 py-2.5 text-sm text-foreground font-sans outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/20 transition-colors placeholder:text-text-tertiary"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm text-muted mb-1">Role</label>
+              <label className="block text-[13px] text-text-secondary mb-2 font-sans font-medium">Role</label>
               <select
                 value={inviteRole}
                 onChange={(e) => setInviteRole(e.target.value)}
-                className="bg-background border border-border rounded px-3 py-2 text-foreground text-sm font-mono focus:outline-none focus:border-accent"
+                className="bg-input border border-border rounded-md px-3 py-2.5 text-sm text-foreground font-sans outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/20 transition-colors"
               >
                 <option value="viewer">Viewer</option>
                 <option value="member">Member</option>
@@ -150,7 +165,7 @@ export default function Team() {
             <button
               type="submit"
               disabled={inviting}
-              className="bg-accent text-background font-mono text-sm font-medium px-4 py-2 rounded hover:bg-accent/90 disabled:opacity-50"
+              className="bg-accent text-background font-sans text-sm font-medium px-4 py-2.5 rounded-md hover:bg-accent-hover hover:-translate-y-px hover:shadow-glow active:translate-y-0 transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none"
             >
               {inviting ? 'Sending...' : 'Invite'}
             </button>
@@ -160,58 +175,70 @@ export default function Team() {
 
       {/* Members table */}
       <div className="bg-surface border border-border rounded-lg overflow-hidden mb-8">
-        <div className="px-5 py-3 border-b border-border">
-          <h2 className="font-mono font-medium text-foreground">Members ({members.length})</h2>
+        <div className="px-5 py-4 border-b border-border-subtle">
+          <h2 className="font-sans font-medium text-sm text-foreground">Members ({members.length})</h2>
         </div>
         <table className="w-full">
           <thead>
-            <tr className="text-left text-xs text-muted uppercase tracking-wider">
-              <th className="px-5 py-3">User</th>
-              <th className="px-5 py-3">Role</th>
-              <th className="px-5 py-3">Joined</th>
-              {canManage && <th className="px-5 py-3 text-right">Actions</th>}
+            <tr className="border-b border-border-subtle">
+              <th className="text-left text-xs text-text-tertiary font-sans font-medium uppercase tracking-wider px-5 py-2.5">User</th>
+              <th className="text-left text-xs text-text-tertiary font-sans font-medium uppercase tracking-wider px-5 py-2.5">Role</th>
+              <th className="text-left text-xs text-text-tertiary font-sans font-medium uppercase tracking-wider px-5 py-2.5">Joined</th>
+              {canManage && <th className="text-right text-xs text-text-tertiary font-sans font-medium uppercase tracking-wider px-5 py-2.5">Actions</th>}
             </tr>
           </thead>
           <tbody>
-            {members.map((m) => (
-              <tr key={m.id} className="border-t border-border">
-                <td className="px-5 py-3">
-                  <div className="text-sm text-foreground font-mono">{m.email}</div>
-                  {m.name && <div className="text-xs text-muted">{m.name}</div>}
-                  {m.user_id === user?.id && <span className="text-xs text-accent">(you)</span>}
-                </td>
-                <td className="px-5 py-3">
-                  {canManage && m.user_id !== user?.id ? (
-                    <select
-                      value={m.role}
-                      onChange={(e) => handleChangeRole(m.id, e.target.value)}
-                      className="bg-background border border-border rounded px-2 py-1 text-foreground text-xs font-mono"
-                    >
-                      <option value="viewer">viewer</option>
-                      <option value="member">member</option>
-                      {myRole === 'owner' && <option value="admin">admin</option>}
-                    </select>
-                  ) : (
-                    <span className="text-sm text-foreground font-mono">{m.role}</span>
-                  )}
-                </td>
-                <td className="px-5 py-3 text-sm text-muted font-mono">
-                  {m.joined_at ? new Date(m.joined_at).toLocaleDateString() : '-'}
-                </td>
-                {canManage && (
-                  <td className="px-5 py-3 text-right">
-                    {m.user_id !== user?.id && (
-                      <button
-                        onClick={() => handleRemove(m.id)}
-                        className="text-xs text-red-400 hover:text-red-300 font-mono"
+            {members.map((m) => {
+              const initials = (m.name || m.email).slice(0, 2).toUpperCase();
+              return (
+                <tr key={m.id} className="border-b border-border-subtle last:border-0 hover:bg-hover transition-colors duration-150">
+                  <td className="px-5 py-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-7 h-7 rounded-full bg-elevated flex items-center justify-center text-[10px] font-sans font-medium text-text-secondary flex-shrink-0">
+                        {initials}
+                      </div>
+                      <div>
+                        <div className="text-sm text-foreground font-sans">{m.email}</div>
+                        {m.name && <div className="text-xs text-text-tertiary font-sans">{m.name}</div>}
+                      </div>
+                      {m.user_id === user?.id && <span className="text-[10px] font-sans font-medium text-accent bg-accent/10 px-1.5 py-0.5 rounded">you</span>}
+                    </div>
+                  </td>
+                  <td className="px-5 py-3">
+                    {canManage && m.user_id !== user?.id ? (
+                      <select
+                        value={m.role}
+                        onChange={(e) => handleChangeRole(m.id, e.target.value)}
+                        className="bg-input border border-border rounded-md px-2 py-1 text-xs text-foreground font-sans focus:outline-none focus:border-accent/50 transition-colors"
                       >
-                        Remove
-                      </button>
+                        <option value="viewer">viewer</option>
+                        <option value="member">member</option>
+                        {myRole === 'owner' && <option value="admin">admin</option>}
+                      </select>
+                    ) : (
+                      <span className={`text-xs font-sans font-medium px-2 py-0.5 rounded ${roleBadge[m.role] || roleBadge.viewer}`}>
+                        {m.role}
+                      </span>
                     )}
                   </td>
-                )}
-              </tr>
-            ))}
+                  <td className="px-5 py-3 text-xs text-text-tertiary font-sans">
+                    {m.joined_at ? new Date(m.joined_at).toLocaleDateString() : '-'}
+                  </td>
+                  {canManage && (
+                    <td className="px-5 py-3 text-right">
+                      {m.user_id !== user?.id && (
+                        <button
+                          onClick={() => handleRemove(m.id)}
+                          className="text-xs font-sans font-medium text-destructive/70 hover:text-destructive transition-colors duration-150"
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </td>
+                  )}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -219,31 +246,35 @@ export default function Team() {
       {/* Pending invites */}
       {invites.length > 0 && (
         <div className="bg-surface border border-border rounded-lg overflow-hidden">
-          <div className="px-5 py-3 border-b border-border">
-            <h2 className="font-mono font-medium text-foreground">Pending Invites ({invites.length})</h2>
+          <div className="px-5 py-4 border-b border-border-subtle">
+            <h2 className="font-sans font-medium text-sm text-foreground">Pending Invites ({invites.length})</h2>
           </div>
           <table className="w-full">
             <thead>
-              <tr className="text-left text-xs text-muted uppercase tracking-wider">
-                <th className="px-5 py-3">Email</th>
-                <th className="px-5 py-3">Role</th>
-                <th className="px-5 py-3">Expires</th>
-                {canInvite && <th className="px-5 py-3 text-right">Actions</th>}
+              <tr className="border-b border-border-subtle">
+                <th className="text-left text-xs text-text-tertiary font-sans font-medium uppercase tracking-wider px-5 py-2.5">Email</th>
+                <th className="text-left text-xs text-text-tertiary font-sans font-medium uppercase tracking-wider px-5 py-2.5">Role</th>
+                <th className="text-left text-xs text-text-tertiary font-sans font-medium uppercase tracking-wider px-5 py-2.5">Expires</th>
+                {canInvite && <th className="text-right text-xs text-text-tertiary font-sans font-medium uppercase tracking-wider px-5 py-2.5">Actions</th>}
               </tr>
             </thead>
             <tbody>
               {invites.map((inv) => (
-                <tr key={inv.id} className="border-t border-border">
-                  <td className="px-5 py-3 text-sm text-foreground font-mono">{inv.email}</td>
-                  <td className="px-5 py-3 text-sm text-foreground font-mono">{inv.role}</td>
-                  <td className="px-5 py-3 text-sm text-muted font-mono">
+                <tr key={inv.id} className="border-b border-border-subtle last:border-0 hover:bg-hover transition-colors duration-150">
+                  <td className="px-5 py-3 text-sm text-foreground font-sans">{inv.email}</td>
+                  <td className="px-5 py-3">
+                    <span className={`text-xs font-sans font-medium px-2 py-0.5 rounded ${roleBadge[inv.role] || roleBadge.viewer}`}>
+                      {inv.role}
+                    </span>
+                  </td>
+                  <td className="px-5 py-3 text-xs text-text-tertiary font-sans">
                     {new Date(inv.expires_at).toLocaleDateString()}
                   </td>
                   {canInvite && (
                     <td className="px-5 py-3 text-right">
                       <button
                         onClick={() => handleRevokeInvite(inv.id)}
-                        className="text-xs text-red-400 hover:text-red-300 font-mono"
+                        className="text-xs font-sans font-medium text-destructive/70 hover:text-destructive transition-colors duration-150"
                       >
                         Revoke
                       </button>

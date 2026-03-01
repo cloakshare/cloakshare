@@ -92,7 +92,7 @@ export default function NotificationBell() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setOpen(!open)}
-        className="relative p-1.5 text-text-tertiary hover:text-text-primary transition-colors"
+        className="relative p-1.5 text-text-tertiary hover:text-foreground transition-colors duration-150"
         aria-label="Notifications"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -109,12 +109,12 @@ export default function NotificationBell() {
         <div className="absolute right-0 top-full mt-2 w-80 bg-surface border border-border rounded-lg shadow-lg z-50 overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-2.5 border-b border-border-subtle">
-            <span className="text-xs font-mono font-medium text-text-primary">Notifications</span>
+            <span className="text-xs font-sans font-medium text-foreground">Notifications</span>
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllRead}
                 disabled={loading}
-                className="text-[11px] font-mono text-accent hover:text-accent-hover transition-colors disabled:opacity-50"
+                className="text-[11px] font-sans text-accent hover:text-accent-hover transition-colors duration-150 disabled:opacity-50"
               >
                 Mark all read
               </button>
@@ -124,7 +124,7 @@ export default function NotificationBell() {
           {/* List */}
           <div className="max-h-80 overflow-y-auto">
             {notifications.length === 0 ? (
-              <div className="px-4 py-8 text-center text-xs text-text-tertiary font-mono">
+              <div className="px-4 py-8 text-center text-xs text-text-tertiary font-sans">
                 No notifications yet
               </div>
             ) : (
@@ -132,7 +132,7 @@ export default function NotificationBell() {
                 <button
                   key={notif.id}
                   onClick={() => handleNotificationClick(notif)}
-                  className={`w-full text-left px-4 py-3 border-b border-border-subtle last:border-b-0 hover:bg-elevated transition-colors ${
+                  className={`w-full text-left px-4 py-3 border-b border-border-subtle last:border-b-0 hover:bg-hover transition-colors duration-150 ${
                     !notif.read ? 'bg-accent/5' : ''
                   }`}
                 >
@@ -141,10 +141,10 @@ export default function NotificationBell() {
                       <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0" />
                     )}
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs text-text-primary font-sans leading-relaxed truncate">
+                      <p className="text-xs text-foreground font-sans leading-relaxed truncate">
                         {notif.message}
                       </p>
-                      <p className="text-[10px] text-text-tertiary font-mono mt-0.5">
+                      <p className="text-[10px] text-text-tertiary font-sans mt-0.5">
                         {timeAgo(notif.created_at)}
                       </p>
                     </div>

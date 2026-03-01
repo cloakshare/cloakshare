@@ -16,7 +16,7 @@ import './index.css';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
-  if (loading) return <div className="flex h-screen items-center justify-center"><div className="loader" /></div>;
+  if (loading) return <div className="flex h-screen items-center justify-center bg-background"><div className="w-6 h-6 border-2 border-border border-t-accent rounded-full animate-spin" /></div>;
   if (!user) return <Navigate to="/login" replace />;
   return <>{children}</>;
 }

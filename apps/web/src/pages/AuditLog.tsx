@@ -56,10 +56,13 @@ export default function AuditLog() {
   if (plan === 'free' || plan === 'starter') {
     return (
       <div>
-        <h1 className="font-mono font-semibold text-xl text-foreground mb-8">Audit Log</h1>
+        <h1 className="font-sans font-semibold text-xl text-foreground mb-8">Audit Log</h1>
         <div className="bg-surface border border-border rounded-lg p-8 text-center">
-          <p className="text-muted mb-2">Audit log requires a Growth or Scale plan.</p>
-          <a href="/dashboard/billing" className="text-accent text-sm font-mono hover:underline">
+          <svg className="w-10 h-10 text-text-tertiary mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+          <p className="text-text-secondary font-sans text-sm mb-2">Audit log requires a Growth or Scale plan.</p>
+          <a href="/dashboard/billing" className="text-accent text-sm font-sans font-medium hover:text-accent-hover transition-colors duration-150">
             Upgrade your plan
           </a>
         </div>
@@ -69,11 +72,11 @@ export default function AuditLog() {
 
   return (
     <div>
-      <h1 className="font-mono font-semibold text-xl text-foreground mb-2">Audit Log</h1>
-      <p className="text-sm text-muted mb-6">Activity history for your organization</p>
+      <h1 className="font-sans font-semibold text-xl text-foreground mb-2">Audit Log</h1>
+      <p className="text-sm text-text-secondary font-sans mb-6">Activity history for your organization</p>
 
       {error && (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3 mb-6 text-red-400 text-sm">
+        <div className="bg-destructive/10 border border-destructive/30 rounded-lg px-4 py-3 mb-6 text-destructive text-sm font-sans">
           {error}
         </div>
       )}
@@ -83,7 +86,7 @@ export default function AuditLog() {
         <select
           value={actionFilter}
           onChange={(e) => { setActionFilter(e.target.value); setCursor(null); }}
-          className="bg-background border border-border rounded px-3 py-2 text-foreground text-sm font-mono focus:outline-none focus:border-accent"
+          className="bg-input border border-border rounded-md px-3 py-2 text-sm text-foreground font-sans focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/20 transition-colors"
         >
           <option value="">All actions</option>
           <option value="link.created">Link created</option>
@@ -101,50 +104,55 @@ export default function AuditLog() {
       {/* Entries */}
       <div className="bg-surface border border-border rounded-lg overflow-hidden">
         {entries.length === 0 && !loading ? (
-          <div className="p-8 text-center text-muted text-sm">No audit log entries found.</div>
+          <div className="p-8 text-center">
+            <svg className="w-10 h-10 text-text-tertiary mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            <p className="text-text-secondary font-sans text-sm">No audit log entries found.</p>
+          </div>
         ) : (
           <table className="w-full">
             <thead>
-              <tr className="text-left text-xs text-muted uppercase tracking-wider">
-                <th className="px-5 py-3">Time</th>
-                <th className="px-5 py-3">Actor</th>
-                <th className="px-5 py-3">Action</th>
-                <th className="px-5 py-3">Resource</th>
-                <th className="px-5 py-3">IP</th>
+              <tr className="border-b border-border-subtle">
+                <th className="text-left text-xs text-text-tertiary font-sans font-medium uppercase tracking-wider px-5 py-2.5">Time</th>
+                <th className="text-left text-xs text-text-tertiary font-sans font-medium uppercase tracking-wider px-5 py-2.5">Actor</th>
+                <th className="text-left text-xs text-text-tertiary font-sans font-medium uppercase tracking-wider px-5 py-2.5">Action</th>
+                <th className="text-left text-xs text-text-tertiary font-sans font-medium uppercase tracking-wider px-5 py-2.5">Resource</th>
+                <th className="text-left text-xs text-text-tertiary font-sans font-medium uppercase tracking-wider px-5 py-2.5">IP</th>
               </tr>
             </thead>
             <tbody>
               {entries.map((entry) => (
                 <Fragment key={entry.id}>
                   <tr
-                    className="border-t border-border cursor-pointer hover:bg-elevated/50"
+                    className="border-b border-border-subtle last:border-0 cursor-pointer hover:bg-hover transition-colors duration-150"
                     onClick={() => setExpandedId(expandedId === entry.id ? null : entry.id)}
                   >
-                    <td className="px-5 py-3 text-xs text-muted font-mono whitespace-nowrap">
+                    <td className="px-5 py-3 text-xs text-text-tertiary font-mono whitespace-nowrap tabular-nums">
                       {new Date(entry.created_at).toLocaleString()}
                     </td>
-                    <td className="px-5 py-3 text-sm text-foreground font-mono">
+                    <td className="px-5 py-3 text-sm text-foreground font-sans">
                       {entry.actor.label}
                       {entry.actor.type === 'api_key' && (
-                        <span className="text-xs text-muted ml-1">(key)</span>
+                        <span className="text-[10px] font-sans text-text-tertiary ml-1 bg-elevated px-1 py-0.5 rounded">key</span>
                       )}
                     </td>
-                    <td className="px-5 py-3 text-sm text-foreground font-mono">
+                    <td className="px-5 py-3 text-sm text-foreground font-sans capitalize">
                       {formatAction(entry.action)}
                     </td>
-                    <td className="px-5 py-3 text-sm text-muted font-mono">
+                    <td className="px-5 py-3 text-sm text-text-tertiary font-mono">
                       {entry.resource ? (
                         <span>{entry.resource.label || entry.resource.id}</span>
-                      ) : '-'}
+                      ) : <span className="text-text-tertiary">-</span>}
                     </td>
-                    <td className="px-5 py-3 text-xs text-muted font-mono">
+                    <td className="px-5 py-3 text-xs text-text-tertiary font-mono tabular-nums">
                       {entry.ip_address || '-'}
                     </td>
                   </tr>
                   {expandedId === entry.id && entry.metadata && (
-                    <tr key={`${entry.id}-meta`} className="border-t border-border/50">
-                      <td colSpan={5} className="px-5 py-3 bg-background">
-                        <pre className="text-xs text-muted font-mono overflow-x-auto">
+                    <tr key={`${entry.id}-meta`}>
+                      <td colSpan={5} className="px-5 py-3 bg-background border-b border-border-subtle">
+                        <pre className="text-xs text-text-secondary font-mono overflow-x-auto">
                           {JSON.stringify(entry.metadata, null, 2)}
                         </pre>
                       </td>
@@ -157,14 +165,23 @@ export default function AuditLog() {
         )}
 
         {loading && (
-          <div className="p-4 text-center text-muted text-sm">Loading...</div>
+          <div className="p-6 space-y-3">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="flex items-center gap-4">
+                <div className="skeleton h-3 w-28 rounded" />
+                <div className="skeleton h-3 w-24 rounded" />
+                <div className="skeleton h-3 w-20 rounded" />
+                <div className="skeleton h-3 w-32 rounded ml-auto" />
+              </div>
+            ))}
+          </div>
         )}
 
         {hasMore && !loading && (
-          <div className="p-4 text-center border-t border-border">
+          <div className="p-4 text-center border-t border-border-subtle">
             <button
               onClick={() => cursor && loadEntries(cursor)}
-              className="text-accent text-sm font-mono hover:underline"
+              className="text-accent text-sm font-sans font-medium hover:text-accent-hover transition-colors duration-150"
             >
               Load more
             </button>
