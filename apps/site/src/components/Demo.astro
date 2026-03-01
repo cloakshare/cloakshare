@@ -16,9 +16,9 @@
               class="border-2 border-dashed border-border rounded-lg p-8 text-center cursor-pointer hover:border-accent/30 transition-colors"
             >
               <svg class="w-8 h-8 mx-auto text-text-tertiary mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-              <p class="text-sm text-text-secondary font-sans mb-1">Drop a PDF here, or click to upload</p>
-              <p class="text-xs text-text-tertiary font-mono">PDF only for demo &middot; max 10 MB</p>
-              <input type="file" id="demo-file-input" accept=".pdf" class="hidden" />
+              <p class="text-sm text-text-secondary font-sans mb-1">Drop a file here, or click to upload</p>
+              <p class="text-xs text-text-tertiary font-mono">PDF, images, Office docs, or video &middot; max 20 MB</p>
+              <input type="file" id="demo-file-input" accept=".pdf,.png,.jpg,.jpeg,.webp,.docx,.doc,.pptx,.ppt,.odt,.odp,.rtf,.mp4,.mov,.webm" class="hidden" />
             </div>
             <div class="mt-4">
               <p class="text-xs text-text-tertiary font-mono mb-2">Or try a sample:</p>
@@ -151,16 +151,21 @@
     btn.classList.add('opacity-40', 'cursor-not-allowed');
   });
 
+  const SUPPORTED_EXTS = ['.pdf','.png','.jpg','.jpeg','.webp','.docx','.doc','.pptx','.ppt','.odt','.odp','.rtf','.mp4','.mov','.webm'];
+  const VIDEO_EXTS = ['.mp4','.mov','.webm'];
+
   function selectFile(file: File) {
     const ext = '.' + file.name.split('.').pop()?.toLowerCase();
-    if (ext !== '.pdf') {
-      alert('Demo supports PDF files only. Sign up for full format support!'); return;
+    if (!SUPPORTED_EXTS.includes(ext)) {
+      alert('Unsupported file type. Try PDF, images, Office docs, or video.'); return;
     }
-    if (file.size > 10 * 1024 * 1024) { alert('Demo files must be under 10 MB'); return; }
+    if (file.size > 20 * 1024 * 1024) { alert('Demo files must be under 20 MB'); return; }
     selectedFile = file;
     submitBtn.disabled = false;
+    const isVideo = VIDEO_EXTS.includes(ext);
+    const label = isVideo ? 'Video' : 'Document';
     submitBtn.textContent = `Secure "${file.name}"`;
-    dropzone.innerHTML = `<p class="text-sm text-accent font-mono">Document: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)} MB)</p>`;
+    dropzone.innerHTML = `<p class="text-sm text-accent font-mono">${label}: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)} MB)</p>`;
   }
 
   // Submit — calls real API

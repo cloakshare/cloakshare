@@ -1,18 +1,20 @@
 import { Hono } from 'hono';
 import { eq } from 'drizzle-orm';
 import { db } from '../db/client.js';
-import { links, renderingJobs, users, apiKeys } from '../db/schema.js';
+import { links, renderingJobs, users } from '../db/schema.js';
 import { rateLimitByIp } from '../middleware/rateLimit.js';
 import { generateId } from '../lib/utils.js';
 import { Errors, errorResponse, successResponse } from '../lib/errors.js';
 import { config } from '../lib/config.js';
 import { logger } from '../lib/logger.js';
 import { createStorage } from '../services/storage.js';
-import { MAX_FILE_SIZE } from '@cloak/shared';
+import { ALL_SUPPORTED_EXTENSIONS, OFFICE_FILE_EXTENSIONS, VIDEO_FILE_EXTENSIONS } from '@cloak/shared';
 import { nanoid } from 'nanoid';
 import type { Variables } from '../lib/types.js';
 
 const demoRouter = new Hono<{ Variables: Variables }>();
+
+const DEMO_MAX_SIZE = 20 * 1024 * 1024; // 20MB for demo
 
 // Demo link creation — no auth, tight rate limit, short expiry
 // Only available in cloud mode
@@ -36,23 +38,35 @@ demoRouter.post(
       return errorResponse(c, Errors.validation('file is required'));
     }
 
-    // Demo limits: PDF only, 10MB max
     const ext = file.name?.split('.').pop()?.toLowerCase();
-    if (ext !== 'pdf') {
-      return errorResponse(c, Errors.validation('Demo only supports PDF files'));
+    if (!ext || !(ALL_SUPPORTED_EXTENSIONS as readonly string[]).includes(ext)) {
+      return errorResponse(c, Errors.validation(`Unsupported file type. Supported: ${ALL_SUPPORTED_EXTENSIONS.join(', ')}`));
     }
 
-    const maxSize = 10 * 1024 * 1024; // 10MB
-    if (file.size > maxSize) {
-      return errorResponse(c, Errors.fileTooLarge(10));
+    if (file.size > DEMO_MAX_SIZE) {
+      return errorResponse(c, Errors.fileTooLarge(20));
+    }
+
+    // Determine file type
+    let fileType = 'pdf';
+    if (ext === 'pdf') fileType = 'pdf';
+    else if (['png', 'jpg', 'jpeg', 'webp'].includes(ext)) fileType = ext === 'jpeg' ? 'jpg' : ext;
+    else if ((OFFICE_FILE_EXTENSIONS as readonly string[]).includes(ext)) fileType = 'pdf'; // converted to PDF
+    else if ((VIDEO_FILE_EXTENSIONS as readonly string[]).includes(ext)) {
+      if (!config.features.video) {
+        return errorResponse(c, Errors.validation('Video support is not enabled'));
+      }
+      fileType = 'video';
     }
 
     const arrayBuffer = await file.arrayBuffer();
     const fileBuffer = Buffer.from(arrayBuffer);
 
-    // Validate PDF magic bytes
-    if (fileBuffer.length < 5 || fileBuffer.subarray(0, 5).toString() !== '%PDF-') {
-      return errorResponse(c, Errors.validation('File does not appear to be a valid PDF'));
+    // Validate PDF magic bytes for .pdf files
+    if (ext === 'pdf') {
+      if (fileBuffer.length < 5 || fileBuffer.subarray(0, 5).toString() !== '%PDF-') {
+        return errorResponse(c, Errors.validation('File does not appear to be a valid PDF'));
+      }
     }
 
     // Get or create a demo system user
@@ -80,8 +94,8 @@ demoRouter.post(
     await db.insert(links).values({
       id: linkId,
       userId: demoUser!.id,
-      originalFilename: file.name || 'demo.pdf',
-      fileType: 'pdf',
+      originalFilename: file.name || 'document',
+      fileType,
       fileSize: file.size,
       r2Prefix: `renders/${linkId}/`,
       expiresAt,
@@ -89,7 +103,7 @@ demoRouter.post(
       watermarkEnabled: true,
       blockDownload: true,
       status: 'processing',
-      name: `Demo: ${file.name || 'document.pdf'}`,
+      name: `Demo: ${file.name || 'document'}`,
     });
 
     await db.insert(renderingJobs).values({
@@ -99,7 +113,7 @@ demoRouter.post(
       status: 'pending',
     });
 
-    logger.info({ linkId }, 'Demo link created');
+    logger.info({ linkId, fileType, ext }, 'Demo link created');
 
     const secureUrl = `${config.viewerUrl}/s/${linkId}`;
 
@@ -107,6 +121,7 @@ demoRouter.post(
       id: linkId,
       secure_url: secureUrl,
       progress_url: `${config.apiUrl}/v1/links/${linkId}/progress`,
+      file_type: fileType,
       status: 'processing',
       expires_at: expiresAt,
     }, 202);
