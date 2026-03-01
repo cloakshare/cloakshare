@@ -55,7 +55,7 @@ export default function Register() {
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <h1 className="font-mono font-bold text-2xl text-foreground tracking-tight">cloak</h1>
+          <h1 className="font-mono font-bold text-2xl text-foreground tracking-tight">CloakShare</h1>
           <p className="text-sm text-text-secondary mt-2">Create your account</p>
         </div>
 
