@@ -8,7 +8,7 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { mkdir, writeFile, readFile, unlink, rm } from 'fs/promises';
-import { join, dirname } from 'path';
+import { join, dirname, resolve, sep } from 'path';
 import { existsSync } from 'fs';
 import { config } from '../lib/config.js';
 import { logger } from '../lib/logger.js';
@@ -36,7 +36,13 @@ class LocalStorage implements StorageProvider {
   }
 
   private getFilePath(key: string): string {
-    return join(this.basePath, key);
+    const filePath = resolve(this.basePath, key);
+    // Prevent path traversal — resolved path must stay within basePath
+    const base = resolve(this.basePath);
+    if (!filePath.startsWith(base + sep) && filePath !== base) {
+      throw new Error('Invalid file path');
+    }
+    return filePath;
   }
 
   async upload(key: string, data: Buffer, _contentType: string): Promise<string> {
@@ -139,18 +145,23 @@ class S3Storage implements StorageProvider {
   }
 
   async deletePrefix(prefix: string): Promise<void> {
-    const response = await this.client.send(new ListObjectsV2Command({
-      Bucket: this.bucketName,
-      Prefix: prefix,
-    }));
+    let continuationToken: string | undefined;
+    do {
+      const response = await this.client.send(new ListObjectsV2Command({
+        Bucket: this.bucketName,
+        Prefix: prefix,
+        ContinuationToken: continuationToken,
+      }));
 
-    if (response.Contents) {
-      for (const obj of response.Contents) {
-        if (obj.Key) {
-          await this.delete(obj.Key);
+      if (response.Contents) {
+        for (const obj of response.Contents) {
+          if (obj.Key) {
+            await this.delete(obj.Key);
+          }
         }
       }
-    }
+      continuationToken = response.IsTruncated ? response.NextContinuationToken : undefined;
+    } while (continuationToken);
   }
 
   async exists(key: string): Promise<boolean> {

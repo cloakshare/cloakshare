@@ -301,11 +301,13 @@ async function poll() {
       const isVideo = (VIDEO_FILE_EXTENSIONS as readonly string[]).includes(ext);
 
       if (isVideo) {
-        processJob(job);
+        processJob(job).catch((err) =>
+          logger.error({ err, jobId: job.id }, 'Unhandled error in video processJob'));
       } else {
         renderLimit(async () => {
           await processJob(job);
-        });
+        }).catch((err) =>
+          logger.error({ err, jobId: job.id }, 'Unhandled error in document processJob'));
       }
     }
   } catch (error) {

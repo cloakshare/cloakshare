@@ -160,6 +160,10 @@ app.route('/', docsRouter);
 if (config.storage.provider === 'local') {
   app.get('/internal/files/*', async (c) => {
     const key = c.req.path.replace('/internal/files/', '');
+    // Block path traversal attempts
+    if (key.includes('..') || key.startsWith('/') || key.includes('\\')) {
+      return c.json({ error: { code: 'FORBIDDEN', message: 'Invalid path' } }, 403);
+    }
     try {
       const { createStorage } = await import('./services/storage.js');
       const storage = createStorage();

@@ -115,6 +115,7 @@ export const links = sqliteTable('links', {
   updatedAt: text('updated_at').default(sql`CURRENT_TIMESTAMP`),
 }, (table) => [
   index('idx_links_user_id').on(table.userId),
+  index('idx_links_org_id').on(table.orgId),
   index('idx_links_status').on(table.status),
   index('idx_links_created_at').on(table.createdAt),
   index('idx_links_user_status_created').on(table.userId, table.status, table.createdAt),

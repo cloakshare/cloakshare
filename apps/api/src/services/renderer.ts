@@ -47,7 +47,7 @@ export type ProgressCallback = (progress: {
  * Get page count from a PDF using pdfinfo (part of poppler-utils)
  */
 async function getPageCount(pdfPath: string): Promise<number> {
-  const { stdout } = await execFile('pdfinfo', [pdfPath]);
+  const { stdout } = await execFile('pdfinfo', [pdfPath], { timeout: 30_000 });
   const match = stdout.match(/Pages:\s+(\d+)/);
   return match ? parseInt(match[1], 10) : 1;
 }
@@ -67,7 +67,7 @@ async function renderPageToPng(pdfPath: string, page: number, outputDir: string)
     '-scale-to-y', '-1',            // Maintain aspect ratio
     pdfPath,
     outputPrefix,
-  ]);
+  ], { timeout: 120_000 }); // 2 minute timeout per page
 
   // pdftoppm names output: page-{padded_number}.png
   const files = await readdir(outputDir);

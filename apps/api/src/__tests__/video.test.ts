@@ -6,6 +6,7 @@ import { app, registerUser, apiRequest, createTestLink } from './helpers.js';
 import { db } from '../db/client.js';
 import { links, views, viewerSessions } from '../db/schema.js';
 import { config } from '../lib/config.js';
+import { sha256 } from '../lib/utils.js';
 
 /**
  * Minimal MP4 buffer — a valid ftyp box (ISO Base Media File Format header).
@@ -487,10 +488,10 @@ describe('Video Pipeline', () => {
         }),
       });
 
-      // Check the view record was updated
+      // Check the view record was updated (session tokens are stored hashed)
       const view = await db.select()
         .from(views)
-        .where(eq(views.sessionToken, sessionToken))
+        .where(eq(views.sessionToken, sha256(sessionToken)))
         .get();
 
       expect(view).toBeDefined();
@@ -575,7 +576,7 @@ describe('Video Pipeline', () => {
 
       expect(res.status).toBe(400);
       const { error } = await res.json();
-      expect(error.code).toBe('INVALID_KEY');
+      expect(error.code).toBe('VALIDATION_ERROR');
     });
 
     it('rejects request with mismatched session (wrong link)', async () => {

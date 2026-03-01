@@ -4,7 +4,7 @@ import { db } from '../db/client.js';
 import { webhookEndpoints, webhookDeliveries } from '../db/schema.js';
 import { apiKeyAuth } from '../middleware/apiKey.js';
 import { rateLimiter } from '../middleware/rateLimit.js';
-import { generateId, generateToken } from '../lib/utils.js';
+import { generateId, generateToken, isPrivateUrl } from '../lib/utils.js';
 import { Errors, errorResponse, successResponse } from '../lib/errors.js';
 import { WEBHOOK_EVENTS } from '@cloak/shared';
 import type { Variables } from '../lib/types.js';
@@ -29,6 +29,11 @@ webhooksRouter.post('/v1/webhooks', apiKeyAuth, rateLimiter('default'), async (c
     new URL(url);
   } catch {
     return errorResponse(c, Errors.validation('Invalid webhook URL'));
+  }
+
+  // SSRF check — block private/internal URLs
+  if (isPrivateUrl(url)) {
+    return errorResponse(c, Errors.validation('Webhook URL must not point to a private or internal address'));
   }
 
   // Validate events

@@ -54,50 +54,53 @@ auth.post('/register', async (c) => {
     slug = `${emailLocal}-${userId.slice(-4)}`;
   }
 
-  await db.insert(users).values({
-    id: userId,
-    email: email.toLowerCase(),
-    passwordHash,
-    name: name || null,
-    defaultOrgId: orgId,
-  });
-
-  await db.insert(organizations).values({
-    id: orgId,
-    name: name || email.split('@')[0],
-    slug,
-    plan: 'free',
-  });
-
-  await db.insert(orgMembers).values({
-    id: generateId('mem'),
-    orgId,
-    userId,
-    role: 'owner',
-  });
-
   // Create a default API key
   const keyRaw = `${API_KEY_LIVE_PREFIX}${randomBytes(16).toString('hex')}`;
   const keyHash = sha256(keyRaw);
   const keyPrefix = keyRaw.slice(0, 12) + '...';
 
-  await db.insert(apiKeys).values({
-    id: generateId('key'),
-    userId,
-    orgId,
-    name: 'Default',
-    keyHash,
-    keyPrefix,
+  // Wrap all inserts in a transaction for atomicity
+  await db.transaction(async (tx) => {
+    await tx.insert(users).values({
+      id: userId,
+      email: email.toLowerCase(),
+      passwordHash,
+      name: name || null,
+      defaultOrgId: orgId,
+    });
+
+    await tx.insert(organizations).values({
+      id: orgId,
+      name: name || email.split('@')[0],
+      slug,
+      plan: 'free',
+    });
+
+    await tx.insert(orgMembers).values({
+      id: generateId('mem'),
+      orgId,
+      userId,
+      role: 'owner',
+    });
+
+    await tx.insert(apiKeys).values({
+      id: generateId('key'),
+      userId,
+      orgId,
+      name: 'Default',
+      keyHash,
+      keyPrefix,
+    });
   });
 
-  // Create session
+  // Create session — store hash of token, send raw token as cookie
   const sessionToken = generateToken();
   const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(); // 30 days
 
   await db.insert(sessions).values({
     id: generateId('ses'),
     userId,
-    token: sessionToken,
+    token: sha256(sessionToken),
     expiresAt,
   });
 
@@ -152,14 +155,14 @@ auth.post('/login', async (c) => {
   // Session rotation: invalidate all existing sessions for this user
   await db.delete(sessions).where(eq(sessions.userId, user.id));
 
-  // Create new session
+  // Create new session — store hash of token, send raw token as cookie
   const sessionToken = generateToken();
   const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
 
   await db.insert(sessions).values({
     id: generateId('ses'),
     userId: user.id,
-    token: sessionToken,
+    token: sha256(sessionToken),
     expiresAt,
   });
 

@@ -1,9 +1,9 @@
 import { Hono } from 'hono';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, sql } from 'drizzle-orm';
 import bcrypt from 'bcrypt';
 import { db } from '../db/client.js';
 import { links, views, viewerSessions, users } from '../db/schema.js';
-import { generateId, generateToken, getClientIp, parseUserAgent, formatDateForWatermark, renderWatermarkTemplate } from '../lib/utils.js';
+import { generateId, generateToken, sha256, getClientIp, parseUserAgent, formatDateForWatermark, renderWatermarkTemplate } from '../lib/utils.js';
 import { Errors, errorResponse, successResponse } from '../lib/errors.js';
 import { rateLimitByIp } from '../middleware/rateLimit.js';
 import { createStorage } from '../services/storage.js';
@@ -157,11 +157,14 @@ viewsRouter.post(
     const sessionShortId = sessionToken.slice(0, 6);
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // 24h
 
+    // Hash viewer session token before storage
+    const sessionTokenHash = sha256(sessionToken);
+
     await db.insert(viewerSessions).values({
       id: generateId('vs'),
       linkId,
       viewerEmail: email || 'anonymous',
-      token: sessionToken,
+      token: sessionTokenHash,
       expiresAt,
       ipAddress: getClientIp(c.req.raw.headers),
     });
@@ -182,12 +185,12 @@ viewsRouter.post(
       viewerDevice: device,
       viewerBrowser: browser,
       viewerOs: os,
-      sessionToken,
+      sessionToken: sessionTokenHash,
     });
 
-    // Increment view count
+    // Atomic view count increment
     await db.update(links)
-      .set({ viewCount: link.viewCount + 1 })
+      .set({ viewCount: sql`${links.viewCount} + 1` })
       .where(eq(links.id, linkId));
 
     // Build watermark text
@@ -293,7 +296,7 @@ viewsRouter.post(
         const sessionVsId = (await db
           .select({ id: viewerSessions.id })
           .from(viewerSessions)
-          .where(eq(viewerSessions.token, sessionToken))
+          .where(eq(viewerSessions.token, sessionTokenHash))
           .get())!.id;
 
         const watermarkedUrls = await generateWatermarkedPages(
@@ -347,24 +350,24 @@ viewsRouter.post('/v1/viewer/:token/sign-segment', async (c) => {
     return c.json({ error: { code: 'UNAUTHORIZED', message: 'Session required' } }, 401);
   }
 
-  // Validate session
+  // Validate session — hash token before lookup
   const session = await db
     .select()
     .from(viewerSessions)
-    .where(eq(viewerSessions.token, sessionToken))
+    .where(eq(viewerSessions.token, sha256(sessionToken)))
     .get();
 
   if (!session || new Date(session.expiresAt) < new Date()) {
-    return c.json({ error: { code: 'SESSION_EXPIRED', message: 'Session expired' } }, 401);
+    return errorResponse(c, Errors.unauthorized('Session expired'));
   }
 
   if (session.linkId !== linkId) {
-    return c.json({ error: { code: 'FORBIDDEN', message: 'Session mismatch' } }, 403);
+    return errorResponse(c, Errors.forbidden('Session mismatch'));
   }
 
   const { segment_key } = await c.req.json();
   if (!segment_key || !segment_key.startsWith(`renders/${linkId}/video/`)) {
-    return c.json({ error: { code: 'INVALID_KEY', message: 'Invalid segment key' } }, 400);
+    return errorResponse(c, Errors.validation('Invalid segment key'));
   }
 
   const storage = createStorage();
@@ -386,15 +389,15 @@ viewsRouter.get('/v1/viewer/:token/page/:pageNumber', async (c) => {
     return errorResponse(c, Errors.unauthorized('Session token required'));
   }
 
-  // Validate session
+  // Validate session — hash token before lookup
   const session = await db
     .select()
     .from(viewerSessions)
-    .where(eq(viewerSessions.token, sessionToken))
+    .where(eq(viewerSessions.token, sha256(sessionToken)))
     .get();
 
   if (!session || new Date(session.expiresAt) < new Date()) {
-    return c.json({ data: null, error: { code: 'SESSION_EXPIRED', message: 'Session expired. Please re-verify.' } }, 401);
+    return errorResponse(c, Errors.unauthorized('Session expired. Please re-verify.'));
   }
 
   if (session.linkId !== linkId) {
@@ -456,11 +459,11 @@ viewsRouter.post('/v1/viewer/:token/track', async (c) => {
     video_watch_time, video_current_time, video_total_duration,
   } = body;
 
-  // Find the view record by session token
+  // Find the view record by session token (stored hashed)
   const view = await db
     .select()
     .from(views)
-    .where(eq(views.sessionToken, sessionToken))
+    .where(eq(views.sessionToken, sha256(sessionToken)))
     .get();
 
   if (!view) {
