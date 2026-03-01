@@ -35,7 +35,7 @@ export function unknownVersionHandler(c: Context) {
     error: {
       code: 'UNKNOWN_API_VERSION',
       message: `API version v${version} does not exist. Current version: v1.`,
-      docs_url: 'https://docs.cloakshare.dev/api-versions',
+      docs_url: 'https://github.com/cloakshare/cloakshare#api-reference',
     },
   }, 404);
 }

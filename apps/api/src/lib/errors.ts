@@ -42,7 +42,7 @@ export const Errors = {
   rateLimited: (message = 'Too many requests', retryAfter?: number) => {
     const err = new AppError('RATE_LIMITED', message, 429);
     (err as any).retryAfter = retryAfter;
-    (err as any).docsUrl = 'https://docs.cloakshare.dev/rate-limits';
+    (err as any).docsUrl = 'https://github.com/cloakshare/cloakshare#api-reference';
     return err;
   },
   domainNotAllowed: (domains: string[]) =>

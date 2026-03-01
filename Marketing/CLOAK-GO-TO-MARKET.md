@@ -365,7 +365,7 @@ The README is the first thing anyone sees. It must be exceptional.
 
 <p align="center">
   <a href="https://cloakshare.dev">Website</a> ·
-  <a href="https://docs.cloakshare.dev">Docs</a> ·
+  <a href="https://github.com/cloakshare/cloakshare">Docs</a> ·
   <a href="https://cloakshare.dev/demo">Live Demo</a> ·
   <a href="https://discord.gg/xxx">Discord</a>
 </p>
@@ -437,7 +437,7 @@ go get github.com/cloakshare/cloakshare-go  # Go
 
 ## Documentation
 
-Full docs at [docs.cloakshare.dev](https://docs.cloakshare.dev)
+Full docs at [GitHub Docs](https://github.com/cloakshare/cloakshare)
 
 ## Contributing
 

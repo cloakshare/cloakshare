@@ -1,6 +1,6 @@
 # Cloak — Self-hosted secure document sharing
 # Quick start: docker compose up
-# Full docs: https://docs.cloakshare.dev/self-hosting
+# Full docs: https://github.com/cloakshare/cloakshare/blob/main/docs/self-hosting.md
 
 services:
   cloak:

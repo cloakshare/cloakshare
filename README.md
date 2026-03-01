@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://cloakshare.dev">Website</a> ·
-  <a href="https://docs.cloakshare.dev">Docs</a> ·
+  <a href="https://github.com/cloakshare/cloakshare">Docs</a> ·
   <a href="https://cloakshare.dev/pricing">Pricing</a> ·
   <a href="https://discord.gg/cloakshare">Discord</a> ·
   <a href="https://cloakshare.dev/blog">Blog</a>
@@ -72,7 +72,7 @@ cp .env.example .env
 docker compose up
 ```
 
-Open `http://localhost:3000` — that's it. Full docs: [Self-hosting guide](https://docs.cloakshare.dev/self-hosting)
+Open `http://localhost:3000` — that's it. Full docs: [Self-hosting guide](https://github.com/cloakshare/cloakshare/blob/main/docs/self-hosting.md)
 
 ---
 
@@ -247,7 +247,7 @@ POST   /v1/viewer/:token/track      Track viewing engagement
 DELETE /v1/viewers/:email           GDPR data deletion
 ```
 
-Full API reference: [docs.cloakshare.dev](https://docs.cloakshare.dev)
+Full API reference: [GitHub Docs](https://github.com/cloakshare/cloakshare)
 
 ---
 
@@ -322,7 +322,7 @@ services:
 
 **Note:** Video transcoding requires FFmpeg. Set `ENABLE_VIDEO=true` to enable. Self-hosted supports all document and video types.
 
-Full guide: [docs.cloakshare.dev/self-hosting](https://docs.cloakshare.dev/self-hosting)
+Full guide: [GitHub Self-Hosting Guide](https://github.com/cloakshare/cloakshare/blob/main/docs/self-hosting.md)
 
 ---
 
@@ -384,7 +384,7 @@ Good first issues are labeled [`good first issue`](https://github.com/cloakshare
 
 <p align="center">
   <a href="https://cloakshare.dev">Website</a> ·
-  <a href="https://docs.cloakshare.dev">Docs</a> ·
+  <a href="https://github.com/cloakshare/cloakshare">Docs</a> ·
   <a href="https://cloakshare.dev/pricing">Pricing</a> ·
   <a href="https://twitter.com/cloakshare">Twitter</a> ·
   <a href="https://discord.gg/cloakshare">Discord</a>
