@@ -6,7 +6,11 @@ import { randomBytes } from 'crypto';
 import { config } from './lib/config.js';
 import { logger } from './lib/logger.js';
 import { AppError, errorResponse } from './lib/errors.js';
+import { initSentry, captureRequestError } from './lib/sentry.js';
 import type { Variables } from './lib/types.js';
+
+// Initialize Sentry before anything else
+initSentry();
 
 // Middleware
 import { apiVersionHeader, unknownVersionHandler } from './middleware/versioning.js';
@@ -34,6 +38,7 @@ import { startRenderWorker, stopRenderWorker } from './workers/renderer.js';
 import { startWebhookWorker, stopWebhookWorker } from './workers/webhooks.js';
 import { startAuditRetentionWorker, stopAuditRetentionWorker } from './workers/auditRetention.js';
 import { startWatermarkCleaner, stopWatermarkCleaner } from './workers/watermarkCleaner.js';
+import { startBackupWorker, stopBackupWorker } from './workers/backup.js';
 
 const app = new Hono<{ Variables: Variables }>();
 
@@ -209,6 +214,12 @@ app.onError((err, c) => {
     return errorResponse(c, err);
   }
 
+  const requestId = c.res.headers.get('X-Request-Id') || undefined;
+  captureRequestError(err, {
+    method: c.req.method,
+    path: c.req.path,
+    requestId,
+  });
   logger.error({ err }, 'Unhandled error');
   return c.json(
     { data: null, error: { code: 'INTERNAL_ERROR', message: 'An unexpected error occurred' } },
@@ -248,6 +259,7 @@ if (!process.env.VITEST) {
     startWebhookWorker();
     startAuditRetentionWorker();
     startWatermarkCleaner();
+    startBackupWorker();
   });
 
   // Graceful shutdown
@@ -257,6 +269,7 @@ if (!process.env.VITEST) {
     stopWebhookWorker();
     stopAuditRetentionWorker();
     stopWatermarkCleaner();
+    stopBackupWorker();
     server.close(() => {
       logger.info('Server closed');
       process.exit(0);

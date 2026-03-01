@@ -58,7 +58,7 @@ async function probeVideo(filePath: string): Promise<ProbeResult> {
     '-show_format',
     '-show_streams',
     filePath,
-  ]);
+  ], { timeout: 30_000 });
 
   const data = JSON.parse(stdout);
   const videoStream = data.streams?.find((s: any) => s.codec_type === 'video');

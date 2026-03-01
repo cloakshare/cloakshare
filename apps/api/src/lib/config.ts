@@ -67,6 +67,16 @@ export const config = {
   // Logging
   logLevel: process.env.LOG_LEVEL || 'info',
 
+  // Sentry (error tracking)
+  sentryDsn: process.env.SENTRY_DSN,
+
+  // Backups
+  backup: {
+    enabled: process.env.BACKUP_ENABLED === 'true',
+    intervalHours: parseInt(process.env.BACKUP_INTERVAL_HOURS || '6', 10),
+    retainCount: parseInt(process.env.BACKUP_RETAIN_COUNT || '5', 10),
+  },
+
   // Features gated by mode
   features: {
     webhooks: true, // Webhooks available for all modes
