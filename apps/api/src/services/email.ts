@@ -108,6 +108,53 @@ export async function sendViewNotification(params: {
 }
 
 /**
+ * Send a team invite email to the invitee.
+ */
+export async function sendTeamInviteEmail(params: {
+  inviteeEmail: string;
+  orgName: string;
+  inviterName: string;
+  role: string;
+  inviteToken: string;
+}) {
+  const { inviteeEmail, orgName, inviterName, role, inviteToken } = params;
+  const dashboardUrl = config.dashboardUrl;
+  const safeOrgName = escapeHtml(orgName);
+  const safeInviter = escapeHtml(inviterName);
+  const safeRole = escapeHtml(role);
+  const acceptUrl = `${dashboardUrl}/invite?token=${encodeURIComponent(inviteToken)}`;
+
+  await sendEmail({
+    to: inviteeEmail,
+    subject: `You've been invited to join ${safeOrgName} on Cloak`,
+    html: `
+      <div style="font-family: 'JetBrains Mono', monospace, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px 0;">
+        <div style="background: #09090B; border-radius: 8px; padding: 24px; color: #FAFAFA;">
+          <h2 style="color: #00FF88; font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 16px;">
+            Team Invite
+          </h2>
+          <p style="color: #A1A1AA; font-size: 13px; margin: 0 0 16px;">
+            ${safeInviter} invited you to join <strong style="color: #FAFAFA;">${safeOrgName}</strong> as a <strong style="color: #FAFAFA;">${safeRole}</strong>.
+          </p>
+          <div style="margin-top: 20px; text-align: center;">
+            <a href="${acceptUrl}"
+               style="display: inline-block; background: #00FF88; color: #09090B; padding: 10px 24px; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none;">
+              Accept Invite
+            </a>
+          </div>
+          <p style="color: #52525B; font-size: 11px; margin-top: 16px; text-align: center;">
+            This invite expires in 7 days.
+          </p>
+        </div>
+        <p style="text-align: center; color: #52525B; font-size: 11px; margin-top: 16px;">
+          Sent by Cloak &middot; If you didn't expect this, you can ignore it.
+        </p>
+      </div>
+    `,
+  });
+}
+
+/**
  * Notify link owner when rendering is complete.
  */
 export async function sendLinkReadyNotification(params: {

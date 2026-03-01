@@ -106,6 +106,21 @@ export async function listDomains(userId: string, orgId?: string) {
 }
 
 /**
+ * Resolve a hostname to a verified custom domain record.
+ * Used by the viewer to look up branding when accessed via a custom domain.
+ */
+export async function resolveCustomDomain(hostname: string) {
+  const domain = await db.select().from(customDomains)
+    .where(and(
+      eq(customDomains.domain, hostname.toLowerCase()),
+      eq(customDomains.verified, true),
+    ))
+    .get();
+
+  return domain || null;
+}
+
+/**
  * Delete a custom domain.
  */
 export async function deleteDomain(userId: string, domainId: string, orgId?: string) {

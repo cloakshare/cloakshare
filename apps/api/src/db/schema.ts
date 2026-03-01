@@ -14,6 +14,7 @@ export const users = sqliteTable('users', {
   stripeSubscriptionId: text('stripe_subscription_id'),
   plan: text('plan').notNull().default('free'), // free | starter | growth | scale
   defaultOrgId: text('default_org_id'), // Active org for dashboard sessions
+  spendingCap: integer('spending_cap'), // Monthly spending cap in cents, null = unlimited
   emailVerified: integer('email_verified', { mode: 'boolean' }).default(false),
   emailVerifiedAt: text('email_verified_at'),
   createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),

@@ -9,6 +9,7 @@ import { generateId, generateToken, sha256 } from '../lib/utils.js';
 import { Errors, errorResponse, successResponse } from '../lib/errors.js';
 import { logger } from '../lib/logger.js';
 import { logAudit, auditorFromContext } from '../services/audit.js';
+import { sendTeamInviteEmail } from '../services/email.js';
 import { ORG_ROLES } from '@cloak/shared';
 import type { Variables } from '../lib/types.js';
 
@@ -138,6 +139,16 @@ teamsRouter.post('/v1/org/members/invite', sessionAuth, orgResolver, requirePerm
   });
 
   logger.info({ orgId, email, role: inviteRole, invitedBy: user.id }, 'Team invite sent');
+
+  // Send invite email (best-effort)
+  const org = c.get('org') as { name: string };
+  sendTeamInviteEmail({
+    inviteeEmail: email,
+    orgName: org.name,
+    inviterName: user.name || user.email,
+    role: inviteRole,
+    inviteToken: token,
+  }).catch((err) => logger.warn({ err, email }, 'Failed to send invite email'));
 
   // Audit log
   const auditInvite = auditorFromContext(c);
@@ -396,6 +407,10 @@ teamsRouter.patch('/v1/org/settings', sessionAuth, orgResolver, requirePermissio
   }
 
   await db.update(organizations).set(updates).where(eq(organizations.id, org.id));
+
+  // Audit log
+  const auditSettings = auditorFromContext(c);
+  logAudit({ ...auditSettings, action: 'org.settings_updated', resourceType: 'org', resourceId: org.id, metadata: { name: updates.name, slug: updates.slug } });
 
   return successResponse(c, {
     id: org.id,

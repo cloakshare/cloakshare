@@ -119,6 +119,12 @@ linksRouter.post('/v1/links', apiKeyAuth, rateLimiter('upload'), enforceUsageLim
       if (fileBuffer.length < 5 || fileBuffer.subarray(0, 5).toString() !== '%PDF-') {
         return errorResponse(c, Errors.validation('File does not appear to be a valid PDF'));
       }
+
+      // Sanitization: reject PDFs with embedded JavaScript (CORRECTIONS SEC 4)
+      const pdfStr = fileBuffer.toString('latin1');
+      if (/\/JS\s/.test(pdfStr) || /\/JavaScript\s/.test(pdfStr)) {
+        return errorResponse(c, Errors.validation('PDF contains embedded JavaScript which is not allowed'));
+      }
     }
 
     // Upload original to temp storage
@@ -661,6 +667,12 @@ linksRouter.patch('/v1/links/:id/branding', apiKeyAuth, async (c) => {
   if (custom_domain_id !== undefined) updates.customDomainId = custom_domain_id;
 
   await db.update(links).set(updates).where(eq(links.id, linkId));
+
+  // Audit log
+  if (orgId) {
+    const audit = auditorFromContext(c);
+    logAudit({ ...audit, action: 'link.branding_updated', resourceType: 'link', resourceId: linkId, resourceLabel: link.name || link.originalFilename || linkId });
+  }
 
   return successResponse(c, {
     id: linkId,

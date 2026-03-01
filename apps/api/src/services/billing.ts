@@ -89,14 +89,19 @@ export async function createCheckoutSession(
     await db.update(users).set({ stripeCustomerId: customerId }).where(eq(users.id, userId));
   }
 
-  // Map plan to price ID
-  const priceIds: Record<string, string | undefined> = {
+  // Map plan to price ID (monthly or annual)
+  const monthlyPriceIds: Record<string, string | undefined> = {
     starter: config.stripe.starterPriceId,
     growth: config.stripe.growthPriceId,
     scale: config.stripe.scalePriceId,
   };
+  const annualPriceIds: Record<string, string | undefined> = {
+    starter: config.stripe.starterAnnualPriceId,
+    growth: config.stripe.growthAnnualPriceId,
+    scale: config.stripe.scaleAnnualPriceId,
+  };
 
-  const priceId = priceIds[plan];
+  const priceId = annual ? (annualPriceIds[plan] || monthlyPriceIds[plan]) : monthlyPriceIds[plan];
   if (!priceId) throw new Error(`No price ID configured for plan: ${plan}`);
 
   const session = await s.checkout.sessions.create({

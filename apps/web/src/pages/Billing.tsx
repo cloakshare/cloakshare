@@ -63,16 +63,23 @@ const plans = [
   },
 ];
 
+const annualPrices: Record<string, string> = {
+  starter: '$24',
+  growth: '$83',
+  scale: '$249',
+};
+
 export default function Billing() {
   const { user } = useAuth();
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState('');
+  const [annual, setAnnual] = useState(false);
 
   const handleUpgrade = async (planId: 'starter' | 'growth' | 'scale') => {
     setLoading(planId);
     setError('');
     try {
-      const { checkout_url } = await billingApi.checkout(planId);
+      const { checkout_url } = await billingApi.checkout(planId, annual);
       window.location.href = checkout_url;
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to start checkout');
@@ -97,9 +104,23 @@ export default function Billing() {
   return (
     <div>
       <h1 className="font-sans font-semibold text-xl text-foreground mb-2">Plan & Billing</h1>
-      <p className="text-sm text-text-secondary font-sans mb-8">
+      <p className="text-sm text-text-secondary font-sans mb-6">
         You're on the <span className="text-accent font-medium">{currentPlan}</span> plan.
       </p>
+
+      {/* Annual / Monthly toggle */}
+      <div className="flex items-center gap-3 mb-8">
+        <span className={`text-sm font-sans ${!annual ? 'text-foreground font-medium' : 'text-text-tertiary'}`}>Monthly</span>
+        <button
+          onClick={() => setAnnual(!annual)}
+          className={`relative w-10 h-5 rounded-full transition-colors duration-150 ${annual ? 'bg-accent' : 'bg-elevated border border-border'}`}
+        >
+          <span className={`absolute top-0.5 w-4 h-4 rounded-full transition-all duration-150 ${annual ? 'left-5.5 bg-background' : 'left-0.5 bg-text-tertiary'}`} style={{ left: annual ? '22px' : '2px' }} />
+        </button>
+        <span className={`text-sm font-sans ${annual ? 'text-foreground font-medium' : 'text-text-tertiary'}`}>
+          Annual <span className="text-accent text-xs">(save ~17%)</span>
+        </span>
+      </div>
 
       {error && (
         <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 mb-6">
@@ -145,8 +166,12 @@ export default function Billing() {
                 <div>
                   <h3 className="font-sans font-medium text-foreground">{plan.name}</h3>
                   <div className="flex items-baseline gap-1 mt-1">
-                    <span className="text-2xl font-mono font-semibold text-foreground tabular-nums">{plan.price}</span>
-                    <span className="text-xs text-text-tertiary font-sans">{plan.period}</span>
+                    <span className="text-2xl font-mono font-semibold text-foreground tabular-nums">
+                      {annual && plan.id !== 'free' ? (annualPrices[plan.id] || plan.price) : plan.price}
+                    </span>
+                    <span className="text-xs text-text-tertiary font-sans">
+                      {plan.id === 'free' ? plan.period : annual ? '/mo (billed yearly)' : plan.period}
+                    </span>
                   </div>
                 </div>
                 {isCurrent && (

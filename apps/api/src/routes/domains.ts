@@ -4,6 +4,7 @@ import { rateLimiter } from '../middleware/rateLimit.js';
 import { addDomain, verifyDomain, listDomains, deleteDomain } from '../services/domains.js';
 import { Errors, errorResponse, successResponse } from '../lib/errors.js';
 import { config } from '../lib/config.js';
+import { logAudit, auditorFromContext } from '../services/audit.js';
 import type { Variables } from '../lib/types.js';
 
 const domainsRouter = new Hono<{ Variables: Variables }>();
@@ -33,6 +34,10 @@ domainsRouter.post('/v1/domains', apiKeyAuth, rateLimiter('default'), async (c) 
 
   try {
     const result = await addDomain(user.id, domain, orgId);
+    if (orgId) {
+      const audit = auditorFromContext(c);
+      logAudit({ ...audit, action: 'domain.added', resourceType: 'domain', resourceId: result.id, resourceLabel: domain });
+    }
     return successResponse(c, result, 201);
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : 'Domain operation failed';
@@ -72,6 +77,10 @@ domainsRouter.post('/v1/domains/:id/verify', apiKeyAuth, async (c) => {
 
   try {
     const result = await verifyDomain(user.id, domainId, orgId);
+    if (orgId) {
+      const audit = auditorFromContext(c);
+      logAudit({ ...audit, action: 'domain.verified', resourceType: 'domain', resourceId: domainId });
+    }
     return successResponse(c, result);
   } catch {
     return errorResponse(c, Errors.notFound('Domain'));
@@ -89,6 +98,10 @@ domainsRouter.delete('/v1/domains/:id', apiKeyAuth, async (c) => {
 
   try {
     await deleteDomain(user.id, domainId, orgId);
+    if (orgId) {
+      const audit = auditorFromContext(c);
+      logAudit({ ...audit, action: 'domain.deleted', resourceType: 'domain', resourceId: domainId });
+    }
     return successResponse(c, { id: domainId, deleted: true });
   } catch {
     return errorResponse(c, Errors.notFound('Domain'));

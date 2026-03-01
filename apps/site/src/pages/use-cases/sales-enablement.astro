@@ -1,0 +1,102 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="Sales Enablement — Cloak" description="Track when prospects open your pitch decks and proposals. Real-time view analytics, email-gated access, and dynamic watermarks for sales teams." canonical="/use-cases/sales-enablement">
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-4xl mx-auto">
+      <p class="font-mono text-accent text-xs uppercase tracking-widest mb-4">Use Case</p>
+      <h1 class="font-mono font-bold text-4xl text-foreground mb-4">Sales Enablement</h1>
+      <p class="text-text-secondary font-sans text-lg mb-16 leading-relaxed max-w-2xl">
+        Know the moment a prospect opens your pitch deck. See which pages they read,
+        how long they spent, and whether they forwarded it. Close deals faster with data.
+      </p>
+
+      <div class="grid gap-8 md:grid-cols-2">
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <div class="w-10 h-10 bg-accent/15 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </div>
+          <h3 class="font-mono font-medium text-foreground mb-2">Real-time view alerts</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            Get email and webhook notifications the instant a prospect opens your deck.
+            Know who viewed it, from what device, and where they're located.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <div class="w-10 h-10 bg-accent/15 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <h3 class="font-mono font-medium text-foreground mb-2">Page-level analytics</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            See which slides your prospect spent the most time on. Identify their concerns
+            and interests before the follow-up call.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <div class="w-10 h-10 bg-accent/15 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <h3 class="font-mono font-medium text-foreground mb-2">Prevent forwarding</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            Email-gated access ensures only your intended recipient can view the deck.
+            Dynamic watermarks make screenshots traceable back to the viewer.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <div class="w-10 h-10 bg-accent/15 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+          </div>
+          <h3 class="font-mono font-medium text-foreground mb-2">CRM integration via API</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            Auto-generate secure links from your CRM workflow. Receive webhook events
+            when prospects engage. Feed view data back into your pipeline.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-16 bg-surface border border-border rounded-lg p-8">
+        <h2 class="font-mono font-medium text-foreground mb-4">How it works</h2>
+        <div class="grid gap-6 md:grid-cols-3">
+          <div>
+            <div class="font-mono text-accent text-sm mb-2">01</div>
+            <p class="text-sm text-text-secondary font-sans leading-relaxed">
+              Upload your pitch deck or proposal via API or dashboard. Cloak renders it into a secure, canvas-based viewer.
+            </p>
+          </div>
+          <div>
+            <div class="font-mono text-accent text-sm mb-2">02</div>
+            <p class="text-sm text-text-secondary font-sans leading-relaxed">
+              Share the secure link with your prospect. They enter their email to view — no downloads, no forwarding.
+            </p>
+          </div>
+          <div>
+            <div class="font-mono text-accent text-sm mb-2">03</div>
+            <p class="text-sm text-text-secondary font-sans leading-relaxed">
+              Get real-time analytics on engagement. See time per page, completion rate, and return visits. Follow up at the right time.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12 text-center">
+        <a href="https://app.cloakshare.dev/register" class="px-6 py-2.5 bg-accent text-background font-mono font-semibold text-sm rounded-md hover:bg-accent-hover transition-colors">
+          Start tracking engagement
+        </a>
+        <p class="text-xs text-text-tertiary font-sans mt-3">Free tier includes 50 links/month</p>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -50,10 +50,30 @@ export async function enforceUsageLimits(c: Context<{ Variables: Record<string, 
     );
   }
 
+  // Spending cap enforcement: if a cap is set and user has exceeded plan limits,
+  // check if overage cost would exceed the cap
+  const spendingCap = (user as { spendingCap?: number | null }).spendingCap;
+  if (spendingCap && linkCount >= limits.linksPerMonth) {
+    // Overage rates in cents per link
+    const overageRates: Record<string, number> = { starter: 8, growth: 6, scale: 4 };
+    const rate = overageRates[plan] || 0;
+    const overageLinks = linkCount - limits.linksPerMonth;
+    const overageCostCents = overageLinks * rate;
+
+    if (overageCostCents >= spendingCap) {
+      return errorResponse(
+        c,
+        Errors.limitReached(
+          `Spending cap reached ($${(spendingCap / 100).toFixed(2)}). Increase your cap in billing settings or upgrade your plan.`,
+        ),
+      );
+    }
+  }
+
   // Set usage headers so clients can track remaining quota
   c.header('X-Usage-Limit', String(limits.linksPerMonth));
   c.header('X-Usage-Used', String(linkCount));
-  c.header('X-Usage-Remaining', String(limits.linksPerMonth - linkCount));
+  c.header('X-Usage-Remaining', String(Math.max(0, limits.linksPerMonth - linkCount)));
 
   await next();
 }

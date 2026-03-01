@@ -1,6 +1,9 @@
 import { Hono } from 'hono';
+import { eq } from 'drizzle-orm';
 import { sessionAuth } from '../middleware/session.js';
 import { createCheckoutSession, createPortalSession, handleStripeWebhook } from '../services/billing.js';
+import { db } from '../db/client.js';
+import { users } from '../db/schema.js';
 import { Errors, errorResponse, successResponse } from '../lib/errors.js';
 import { config } from '../lib/config.js';
 import { logger } from '../lib/logger.js';
@@ -55,6 +58,25 @@ billingRouter.post('/v1/billing/portal', sessionAuth, async (c) => {
     logger.error({ error, userId: user.id }, 'Failed to create portal session');
     return errorResponse(c, Errors.validation('No active subscription to manage'));
   }
+});
+
+// ============================================
+// PUT /v1/billing/spending-cap — Set spending cap
+// ============================================
+
+billingRouter.put('/v1/billing/spending-cap', sessionAuth, async (c) => {
+  const user = c.get('user') as { id: string; plan: string };
+  const { cap_cents } = await c.req.json();
+
+  // null or 0 means remove cap
+  const spendingCap = cap_cents && cap_cents > 0 ? Math.round(cap_cents) : null;
+
+  await db.update(users).set({ spendingCap }).where(eq(users.id, user.id));
+
+  return successResponse(c, {
+    spending_cap_cents: spendingCap,
+    spending_cap_display: spendingCap ? `$${(spendingCap / 100).toFixed(2)}` : null,
+  });
 });
 
 // ============================================

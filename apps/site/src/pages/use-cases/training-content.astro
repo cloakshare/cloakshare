@@ -1,0 +1,108 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="Training Content — Cloak" description="Distribute training materials securely. Track completion rates, prevent unauthorized sharing, and watermark every page with the viewer's identity." canonical="/use-cases/training-content">
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-4xl mx-auto">
+      <p class="font-mono text-accent text-xs uppercase tracking-widest mb-4">Use Case</p>
+      <h1 class="font-mono font-bold text-4xl text-foreground mb-4">Training Content</h1>
+      <p class="text-text-secondary font-sans text-lg mb-16 leading-relaxed max-w-2xl">
+        Distribute training manuals, certification materials, and onboarding documents
+        securely. Track who completed the material, prevent unauthorized redistribution,
+        and automate the entire workflow via API.
+      </p>
+
+      <div class="grid gap-8 md:grid-cols-2">
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <div class="w-10 h-10 bg-accent/15 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            </svg>
+          </div>
+          <h3 class="font-mono font-medium text-foreground mb-2">Completion tracking</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            See exactly who viewed your training materials, how far they got, and how
+            long they spent on each section. Identify who needs follow-up.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <div class="w-10 h-10 bg-accent/15 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h3 class="font-mono font-medium text-foreground mb-2">Video training support</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            Upload training videos (MP4, MOV, WebM) alongside documents. Cloak auto-transcodes
+            to adaptive HLS streaming with watch-time tracking and watermarked overlays.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <div class="w-10 h-10 bg-accent/15 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <h3 class="font-mono font-medium text-foreground mb-2">IP protection</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            Prevent trainees from downloading, printing, or screenshotting proprietary materials.
+            Dynamic watermarks with their email make any leak traceable.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <div class="w-10 h-10 bg-accent/15 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </div>
+          <h3 class="font-mono font-medium text-foreground mb-2">Automated distribution</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            Generate unique, tracked links for each trainee via API. Integrate with your
+            LMS or HR system. Receive webhooks when materials are accessed.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-16 bg-surface border border-border rounded-lg p-8">
+        <h2 class="font-mono font-medium text-foreground mb-4">Training workflow</h2>
+        <div class="grid gap-6 md:grid-cols-4">
+          <div>
+            <div class="font-mono text-accent text-sm mb-2">01</div>
+            <p class="text-sm text-text-secondary font-sans leading-relaxed">
+              Upload training materials (PDFs, PPTX, videos) via API or dashboard.
+            </p>
+          </div>
+          <div>
+            <div class="font-mono text-accent text-sm mb-2">02</div>
+            <p class="text-sm text-text-secondary font-sans leading-relaxed">
+              Generate unique links per trainee with email gating and domain restrictions.
+            </p>
+          </div>
+          <div>
+            <div class="font-mono text-accent text-sm mb-2">03</div>
+            <p class="text-sm text-text-secondary font-sans leading-relaxed">
+              Trainees view materials in the secure viewer. Time and engagement are tracked per page.
+            </p>
+          </div>
+          <div>
+            <div class="font-mono text-accent text-sm mb-2">04</div>
+            <p class="text-sm text-text-secondary font-sans leading-relaxed">
+              Pull completion reports via API. Identify who finished and who needs reminders.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12 text-center">
+        <a href="https://app.cloakshare.dev/register" class="px-6 py-2.5 bg-accent text-background font-mono font-semibold text-sm rounded-md hover:bg-accent-hover transition-colors">
+          Start distributing securely
+        </a>
+        <p class="text-xs text-text-tertiary font-sans mt-3">Free tier includes 50 links/month</p>
+      </div>
+    </div>
+  </section>
+</Base>
