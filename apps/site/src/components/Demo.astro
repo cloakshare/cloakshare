@@ -16,9 +16,9 @@
               class="border-2 border-dashed border-border rounded-lg p-8 text-center cursor-pointer hover:border-accent/30 transition-colors"
             >
               <svg class="w-8 h-8 mx-auto text-text-tertiary mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-              <p class="text-sm text-text-secondary font-sans mb-1">Drop a PDF or video here, or click to upload</p>
-              <p class="text-xs text-text-tertiary font-mono">PDF: max 10 pages, 20 MB &middot; Video: MP4/MOV/WebM, 50 MB</p>
-              <input type="file" id="demo-file-input" accept=".pdf,.mp4,.mov,.webm" class="hidden" />
+              <p class="text-sm text-text-secondary font-sans mb-1">Drop a PDF here, or click to upload</p>
+              <p class="text-xs text-text-tertiary font-mono">PDF only for demo &middot; max 10 MB</p>
+              <input type="file" id="demo-file-input" accept=".pdf" class="hidden" />
             </div>
             <div class="mt-4">
               <p class="text-xs text-text-tertiary font-mono mb-2">Or try a sample:</p>
@@ -123,7 +123,6 @@
 
 <script>
   const API_BASE = 'https://api.cloakshare.dev';
-  const DEMO_KEY = 'ck_demo_placeholder'; // Will be replaced with real key
 
   const dropzone = document.getElementById('demo-dropzone')!;
   const fileInput = document.getElementById('demo-file-input') as HTMLInputElement;
@@ -146,86 +145,117 @@
   });
   fileInput.addEventListener('change', () => { if (fileInput.files?.[0]) selectFile(fileInput.files[0]); });
 
-  // Sample buttons
+  // Sample buttons — disabled for now (no pre-built samples)
   document.querySelectorAll('.demo-sample-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const sample = (btn as HTMLElement).dataset.sample;
-      // In production, these would load pre-rendered sample links
-      // For now, show a placeholder flow
-      submitBtn.disabled = false;
-      submitBtn.textContent = `Secure "${sample}"`;
-      dropzone.innerHTML = `<p class="text-sm text-accent font-mono">Sample selected: ${sample}</p>`;
-    });
+    (btn as HTMLButtonElement).disabled = true;
+    btn.classList.add('opacity-40', 'cursor-not-allowed');
   });
-
-  const ALLOWED_TYPES = ['application/pdf', 'video/mp4', 'video/quicktime', 'video/webm'];
-  const ALLOWED_EXTS = ['.pdf', '.mp4', '.mov', '.webm'];
 
   function selectFile(file: File) {
     const ext = '.' + file.name.split('.').pop()?.toLowerCase();
-    if (!ALLOWED_TYPES.includes(file.type) && !ALLOWED_EXTS.includes(ext)) {
-      alert('Please upload a PDF or video file (MP4, MOV, WebM)'); return;
+    if (ext !== '.pdf') {
+      alert('Demo supports PDF files only. Sign up for full format support!'); return;
     }
-    const maxSize = file.type.startsWith('video/') || ext !== '.pdf' ? 50 * 1024 * 1024 : 20 * 1024 * 1024;
-    if (file.size > maxSize) { alert(`File must be under ${maxSize / 1024 / 1024} MB`); return; }
+    if (file.size > 10 * 1024 * 1024) { alert('Demo files must be under 10 MB'); return; }
     selectedFile = file;
     submitBtn.disabled = false;
     submitBtn.textContent = `Secure "${file.name}"`;
-    const isVideo = file.type.startsWith('video/') || ['.mp4', '.mov', '.webm'].includes(ext);
-    const label = isVideo ? 'Video' : 'Document';
-    dropzone.innerHTML = `<p class="text-sm text-accent font-mono">${label}: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)} MB)</p>`;
+    dropzone.innerHTML = `<p class="text-sm text-accent font-mono">Document: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)} MB)</p>`;
   }
 
-  // Submit
+  // Submit — calls real API
   submitBtn.addEventListener('click', async () => {
+    if (!selectedFile) return;
     uploadSection.classList.add('hidden');
     progressSection.classList.remove('hidden');
 
     const progressSteps = document.getElementById('demo-progress-steps')!;
     const progressFill = document.getElementById('demo-progress-fill')!;
 
-    // Simulate progress for demo (in production, uses real SSE)
-    const isVideo = selectedFile?.type?.startsWith('video/') ||
-      dropzone.textContent?.includes('Video') || dropzone.textContent?.includes('MP4');
-    const steps = isVideo ? [
-      'File received',
-      'Probing video metadata...',
-      'Transcoding to 720p HLS...',
-      'Transcoding to 1080p HLS...',
-      'Generating master playlist',
-      'Extracting thumbnail',
-      'Generating secure token',
-    ] : [
-      'File received',
-      'Rendering page 1...',
-      'Rendering page 2...',
-      'Rendering page 3...',
-      'Applying watermarks',
-      'Generating secure token',
-    ];
-
-    for (let i = 0; i < steps.length; i++) {
-      await new Promise(r => setTimeout(r, 400 + Math.random() * 300));
-      const pct = Math.round(((i + 1) / steps.length) * 100);
-      progressFill.style.width = pct + '%';
+    // Step 1: Upload to API
+    function addStep(text: string) {
       const el = document.createElement('div');
       el.className = 'flex items-center gap-2';
-      el.innerHTML = `<span class="text-accent">&#10003;</span> <span class="text-text-secondary">${steps[i]}</span> <span class="text-text-tertiary ml-auto">${(0.3 + Math.random() * 0.8).toFixed(1)}s</span>`;
+      el.innerHTML = `<span class="text-accent">&#10003;</span> <span class="text-text-secondary">${text}</span>`;
       progressSteps.appendChild(el);
     }
 
-    await new Promise(r => setTimeout(r, 500));
-    progressSection.classList.add('hidden');
-    resultSection.classList.remove('hidden');
+    addStep('Uploading file...');
+    progressFill.style.width = '20%';
 
-    const demoUrl = 'https://view.cloakshare.dev/s/demo_' + Math.random().toString(36).slice(2, 8);
-    (document.getElementById('demo-url') as HTMLElement).textContent = demoUrl;
-    (document.getElementById('demo-open-viewer') as HTMLAnchorElement).href = demoUrl;
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      const res = await fetch(`${API_BASE}/v1/demo/link`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: { message: 'Upload failed' } }));
+        throw new Error(err.error?.message || 'Upload failed');
+      }
+
+      const data = await res.json();
+      const linkId = data.data.id;
+      const secureUrl = data.data.secure_url;
+      const progressUrl = data.data.progress_url;
+
+      addStep('File received');
+      progressFill.style.width = '40%';
+
+      // Step 2: Poll for rendering progress
+      let status = 'processing';
+      while (status === 'processing') {
+        await new Promise(r => setTimeout(r, 1500));
+        try {
+          const progressRes = await fetch(progressUrl);
+          if (progressRes.ok) {
+            const progress = await progressRes.json();
+            const p = progress.data || progress;
+            if (p.status === 'active' || p.status === 'completed') {
+              status = 'active';
+              progressFill.style.width = '100%';
+              addStep('Rendering complete');
+            } else if (p.status === 'failed') {
+              throw new Error('Rendering failed');
+            } else if (p.progress) {
+              const pct = 40 + (p.progress.percent || 0) * 0.6;
+              progressFill.style.width = pct + '%';
+              if (p.progress.message) addStep(p.progress.message);
+            }
+          }
+        } catch (e) {
+          // Progress endpoint may not exist yet, keep polling
+        }
+      }
+
+      addStep('Secure link generated');
+
+      await new Promise(r => setTimeout(r, 500));
+      progressSection.classList.add('hidden');
+      resultSection.classList.remove('hidden');
+
+      (document.getElementById('demo-url') as HTMLElement).textContent = secureUrl;
+      (document.getElementById('demo-open-viewer') as HTMLAnchorElement).href = secureUrl;
+    } catch (err: any) {
+      progressSection.classList.add('hidden');
+      uploadSection.classList.remove('hidden');
+      progressSteps.innerHTML = '';
+      progressFill.style.width = '0%';
+      alert(err.message || 'Something went wrong. Please try again.');
+    }
   });
 
   // Copy button
   document.getElementById('demo-copy')?.addEventListener('click', () => {
     const url = document.getElementById('demo-url')?.textContent;
-    if (url) navigator.clipboard.writeText(url);
+    if (url) {
+      navigator.clipboard.writeText(url);
+      const btn = document.getElementById('demo-copy')!;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    }
   });
 </script>

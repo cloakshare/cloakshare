@@ -26,6 +26,7 @@ import embedRouter from './routes/embed.js';
 import teamsRouter from './routes/teams.js';
 import auditRouter from './routes/audit.js';
 import notificationsRouter from './routes/notifications.js';
+import demoRouter from './routes/demo.js';
 
 // Workers
 import { startRenderWorker, stopRenderWorker } from './workers/renderer.js';
@@ -146,6 +147,9 @@ app.route('/', auditRouter);
 
 // Notifications
 app.route('/', notificationsRouter);
+
+// Demo (marketing site live demo)
+app.route('/', demoRouter);
 
 // Internal file serving for local storage mode
 if (config.storage.provider === 'local') {
