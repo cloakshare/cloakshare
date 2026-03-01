@@ -1,5 +1,7 @@
 ---
-const step1Code = `<span class="text-text-tertiary"># Upload a file and get a secure link</span>
+// Step 1 — Create a secure link
+const step1 = {
+  curl: `<span class="text-text-tertiary"># Upload a file and get a secure link</span>
 <span class="text-text-tertiary"># Works with PDF, DOCX, PPTX, XLSX, images, and video</span>
 
 curl -X POST https://api.cloakshare.dev/v1/links \\
@@ -7,7 +9,53 @@ curl -X POST https://api.cloakshare.dev/v1/links \\
   -F file=@proposal.pdf \\
   -F expires_in=<span class="text-accent">"72h"</span> \\
   -F require_email=<span class="text-accent">true</span> \\
-  -F watermark=<span class="text-accent">true</span>`;
+  -F watermark=<span class="text-accent">true</span>`,
+  nodejs: `<span class="text-text-tertiary">// npm install form-data node-fetch</span>
+<span class="text-warning">import</span> fs <span class="text-warning">from</span> <span class="text-accent">'fs'</span>;
+
+<span class="text-warning">const</span> form = <span class="text-warning">new</span> FormData();
+form.append(<span class="text-accent">'file'</span>, fs.createReadStream(<span class="text-accent">'proposal.pdf'</span>));
+form.append(<span class="text-accent">'expires_in'</span>, <span class="text-accent">'72h'</span>);
+form.append(<span class="text-accent">'require_email'</span>, <span class="text-accent">'true'</span>);
+form.append(<span class="text-accent">'watermark'</span>, <span class="text-accent">'true'</span>);
+
+<span class="text-warning">const</span> res = <span class="text-warning">await</span> fetch(
+  <span class="text-accent">'https://api.cloakshare.dev/v1/links'</span>, {
+  method: <span class="text-accent">'POST'</span>,
+  headers: { Authorization: <span class="text-accent">'Bearer YOUR_API_KEY'</span> },
+  body: form,
+});
+<span class="text-warning">const</span> { data } = <span class="text-warning">await</span> res.json();`,
+  python: `<span class="text-text-tertiary"># pip install requests</span>
+<span class="text-warning">import</span> requests
+
+res = requests.post(
+    <span class="text-accent">"https://api.cloakshare.dev/v1/links"</span>,
+    headers={<span class="text-accent">"Authorization"</span>: <span class="text-accent">"Bearer YOUR_API_KEY"</span>},
+    files={<span class="text-accent">"file"</span>: open(<span class="text-accent">"proposal.pdf"</span>, <span class="text-accent">"rb"</span>)},
+    data={
+        <span class="text-accent">"expires_in"</span>: <span class="text-accent">"72h"</span>,
+        <span class="text-accent">"require_email"</span>: <span class="text-accent">"true"</span>,
+        <span class="text-accent">"watermark"</span>: <span class="text-accent">"true"</span>,
+    },
+)
+data = res.json()[<span class="text-accent">"data"</span>]`,
+  go: `file, _ := os.Open(<span class="text-accent">"proposal.pdf"</span>)
+body := &bytes.Buffer{}
+w := multipart.NewWriter(body)
+part, _ := w.CreateFormFile(<span class="text-accent">"file"</span>, <span class="text-accent">"proposal.pdf"</span>)
+io.Copy(part, file)
+w.WriteField(<span class="text-accent">"expires_in"</span>, <span class="text-accent">"72h"</span>)
+w.WriteField(<span class="text-accent">"require_email"</span>, <span class="text-accent">"true"</span>)
+w.WriteField(<span class="text-accent">"watermark"</span>, <span class="text-accent">"true"</span>)
+w.Close()
+
+req, _ := http.NewRequest(<span class="text-accent">"POST"</span>,
+    <span class="text-accent">"https://api.cloakshare.dev/v1/links"</span>, body)
+req.Header.Set(<span class="text-accent">"Authorization"</span>, <span class="text-accent">"Bearer YOUR_API_KEY"</span>)
+req.Header.Set(<span class="text-accent">"Content-Type"</span>, w.FormDataContentType())
+resp, _ := http.DefaultClient.Do(req)`,
+};
 
 const step1Response = `{
   <span class="text-text-secondary">"data"</span>: {
@@ -22,7 +70,9 @@ const step1Response = `{
   }
 }`;
 
-const step2Code = `<span class="text-text-tertiary"># The secure_url is what you send
+// Step 2 — Share the link (same for all languages)
+const step2 = {
+  curl: `<span class="text-text-tertiary"># The secure_url is what you send
 # to your recipient.
 #
 # They see a secure viewer:
@@ -31,12 +81,62 @@ const step2Code = `<span class="text-text-tertiary"># The secure_url is what you
 # - No download button
 # - Canvas rendering / HLS streaming</span>
 
-https://view.cloakshare.dev/s/lnk_xK9mP2nQ`;
+https://view.cloakshare.dev/s/lnk_xK9mP2nQ`,
+  nodejs: `<span class="text-text-tertiary">// Send the secure_url to your recipient.</span>
+<span class="text-text-tertiary">// They see a secure viewer with:</span>
+<span class="text-text-tertiary">//   - Email gate</span>
+<span class="text-text-tertiary">//   - Watermarked pages (or video frames)</span>
+<span class="text-text-tertiary">//   - No download button</span>
+<span class="text-text-tertiary">//   - Canvas rendering / HLS streaming</span>
 
-const step3Code = `<span class="text-text-tertiary"># Check analytics on your link</span>
+console.log(data.secure_url);
+<span class="text-text-tertiary">// https://view.cloakshare.dev/s/lnk_xK9mP2nQ</span>`,
+  python: `<span class="text-text-tertiary"># Send the secure_url to your recipient.</span>
+<span class="text-text-tertiary"># They see a secure viewer with:</span>
+<span class="text-text-tertiary">#   - Email gate</span>
+<span class="text-text-tertiary">#   - Watermarked pages (or video frames)</span>
+<span class="text-text-tertiary">#   - No download button</span>
+<span class="text-text-tertiary">#   - Canvas rendering / HLS streaming</span>
+
+print(data[<span class="text-accent">"secure_url"</span>])
+<span class="text-text-tertiary"># https://view.cloakshare.dev/s/lnk_xK9mP2nQ</span>`,
+  go: `<span class="text-text-tertiary">// Send the secure_url to your recipient.</span>
+<span class="text-text-tertiary">// They see a secure viewer with:</span>
+<span class="text-text-tertiary">//   - Email gate</span>
+<span class="text-text-tertiary">//   - Watermarked pages (or video frames)</span>
+<span class="text-text-tertiary">//   - No download button</span>
+<span class="text-text-tertiary">//   - Canvas rendering / HLS streaming</span>
+
+fmt.Println(result.Data.SecureURL)
+<span class="text-text-tertiary">// https://view.cloakshare.dev/s/lnk_xK9mP2nQ</span>`,
+};
+
+// Step 3 — Track engagement
+const step3 = {
+  curl: `<span class="text-text-tertiary"># Check analytics on your link</span>
 
 curl https://api.cloakshare.dev/v1/links/lnk_xK9mP2nQ/analytics \\
-  -H <span class="text-accent">"Authorization: Bearer YOUR_API_KEY"</span>`;
+  -H <span class="text-accent">"Authorization: Bearer YOUR_API_KEY"</span>`,
+  nodejs: `<span class="text-text-tertiary">// Check analytics on your link</span>
+
+<span class="text-warning">const</span> analytics = <span class="text-warning">await</span> fetch(
+  <span class="text-accent">'https://api.cloakshare.dev/v1/links/lnk_xK9mP2nQ/analytics'</span>,
+  { headers: { Authorization: <span class="text-accent">'Bearer YOUR_API_KEY'</span> } }
+);
+<span class="text-warning">const</span> { data } = <span class="text-warning">await</span> analytics.json();`,
+  python: `<span class="text-text-tertiary"># Check analytics on your link</span>
+
+res = requests.get(
+    <span class="text-accent">"https://api.cloakshare.dev/v1/links/lnk_xK9mP2nQ/analytics"</span>,
+    headers={<span class="text-accent">"Authorization"</span>: <span class="text-accent">"Bearer YOUR_API_KEY"</span>},
+)
+data = res.json()[<span class="text-accent">"data"</span>]`,
+  go: `req, _ := http.NewRequest(<span class="text-accent">"GET"</span>,
+    <span class="text-accent">"https://api.cloakshare.dev/v1/links/lnk_xK9mP2nQ/analytics"</span>,
+    <span class="text-warning">nil</span>)
+req.Header.Set(<span class="text-accent">"Authorization"</span>, <span class="text-accent">"Bearer YOUR_API_KEY"</span>)
+resp, _ := http.DefaultClient.Do(req)`,
+};
 
 const step3Response = `{
   <span class="text-text-secondary">"data"</span>: {
@@ -52,14 +152,56 @@ const step3Response = `{
   }
 }`;
 
-const step4Code = `<span class="text-text-tertiary"># Set up a webhook for view events</span>
+// Step 4 — Webhooks
+const step4 = {
+  curl: `<span class="text-text-tertiary"># Set up a webhook for view events</span>
 
 curl -X POST https://api.cloakshare.dev/v1/webhooks \\
   -H <span class="text-accent">"Authorization: Bearer YOUR_API_KEY"</span> \\
+  -H <span class="text-accent">"Content-Type: application/json"</span> \\
   -d '{
     <span class="text-text-secondary">"url"</span>: <span class="text-accent">"https://your-app.com/webhook"</span>,
     <span class="text-text-secondary">"events"</span>: [<span class="text-accent">"link.viewed"</span>]
-  }'`;
+  }'`,
+  nodejs: `<span class="text-text-tertiary">// Set up a webhook for view events</span>
+
+<span class="text-warning">const</span> webhook = <span class="text-warning">await</span> fetch(
+  <span class="text-accent">'https://api.cloakshare.dev/v1/webhooks'</span>, {
+  method: <span class="text-accent">'POST'</span>,
+  headers: {
+    Authorization: <span class="text-accent">'Bearer YOUR_API_KEY'</span>,
+    <span class="text-accent">'Content-Type'</span>: <span class="text-accent">'application/json'</span>,
+  },
+  body: JSON.stringify({
+    url: <span class="text-accent">'https://your-app.com/webhook'</span>,
+    events: [<span class="text-accent">'link.viewed'</span>],
+  }),
+});`,
+  python: `<span class="text-text-tertiary"># Set up a webhook for view events</span>
+
+res = requests.post(
+    <span class="text-accent">"https://api.cloakshare.dev/v1/webhooks"</span>,
+    headers={
+        <span class="text-accent">"Authorization"</span>: <span class="text-accent">"Bearer YOUR_API_KEY"</span>,
+        <span class="text-accent">"Content-Type"</span>: <span class="text-accent">"application/json"</span>,
+    },
+    json={
+        <span class="text-accent">"url"</span>: <span class="text-accent">"https://your-app.com/webhook"</span>,
+        <span class="text-accent">"events"</span>: [<span class="text-accent">"link.viewed"</span>],
+    },
+)`,
+  go: `payload := []byte(<span class="text-accent">\`{
+    "url": "https://your-app.com/webhook",
+    "events": ["link.viewed"]
+}\`</span>)
+
+req, _ := http.NewRequest(<span class="text-accent">"POST"</span>,
+    <span class="text-accent">"https://api.cloakshare.dev/v1/webhooks"</span>,
+    bytes.NewBuffer(payload))
+req.Header.Set(<span class="text-accent">"Authorization"</span>, <span class="text-accent">"Bearer YOUR_API_KEY"</span>)
+req.Header.Set(<span class="text-accent">"Content-Type"</span>, <span class="text-accent">"application/json"</span>)
+resp, _ := http.DefaultClient.Do(req)`,
+};
 
 const step4Response = `{
   <span class="text-text-secondary">"type"</span>: <span class="text-accent">"link.viewed"</span>,
@@ -70,6 +212,8 @@ const step4Response = `{
     <span class="text-text-secondary">"completion"</span>: <span class="text-warning">0.83</span>
   }
 }`;
+
+const langs = ['curl', 'nodejs', 'python', 'go'] as const;
 ---
 
 <section id="tutorial" class="py-20 px-6 border-t border-border-subtle">
@@ -96,7 +240,9 @@ const step4Response = `{
         </div>
         <div class="grid md:grid-cols-2 divide-x divide-border-subtle">
           <div class="p-5">
-            <pre class="text-sm font-mono text-text-secondary leading-relaxed overflow-x-auto" set:html={step1Code} />
+            {langs.map(lang => (
+              <pre class:list={["text-sm font-mono text-text-secondary leading-relaxed overflow-x-auto tutorial-code", lang !== 'curl' && 'hidden']} data-lang={lang} data-step="1" set:html={step1[lang]} />
+            ))}
           </div>
           <div class="p-5 bg-background/50">
             <p class="text-xs text-text-tertiary font-mono mb-2">Response</p>
@@ -113,7 +259,9 @@ const step4Response = `{
         </div>
         <div class="grid md:grid-cols-2 divide-x divide-border-subtle">
           <div class="p-5">
-            <pre class="text-sm font-mono text-text-secondary leading-relaxed" set:html={step2Code} />
+            {langs.map(lang => (
+              <pre class:list={["text-sm font-mono text-text-secondary leading-relaxed overflow-x-auto tutorial-code", lang !== 'curl' && 'hidden']} data-lang={lang} data-step="2" set:html={step2[lang]} />
+            ))}
           </div>
           <div class="p-5 bg-background/50 flex items-center justify-center">
             <div class="bg-elevated border border-border rounded-lg p-6 w-full max-w-[220px] text-center">
@@ -137,7 +285,9 @@ const step4Response = `{
         </div>
         <div class="grid md:grid-cols-2 divide-x divide-border-subtle">
           <div class="p-5">
-            <pre class="text-sm font-mono text-text-secondary leading-relaxed overflow-x-auto" set:html={step3Code} />
+            {langs.map(lang => (
+              <pre class:list={["text-sm font-mono text-text-secondary leading-relaxed overflow-x-auto tutorial-code", lang !== 'curl' && 'hidden']} data-lang={lang} data-step="3" set:html={step3[lang]} />
+            ))}
           </div>
           <div class="p-5 bg-background/50">
             <p class="text-xs text-text-tertiary font-mono mb-2">Response</p>
@@ -154,7 +304,9 @@ const step4Response = `{
         </div>
         <div class="grid md:grid-cols-2 divide-x divide-border-subtle">
           <div class="p-5">
-            <pre class="text-sm font-mono text-text-secondary leading-relaxed overflow-x-auto" set:html={step4Code} />
+            {langs.map(lang => (
+              <pre class:list={["text-sm font-mono text-text-secondary leading-relaxed overflow-x-auto tutorial-code", lang !== 'curl' && 'hidden']} data-lang={lang} data-step="4" set:html={step4[lang]} />
+            ))}
           </div>
           <div class="p-5 bg-background/50">
             <p class="text-xs text-text-tertiary font-mono mb-2">You'll receive</p>
@@ -180,15 +332,27 @@ const step4Response = `{
 </section>
 
 <script>
-  // Language tab switching (visual only for MVP)
   document.querySelectorAll('.tutorial-lang-tab').forEach(tab => {
     tab.addEventListener('click', () => {
+      const lang = (tab as HTMLElement).dataset.lang;
+
+      // Update tab styles
       document.querySelectorAll('.tutorial-lang-tab').forEach(t => {
         t.classList.remove('bg-accent/10', 'text-accent');
         t.classList.add('text-text-tertiary');
       });
       tab.classList.add('bg-accent/10', 'text-accent');
       tab.classList.remove('text-text-tertiary');
+
+      // Show/hide code blocks
+      document.querySelectorAll('.tutorial-code').forEach(block => {
+        const el = block as HTMLElement;
+        if (el.dataset.lang === lang) {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      });
     });
   });
 </script>
