@@ -41,7 +41,7 @@ RUN pnpm --filter @cloak/shared build && pnpm --filter @cloak/api build
 RUN cd apps/api && npx tsup src/db/migrate.ts --format esm --outDir dist/db
 
 # Prune dev dependencies
-RUN pnpm prune --prod
+RUN CI=true pnpm prune --prod
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
