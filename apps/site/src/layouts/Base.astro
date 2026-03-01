@@ -1,0 +1,94 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+  noindex?: boolean;
+  type?: 'website' | 'article';
+  publishedAt?: string;
+}
+
+const {
+  title,
+  description = 'Open-source API for secure document and video sharing. Tokenized links with watermarks, tracking, and expiry. Self-hostable DocSend alternative.',
+  canonical,
+  ogImage = '/og-default.png',
+  noindex = false,
+  type = 'website',
+  publishedAt,
+} = Astro.props;
+
+const siteUrl = 'https://cloakshare.dev';
+const canonicalUrl = canonical ? `${siteUrl}${canonical}` : `${siteUrl}${Astro.url.pathname}`;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonicalUrl} />
+
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={`${siteUrl}${ogImage}`} />
+    <meta property="og:site_name" content="CloakShare" />
+    {publishedAt && <meta property="article:published_time" content={publishedAt} />}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@cloakshare" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${siteUrl}${ogImage}`} />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "CloakShare",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Cross-platform",
+      "description": "Open-source API for secure document and video sharing with watermarks, tracking, and expiry.",
+      "url": "https://cloakshare.dev",
+      "offers": {
+        "@type": "AggregateOffer",
+        "lowPrice": "0",
+        "highPrice": "299",
+        "priceCurrency": "USD",
+        "offerCount": "4"
+      },
+      "featureList": [
+        "Secure video sharing with HLS streaming",
+        "Dynamic watermarks per viewer",
+        "Page-level and video analytics",
+        "Email gate and password protection",
+        "Webhooks and real-time notifications",
+        "Custom domains with auto-SSL",
+        "Team management and RBAC",
+        "Self-hostable with Docker",
+        "SDKs for Node.js, Python, and Go"
+      ]
+    })} />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <Header />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

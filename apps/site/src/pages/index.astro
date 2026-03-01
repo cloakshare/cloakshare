@@ -1,0 +1,307 @@
+---
+import Base from '../layouts/Base.astro';
+import PricingTable from '../components/PricingTable.astro';
+import CodeExample from '../components/CodeExample.astro';
+import Demo from '../components/Demo.astro';
+import Tutorial from '../components/Tutorial.astro';
+---
+
+<Base title="CloakShare — Open-Source Secure Document & Video Sharing API" description="Secure documents and video with one API call. Tokenized links, dynamic watermarks, page-level analytics, HLS video streaming. Open-source DocSend alternative. Self-hostable." canonical="/">
+
+  <!-- Hero -->
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border-subtle bg-surface text-xs text-text-secondary font-mono mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+        Open source &middot; MIT licensed
+      </div>
+      <h1 class="text-4xl md:text-6xl font-mono font-bold text-foreground leading-tight tracking-tight">
+        Secure documents &amp; video<br />with <span class="text-accent">one API call</span>
+      </h1>
+      <p class="text-lg text-text-secondary font-sans mt-6 max-w-2xl mx-auto leading-relaxed">
+        Tokenized links with watermarks, tracking, and expiry.
+        For PDFs, Office docs, images, and video. Self-hostable. The open-source DocSend alternative.
+      </p>
+      <div class="flex items-center justify-center gap-4 mt-8">
+        <a
+          href="https://app.cloakshare.dev/register"
+          class="px-6 py-2.5 bg-accent text-background font-mono font-semibold text-sm rounded-md hover:bg-accent-hover transition-colors"
+        >
+          Get API Key &mdash; Free
+        </a>
+        <a
+          href="https://github.com/cloakshare/cloakshare"
+          class="px-6 py-2.5 bg-elevated border border-border text-text-secondary font-mono text-sm rounded-md hover:text-text-primary hover:border-text-tertiary transition-all"
+          target="_blank"
+          rel="noopener"
+        >
+          View on GitHub
+        </a>
+      </div>
+
+      <!-- File type badges -->
+      <div class="flex items-center justify-center gap-2 mt-8 flex-wrap">
+        {['PDF', 'DOCX', 'PPTX', 'XLSX', 'PNG', 'JPG'].map(type => (
+          <span class="px-2.5 py-1 rounded-md border border-border-subtle bg-surface text-xs font-mono text-text-tertiary">{type}</span>
+        ))}
+        {['MP4', 'MOV', 'WEBM'].map(type => (
+          <span class="px-2.5 py-1 rounded-md border border-accent/30 bg-accent-muted text-xs font-mono text-accent">{type}</span>
+        ))}
+      </div>
+    </div>
+
+    <!-- Code example -->
+    <div class="max-w-3xl mx-auto mt-16">
+      <CodeExample />
+    </div>
+  </section>
+
+  <!-- Video flagship -->
+  <section class="py-20 px-6 border-t border-border-subtle bg-gradient-to-b from-background to-surface/30">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/30 bg-accent-muted text-xs text-accent font-mono mb-6">
+            <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+            New &mdash; Video Sharing
+          </div>
+          <h2 class="font-mono font-bold text-3xl text-foreground mb-4 leading-tight">
+            Secure video sharing<br />with <span class="text-accent">HLS streaming</span>
+          </h2>
+          <p class="text-text-secondary font-sans leading-relaxed mb-6">
+            Upload MP4, MOV, or WebM files. Cloak transcodes to adaptive HLS with 720p and 1080p quality tiers.
+            Canvas-based watermark overlay tracks every viewer. Anti-download protections prevent screen recording and content ripping.
+          </p>
+          <ul class="space-y-3 mb-8">
+            {[
+              'Adaptive bitrate HLS streaming (720p + 1080p)',
+              'Canvas watermark overlay on every frame',
+              'Watch time analytics and completion tracking',
+              'Per-segment signed URLs with auto-refresh',
+              'Safari/iOS native HLS with dynamic manifests',
+              'Anti-download: no right-click, no PiP, no save',
+            ].map(item => (
+              <li class="flex items-start gap-2 text-sm text-text-secondary font-sans">
+                <span class="text-accent text-xs mt-1">+</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="bg-surface border border-border rounded-lg overflow-hidden shadow-lg">
+          <div class="flex items-center gap-2 px-4 py-3 border-b border-border-subtle bg-elevated/50">
+            <div class="flex gap-1.5">
+              <span class="w-3 h-3 rounded-full bg-[#FF5F57]"></span>
+              <span class="w-3 h-3 rounded-full bg-[#FFBD2E]"></span>
+              <span class="w-3 h-3 rounded-full bg-[#28C840]"></span>
+            </div>
+            <span class="text-xs text-text-tertiary font-mono ml-2">terminal</span>
+          </div>
+          <div class="p-5 overflow-x-auto">
+            <pre class="text-sm font-mono leading-relaxed"><span class="text-text-tertiary">$</span> <span class="text-foreground">curl -X POST /v1/links \</span>
+    <span class="text-text-secondary">-H</span> <span class="text-accent">"Authorization: Bearer ck_live_..."</span> <span class="text-foreground">\</span>
+    <span class="text-text-secondary">-F</span> <span class="text-foreground">file=@training.mp4 \</span>
+    <span class="text-text-secondary">-F</span> <span class="text-foreground">watermark=</span><span class="text-accent">true</span> <span class="text-foreground">\</span>
+    <span class="text-text-secondary">-F</span> <span class="text-foreground">require_email=</span><span class="text-accent">true</span>
+
+<span class="text-text-tertiary">// Response:</span>
+<span class="text-foreground">&#123;"data": &#123;</span>
+    <span class="text-text-secondary">"secure_url"</span>: <span class="text-accent">"https://view.cloakshare.dev/s/lnk_v8kQ3"</span>,
+    <span class="text-text-secondary">"file_type"</span>: <span class="text-accent">"video"</span>,
+    <span class="text-text-secondary">"video_metadata"</span>: &#123;
+      <span class="text-text-secondary">"duration"</span>: <span class="text-warning">324</span>,
+      <span class="text-text-secondary">"qualities"</span>: <span class="text-accent">["720p", "1080p"]</span>
+    &#125;
+<span class="text-foreground">&#125;&#125;</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="py-20 px-6 border-t border-border-subtle">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-center font-mono font-semibold text-2xl text-foreground mb-4">How it works</h2>
+      <p class="text-center text-text-secondary font-sans mb-16 max-w-xl mx-auto">Three API calls. That&rsquo;s all it takes to secure, share, and track any document or video.</p>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-surface border border-border rounded-lg p-6 card-glow">
+          <div class="w-8 h-8 rounded-md bg-accent-muted flex items-center justify-center mb-4">
+            <span class="text-accent font-mono font-bold text-sm">1</span>
+          </div>
+          <h3 class="font-mono font-medium text-foreground mb-2">Upload via API</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            POST your file to <code class="text-accent font-mono text-xs">/v1/links</code>.
+            PDFs, Office docs, images, or video. Set expiry, watermark, email gate in one call.
+          </p>
+          <div class="mt-4 bg-background rounded-md p-3 border border-border-subtle">
+            <code class="text-xs text-text-tertiary font-mono">
+              curl -X POST /v1/links \<br />
+              &nbsp;&nbsp;-F file=@deck.pdf \<br />
+              &nbsp;&nbsp;-F expires_in="72h"
+            </code>
+          </div>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6 card-glow">
+          <div class="w-8 h-8 rounded-md bg-accent-muted flex items-center justify-center mb-4">
+            <span class="text-accent font-mono font-bold text-sm">2</span>
+          </div>
+          <h3 class="font-mono font-medium text-foreground mb-2">Share the secure link</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            Recipients open the link in a browser. They see an email gate, then a watermarked
+            viewer. Documents render to canvas. Videos stream via HLS. No downloads.
+          </p>
+          <div class="mt-4 bg-background rounded-md p-3 border border-border-subtle">
+            <code class="text-xs text-accent font-mono">
+              https://view.cloakshare.dev/s/xK9mP2
+            </code>
+          </div>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6 card-glow">
+          <div class="w-8 h-8 rounded-md bg-accent-muted flex items-center justify-center mb-4">
+            <span class="text-accent font-mono font-bold text-sm">3</span>
+          </div>
+          <h3 class="font-mono font-medium text-foreground mb-2">Track engagement</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            See who viewed it, how long they spent, which pages they read or how much video they watched.
+            Get webhook notifications in real-time.
+          </p>
+          <div class="mt-4 bg-background rounded-md p-3 border border-border-subtle">
+            <code class="text-xs text-text-tertiary font-mono">
+              GET /v1/links/:id/analytics<br />
+              <span class="text-text-secondary">&#123;"views": 3, "avg_duration": 45&#125;</span>
+            </code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="py-20 px-6 border-t border-border-subtle">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-center font-mono font-semibold text-2xl text-foreground mb-4">Everything you need</h2>
+      <p class="text-center text-text-secondary font-sans mb-16 max-w-xl mx-auto">Enterprise-grade document and video security, accessible via a simple REST API.</p>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="bg-surface border border-accent/30 rounded-lg p-5 card-glow shadow-glow">
+          <h3 class="font-mono font-medium text-sm text-accent mb-2">Video Sharing</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">Upload MP4/MOV/WebM. Adaptive HLS streaming with 720p + 1080p. Canvas watermark on every frame.</p>
+        </div>
+        {[
+          { title: 'Office Documents', desc: 'DOCX, PPTX, XLSX converted server-side via LibreOffice. Same security as PDFs.' },
+          { title: 'Dynamic Watermarks', desc: "Viewer's email baked into every page and video frame. Unique per session." },
+          { title: 'Link Expiry', desc: 'Time-based or view-count limits. Revoke access instantly.' },
+          { title: 'Email Gate', desc: 'Only verified email addresses can view. Restrict by domain.' },
+          { title: 'Page-Level Analytics', desc: 'Time per page, watch time, completion rate, device, geo, and more.' },
+          { title: 'Webhooks', desc: 'Real-time notifications when someone views your document or video.' },
+          { title: 'Custom Domains', desc: 'Serve content from docs.your-saas.com with auto-SSL.' },
+          { title: 'Password Protection', desc: 'Add a password gate on top of email verification.' },
+          { title: 'Teams & RBAC', desc: 'Invite team members with admin, member, or viewer roles.' },
+          { title: 'Embeddable Viewer', desc: 'iframe into your app with PostMessage API integration.' },
+          { title: 'One-Click Revocation', desc: 'Kill access to any document or video with a single API call.' },
+        ].map(feature => (
+          <div class="bg-surface border border-border rounded-lg p-5 card-glow">
+            <h3 class="font-mono font-medium text-sm text-foreground mb-2">{feature.title}</h3>
+            <p class="text-sm text-text-secondary font-sans leading-relaxed">{feature.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo -->
+  <Demo />
+
+  <!-- Tutorial -->
+  <Tutorial />
+
+  <!-- Use cases -->
+  <section class="py-20 px-6 border-t border-border-subtle">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-center font-mono font-semibold text-2xl text-foreground mb-16">Built for</h2>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-surface border border-border rounded-lg p-6 card-glow">
+          <h3 class="font-mono font-medium text-foreground mb-3">Sales teams</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            Stop competitors from seeing your pricing. Track which prospects
+            actually read your proposals and follow up at the right time.
+          </p>
+        </div>
+        <div class="bg-surface border border-border rounded-lg p-6 card-glow">
+          <h3 class="font-mono font-medium text-foreground mb-3">Fundraising</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            Track which investors read your pitch deck, how long they spent,
+            and which sections they skipped. Prioritize warm leads.
+          </p>
+        </div>
+        <div class="bg-surface border border-border rounded-lg p-6 card-glow">
+          <h3 class="font-mono font-medium text-foreground mb-3">Platforms</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            Add secure document and video sharing to your app in 5 minutes.
+            One API, no viewer to build, no infrastructure to manage.
+          </p>
+        </div>
+        <div class="bg-surface border border-border rounded-lg p-6 card-glow">
+          <h3 class="font-mono font-medium text-foreground mb-3">Training &amp; Education</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            Share training videos with watermarked, tracked access. Know who watched,
+            how far they got, and prevent unauthorized redistribution.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing summary -->
+  <section id="pricing" class="py-20 px-6 border-t border-border-subtle">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-center font-mono font-semibold text-2xl text-foreground mb-4">Simple, transparent pricing</h2>
+      <p class="text-center text-text-secondary font-sans mb-16 max-w-xl mx-auto">Start free. Scale as you grow. No per-seat pricing.</p>
+      <PricingTable />
+    </div>
+  </section>
+
+  <!-- Self-host CTA -->
+  <section class="py-20 px-6 border-t border-border-subtle">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="font-mono font-semibold text-2xl text-foreground mb-4">Open source &amp; self-hostable</h2>
+      <p class="text-text-secondary font-sans mb-8 leading-relaxed">
+        Cloak is open source and MIT licensed. Self-host on your own infrastructure with Docker,
+        inspect the code, or contribute. Enable video support with <code class="text-accent font-mono text-sm">ENABLE_VIDEO=true</code>.
+        The cloud version adds CDN delivery, analytics, webhooks, custom domains, and managed infrastructure.
+      </p>
+
+      <!-- Self-host command -->
+      <div class="bg-surface border border-border rounded-lg p-4 mb-8 text-left max-w-xl mx-auto">
+        <p class="text-xs text-text-tertiary font-mono mb-2">Get started in 30 seconds:</p>
+        <code class="text-sm text-accent font-mono">
+          git clone https://github.com/cloakshare/cloakshare<br />
+          cd cloak && docker compose up
+        </code>
+      </div>
+
+      <div class="flex items-center justify-center gap-4">
+        <a
+          href="https://github.com/cloakshare/cloakshare"
+          class="px-6 py-2.5 bg-elevated border border-border text-text-secondary font-mono text-sm rounded-md hover:text-text-primary hover:border-text-tertiary transition-all"
+          target="_blank"
+          rel="noopener"
+        >
+          View on GitHub
+        </a>
+        <a
+          href="https://app.cloakshare.dev/register"
+          class="px-6 py-2.5 bg-accent text-background font-mono font-semibold text-sm rounded-md hover:bg-accent-hover transition-colors"
+        >
+          Try Cloud &mdash; Free
+        </a>
+      </div>
+    </div>
+  </section>
+
+</Base>

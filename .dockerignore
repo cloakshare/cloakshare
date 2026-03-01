@@ -1,0 +1,22 @@
+node_modules/
+dist/
+.git/
+.github/
+.turbo/
+.env
+*.db
+*.db-journal
+
+# Dev data
+apps/api/data/
+data/
+
+# Site and web (not needed in API image)
+apps/site/
+apps/web/
+apps/viewer/
+
+# Docs
+*.md
+!README.md
+LICENSE

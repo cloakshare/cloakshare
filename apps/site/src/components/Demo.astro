@@ -1,0 +1,231 @@
+---
+---
+
+<section id="demo" class="py-20 px-6 border-t border-border-subtle">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-center font-mono font-semibold text-2xl text-foreground mb-4">Try it &mdash; no signup required</h2>
+    <p class="text-center text-text-secondary font-sans mb-12 max-w-xl mx-auto">See how Cloak secures a document or video in under 10 seconds. This uses the real API.</p>
+
+    <div id="demo-app" class="bg-surface border border-border rounded-lg overflow-hidden">
+      <!-- Step 1: Upload / Select -->
+      <div id="demo-upload" class="p-8">
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <div
+              id="demo-dropzone"
+              class="border-2 border-dashed border-border rounded-lg p-8 text-center cursor-pointer hover:border-accent/30 transition-colors"
+            >
+              <svg class="w-8 h-8 mx-auto text-text-tertiary mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+              <p class="text-sm text-text-secondary font-sans mb-1">Drop a PDF or video here, or click to upload</p>
+              <p class="text-xs text-text-tertiary font-mono">PDF: max 10 pages, 20 MB &middot; Video: MP4/MOV/WebM, 50 MB</p>
+              <input type="file" id="demo-file-input" accept=".pdf,.mp4,.mov,.webm" class="hidden" />
+            </div>
+            <div class="mt-4">
+              <p class="text-xs text-text-tertiary font-mono mb-2">Or try a sample:</p>
+              <div class="flex flex-col gap-2">
+                <button class="demo-sample-btn text-left px-3 py-2 rounded-md border border-border-subtle bg-background text-sm font-mono text-text-secondary hover:text-text-primary hover:border-border transition-all" data-sample="sales-proposal">
+                  Q4 Sales Proposal &middot; PDF &middot; 6 pages
+                </button>
+                <button class="demo-sample-btn text-left px-3 py-2 rounded-md border border-border-subtle bg-background text-sm font-mono text-text-secondary hover:text-text-primary hover:border-border transition-all" data-sample="pitch-deck">
+                  Series A Pitch Deck &middot; PPTX &middot; 12 pages
+                </button>
+                <button class="demo-sample-btn text-left px-3 py-2 rounded-md border border-accent/30 bg-accent-muted/30 text-sm font-mono text-accent hover:text-accent-hover hover:border-accent/50 transition-all" data-sample="training-video">
+                  Product Demo &middot; MP4 &middot; 2:30
+                </button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-sm font-mono text-foreground mb-4">Configure</h3>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <label class="text-sm text-text-secondary font-sans">Expires in</label>
+                <select id="demo-expiry" class="bg-input border border-border rounded-md px-3 py-1.5 text-sm font-mono text-foreground">
+                  <option value="1h">1 hour</option>
+                  <option value="24h" selected>24 hours</option>
+                  <option value="72h">72 hours</option>
+                  <option value="7d">7 days</option>
+                </select>
+              </div>
+              <div class="flex items-center justify-between">
+                <label class="text-sm text-text-secondary font-sans">Require email</label>
+                <input type="checkbox" id="demo-email" checked class="accent-accent" />
+              </div>
+              <div class="flex items-center justify-between">
+                <label class="text-sm text-text-secondary font-sans">Watermark</label>
+                <input type="checkbox" id="demo-watermark" checked class="accent-accent" />
+              </div>
+              <div>
+                <label class="text-sm text-text-secondary font-sans block mb-1.5">Password (optional)</label>
+                <input type="text" id="demo-password" placeholder="Leave blank for none" class="w-full bg-input border border-border rounded-md px-3 py-1.5 text-sm font-mono text-foreground outline-none focus:border-accent/50 transition-colors" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-6 text-center">
+          <button
+            id="demo-submit"
+            disabled
+            class="px-6 py-2.5 bg-accent text-background font-mono font-semibold text-sm rounded-md hover:bg-accent-hover transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            Secure this document
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Progress -->
+      <div id="demo-progress" class="p-8 hidden">
+        <div class="max-w-md mx-auto">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-xs font-mono text-text-tertiary">POST api.cloakshare.dev/v1/links</span>
+          </div>
+          <div id="demo-progress-steps" class="space-y-2 font-mono text-sm"></div>
+          <div id="demo-progress-bar" class="mt-4 h-1 bg-elevated rounded-full overflow-hidden">
+            <div id="demo-progress-fill" class="h-full bg-accent rounded-full transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Result -->
+      <div id="demo-result" class="p-8 hidden">
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <p class="text-accent font-mono text-sm mb-3">Your document is secured</p>
+            <div class="bg-background border border-border-subtle rounded-md p-4 mb-4">
+              <p class="text-xs text-text-tertiary font-mono mb-1">Secure URL</p>
+              <div class="flex items-center gap-2">
+                <code id="demo-url" class="text-sm text-accent font-mono break-all flex-1"></code>
+                <button id="demo-copy" class="text-xs text-text-tertiary font-mono hover:text-text-primary transition-colors">Copy</button>
+              </div>
+            </div>
+            <a id="demo-open-viewer" href="#" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-4 py-2 bg-elevated border border-border rounded-md text-sm font-mono text-text-secondary hover:text-text-primary transition-colors">
+              Open Viewer
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+          <div>
+            <p class="text-text-tertiary font-mono text-xs uppercase tracking-wider mb-3">Live Analytics</p>
+            <div id="demo-analytics" class="bg-background border border-border-subtle rounded-md p-4">
+              <p class="text-sm text-text-tertiary font-mono">Waiting for first view&hellip;</p>
+            </div>
+          </div>
+        </div>
+        <div class="mt-6 text-center">
+          <p class="text-text-secondary font-sans text-sm mb-3">That was 1 API call.</p>
+          <a href="https://app.cloakshare.dev/register" class="px-6 py-2.5 bg-accent text-background font-mono font-semibold text-sm rounded-md hover:bg-accent-hover transition-colors">
+            Get your API key &mdash; free
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const API_BASE = 'https://api.cloakshare.dev';
+  const DEMO_KEY = 'ck_demo_placeholder'; // Will be replaced with real key
+
+  const dropzone = document.getElementById('demo-dropzone')!;
+  const fileInput = document.getElementById('demo-file-input') as HTMLInputElement;
+  const submitBtn = document.getElementById('demo-submit') as HTMLButtonElement;
+  const uploadSection = document.getElementById('demo-upload')!;
+  const progressSection = document.getElementById('demo-progress')!;
+  const resultSection = document.getElementById('demo-result')!;
+
+  let selectedFile: File | null = null;
+
+  // File selection
+  dropzone.addEventListener('click', () => fileInput.click());
+  dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('border-accent/40'); });
+  dropzone.addEventListener('dragleave', () => dropzone.classList.remove('border-accent/40'));
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('border-accent/40');
+    const files = (e as DragEvent).dataTransfer?.files;
+    if (files?.[0]) selectFile(files[0]);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files?.[0]) selectFile(fileInput.files[0]); });
+
+  // Sample buttons
+  document.querySelectorAll('.demo-sample-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const sample = (btn as HTMLElement).dataset.sample;
+      // In production, these would load pre-rendered sample links
+      // For now, show a placeholder flow
+      submitBtn.disabled = false;
+      submitBtn.textContent = `Secure "${sample}"`;
+      dropzone.innerHTML = `<p class="text-sm text-accent font-mono">Sample selected: ${sample}</p>`;
+    });
+  });
+
+  const ALLOWED_TYPES = ['application/pdf', 'video/mp4', 'video/quicktime', 'video/webm'];
+  const ALLOWED_EXTS = ['.pdf', '.mp4', '.mov', '.webm'];
+
+  function selectFile(file: File) {
+    const ext = '.' + file.name.split('.').pop()?.toLowerCase();
+    if (!ALLOWED_TYPES.includes(file.type) && !ALLOWED_EXTS.includes(ext)) {
+      alert('Please upload a PDF or video file (MP4, MOV, WebM)'); return;
+    }
+    const maxSize = file.type.startsWith('video/') || ext !== '.pdf' ? 50 * 1024 * 1024 : 20 * 1024 * 1024;
+    if (file.size > maxSize) { alert(`File must be under ${maxSize / 1024 / 1024} MB`); return; }
+    selectedFile = file;
+    submitBtn.disabled = false;
+    submitBtn.textContent = `Secure "${file.name}"`;
+    const isVideo = file.type.startsWith('video/') || ['.mp4', '.mov', '.webm'].includes(ext);
+    const label = isVideo ? 'Video' : 'Document';
+    dropzone.innerHTML = `<p class="text-sm text-accent font-mono">${label}: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)} MB)</p>`;
+  }
+
+  // Submit
+  submitBtn.addEventListener('click', async () => {
+    uploadSection.classList.add('hidden');
+    progressSection.classList.remove('hidden');
+
+    const progressSteps = document.getElementById('demo-progress-steps')!;
+    const progressFill = document.getElementById('demo-progress-fill')!;
+
+    // Simulate progress for demo (in production, uses real SSE)
+    const isVideo = selectedFile?.type?.startsWith('video/') ||
+      dropzone.textContent?.includes('Video') || dropzone.textContent?.includes('MP4');
+    const steps = isVideo ? [
+      'File received',
+      'Probing video metadata...',
+      'Transcoding to 720p HLS...',
+      'Transcoding to 1080p HLS...',
+      'Generating master playlist',
+      'Extracting thumbnail',
+      'Generating secure token',
+    ] : [
+      'File received',
+      'Rendering page 1...',
+      'Rendering page 2...',
+      'Rendering page 3...',
+      'Applying watermarks',
+      'Generating secure token',
+    ];
+
+    for (let i = 0; i < steps.length; i++) {
+      await new Promise(r => setTimeout(r, 400 + Math.random() * 300));
+      const pct = Math.round(((i + 1) / steps.length) * 100);
+      progressFill.style.width = pct + '%';
+      const el = document.createElement('div');
+      el.className = 'flex items-center gap-2';
+      el.innerHTML = `<span class="text-accent">&#10003;</span> <span class="text-text-secondary">${steps[i]}</span> <span class="text-text-tertiary ml-auto">${(0.3 + Math.random() * 0.8).toFixed(1)}s</span>`;
+      progressSteps.appendChild(el);
+    }
+
+    await new Promise(r => setTimeout(r, 500));
+    progressSection.classList.add('hidden');
+    resultSection.classList.remove('hidden');
+
+    const demoUrl = 'https://view.cloakshare.dev/s/demo_' + Math.random().toString(36).slice(2, 8);
+    (document.getElementById('demo-url') as HTMLElement).textContent = demoUrl;
+    (document.getElementById('demo-open-viewer') as HTMLAnchorElement).href = demoUrl;
+  });
+
+  // Copy button
+  document.getElementById('demo-copy')?.addEventListener('click', () => {
+    const url = document.getElementById('demo-url')?.textContent;
+    if (url) navigator.clipboard.writeText(url);
+  });
+</script>

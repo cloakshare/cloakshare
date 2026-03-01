@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Changelog — Cloak" description="Product updates and new features." canonical="/changelog">
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <h1 class="font-mono font-bold text-4xl text-foreground mb-12">Changelog</h1>
+
+      <div class="space-y-10">
+
+        <div class="border-l-2 border-accent pl-6">
+          <p class="text-xs text-text-tertiary font-mono mb-1">February 28, 2026</p>
+          <h2 class="font-mono font-medium text-lg text-foreground mb-3">v1.1.0 &mdash; Video, Office Docs &amp; Teams</h2>
+          <ul class="space-y-2 text-sm text-text-secondary font-sans">
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Video sharing</strong> &mdash; Upload MP4, MOV, WebM. Adaptive HLS streaming with 720p + 1080p quality tiers</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Video watermark overlay &mdash; Canvas-based watermark on every frame</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Watch time analytics &mdash; Track video engagement, completion rate, furthest point reached</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Safari/iOS native HLS &mdash; Dynamic per-session manifests with pre-signed segment URLs</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Office document support</strong> &mdash; DOCX, PPTX, XLSX via LibreOffice server-side conversion</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Teams & RBAC</strong> &mdash; Invite team members with admin, member, or viewer roles</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Audit log &mdash; Immutable record of all actions via API and dashboard</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Rate limiting &mdash; Configurable rate limits per API key</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> API versioning &mdash; v1 prefix with backwards-compatible evolution</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Health check endpoint &mdash; <code class="text-accent font-mono text-xs">GET /health</code> for monitoring</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Node.js SDK &mdash; <code class="text-accent font-mono text-xs">@cloak/sdk-node</code> with full TypeScript types</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Self-hosted video &mdash; Enable with <code class="text-accent font-mono text-xs">ENABLE_VIDEO=true</code> env var</li>
+          </ul>
+        </div>
+
+        <div class="border-l-2 border-accent/30 pl-6">
+          <p class="text-xs text-text-tertiary font-mono mb-1">February 28, 2026</p>
+          <h2 class="font-mono font-medium text-lg text-foreground mb-3">v1.0.0 &mdash; Launch</h2>
+          <ul class="space-y-2 text-sm text-text-secondary font-sans">
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> PDF rendering pipeline (Poppler + Sharp)</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Secure canvas-based viewer with dynamic watermarks</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Email gate, password protection, domain restrictions</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Link expiry (time-based and view-count)</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Page-level analytics with engagement tracking</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Webhook system with HMAC signing and retries</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Custom domains with CNAME verification</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Embeddable viewer with PostMessage API</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Stripe billing with usage metering</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Email notifications via Resend</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> GDPR data deletion endpoint</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Dashboard with link management and analytics</li>
+            <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Docker Compose self-hosting support</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

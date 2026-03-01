@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Secure Document — CloakShare</title>
+  <link rel="stylesheet" href="/src/styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Loading state -->
+    <div id="loading" class="screen">
+      <div class="loader"></div>
+      <p>Loading document...</p>
+    </div>
+
+    <!-- Processing state (document still rendering) -->
+    <div id="processing" class="screen hidden">
+      <div class="processing-card">
+        <div class="loader"></div>
+        <h2>Preparing document</h2>
+        <p id="processing-message">This document is being processed. Please wait...</p>
+        <div class="progress-bar">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <p id="progress-text" class="progress-text">0%</p>
+      </div>
+    </div>
+
+    <!-- Error state -->
+    <div id="error" class="screen hidden">
+      <div class="error-card">
+        <div class="error-icon">!</div>
+        <h2 id="error-title">Document unavailable</h2>
+        <p id="error-message">This document is no longer available.</p>
+      </div>
+    </div>
+
+    <!-- Email gate -->
+    <div id="gate" class="screen hidden">
+      <div class="gate-card">
+        <div id="brand-section" class="brand-section hidden">
+          <img id="brand-logo" class="brand-logo" alt="" />
+          <span id="brand-name" class="brand-name"></span>
+        </div>
+        <h2 id="gate-title">View document</h2>
+        <p id="gate-subtitle" class="gate-subtitle"></p>
+        <form id="gate-form">
+          <div id="email-field" class="field hidden">
+            <label for="email-input">Email address</label>
+            <input type="email" id="email-input" placeholder="you@company.com" autocomplete="email" />
+            <p id="email-error" class="field-error hidden"></p>
+          </div>
+          <div id="password-field" class="field hidden">
+            <label for="password-input">Password</label>
+            <input type="password" id="password-input" placeholder="Enter password" autocomplete="current-password" />
+            <p id="password-error" class="field-error hidden"></p>
+          </div>
+          <button type="submit" id="gate-submit" class="btn-primary">View Document</button>
+          <p id="gate-error" class="form-error hidden"></p>
+        </form>
+        <div class="secured-by">
+          Secured by <a href="https://cloakshare.dev" target="_blank" rel="noopener">CloakShare</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Video Viewer -->
+    <div id="video-viewer" class="screen hidden">
+      <header class="viewer-header">
+        <div class="viewer-header-left">
+          <span id="video-doc-name" class="doc-name"></span>
+        </div>
+        <div class="viewer-header-center">
+          <span id="video-time-display" class="video-time">0:00 / 0:00</span>
+        </div>
+        <div class="viewer-header-right">
+          <select id="video-quality-select" class="quality-select"></select>
+        </div>
+      </header>
+      <main class="viewer-body video-viewer-body">
+        <div class="video-container">
+          <video id="video-element" playsinline></video>
+          <canvas id="video-watermark-canvas"></canvas>
+          <div id="video-controls" class="video-controls">
+            <button id="video-play-btn" class="video-ctrl-btn" aria-label="Play">
+              <svg id="play-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+              <svg id="pause-icon" class="hidden" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            </button>
+            <input type="range" id="video-seek" class="video-seek" min="0" max="100" step="0.1" value="0" />
+            <span id="video-time-ctrl" class="video-time-ctrl">0:00 / 0:00</span>
+            <button id="video-fullscreen-btn" class="video-ctrl-btn" aria-label="Fullscreen">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+            </button>
+          </div>
+        </div>
+      </main>
+      <div class="secured-badge">
+        <svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Secured by CloakShare
+      </div>
+    </div>
+
+    <!-- Viewer -->
+    <div id="viewer" class="screen hidden">
+      <header id="viewer-header" class="viewer-header">
+        <div class="viewer-header-left">
+          <span id="doc-name" class="doc-name"></span>
+        </div>
+        <div class="viewer-header-center">
+          <button id="prev-btn" class="nav-btn" disabled>&larr;</button>
+          <span id="page-indicator" class="page-indicator">1 / 1</span>
+          <button id="next-btn" class="nav-btn">&rarr;</button>
+        </div>
+        <div class="viewer-header-right"></div>
+      </header>
+      <main id="viewer-body" class="viewer-body">
+        <canvas id="doc-canvas"></canvas>
+      </main>
+      <!-- Fixed bottom-right badge per design system -->
+      <div class="secured-badge">
+        <svg class="lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Secured by CloakShare
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

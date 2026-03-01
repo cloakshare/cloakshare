@@ -1,0 +1,170 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="The Developer's Guide to Building Secure Document Sharing into Your App" description="Technical guide to integrating Cloak's document sharing API. Create secure links, set watermarks and expiry, track analytics via webhooks, and use the Node.js SDK." type="article" publishedAt="2026-02-28" canonical="/blog/document-sharing-api-guide">
+  <article class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <p class="text-xs text-text-tertiary font-mono mb-4">February 28, 2026</p>
+      <h1 class="font-mono font-bold text-3xl md:text-4xl text-foreground mb-6 leading-tight">
+        The Developer's Guide to Building Secure Document Sharing into Your App
+      </h1>
+
+      <div class="prose-cloak space-y-6 text-text-secondary font-sans leading-relaxed">
+        <p>
+          If your application handles sensitive documents — investor updates, legal contracts,
+          training materials, sales proposals — you need more than a file upload and a public URL.
+          You need watermarks, view tracking, access controls, and expiry. Cloak's API lets you
+          add all of this with a few REST calls or our Node.js SDK. This guide covers the core
+          integration patterns.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Creating a secure link</h2>
+        <p>
+          The fundamental operation in Cloak is creating a link. Upload a file (PDF, DOCX, MP4,
+          or any supported format), set your security rules, and get back a tokenized URL. The
+          recipient views the content in Cloak's browser-based viewer — no downloads.
+        </p>
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">// Node.js SDK</span>
+import Cloak from '@cloakshare/sdk';
+
+const cloak = new Cloak('ck_live_xxx');
+
+const link = await cloak.links.create({'{'}
+  file: './quarterly-report.pdf',
+  watermark: true,
+  email_required: true,
+  expires_in: '7d',
+  password: 'deal-room-2026',
+  allow_download: false,
+{'}'});
+
+console.log(link.secure_url);
+<span class="text-accent">// https://view.cloakshare.dev/s/lnk_mN7pR3</span></pre>
+        </div>
+        <p>
+          The same endpoint handles video files. Upload an MP4 and Cloak transcodes it to HLS
+          automatically. The returned link streams the video with the same watermark and analytics
+          features.
+        </p>
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">// Video upload — same API, different file</span>
+const videoLink = await cloak.links.create({'{'}
+  file: './product-demo.mp4',
+  watermark: true,
+  email_required: true,
+  expires_in: '30d',
+{'}'});
+
+console.log(videoLink.type);
+<span class="text-accent">// "video"</span></pre>
+        </div>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Setting security rules</h2>
+        <p>
+          Every link supports a combination of security controls. Mix and match based on your
+          use case.
+        </p>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <code class="text-accent font-mono text-sm">watermark: true</code> — overlay the viewer's email on every page or video frame</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <code class="text-accent font-mono text-sm">email_required: true</code> — gate access behind email verification</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <code class="text-accent font-mono text-sm">password: "secret"</code> — require a password before viewing</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <code class="text-accent font-mono text-sm">expires_in: "72h"</code> — auto-expire after a duration</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <code class="text-accent font-mono text-sm">max_views: 10</code> — limit total number of views</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <code class="text-accent font-mono text-sm">allow_download: false</code> — disable the download button</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <code class="text-accent font-mono text-sm">domain_whitelist: ["acme.com"]</code> — restrict to specific email domains</li>
+        </ul>
+        <p>
+          These can be set at creation time or updated later via
+          <code class="text-accent font-mono text-sm">PATCH /v1/links/:id</code>.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Tracking analytics via webhooks</h2>
+        <p>
+          Polling the analytics API works, but webhooks give you real-time data. Register a
+          webhook endpoint and Cloak will POST events as they happen — link viewed, page turned,
+          video watched, download attempted.
+        </p>
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">// Register a webhook</span>
+await cloak.webhooks.create({'{'}
+  url: 'https://your-app.com/api/cloak-events',
+  events: ['link.viewed', 'link.completed', 'video.watched'],
+  secret: 'whsec_your_signing_secret',
+{'}'});
+
+<span class="text-text-tertiary">// Your webhook handler</span>
+app.post('/api/cloak-events', (req, res) => {'{'}
+  const event = req.body;
+
+  if (event.type === 'link.viewed') {'{'}
+    console.log(`${'{'}event.data.viewer_email{'}'} viewed ${'{'}event.data.link_id{'}'}`);
+    console.log(`Time on page: ${'{'}event.data.duration_seconds{'}'}s`);
+  {'}'}
+
+  if (event.type === 'video.watched') {'{'}
+    console.log(`Watch time: ${'{'}event.data.watch_time_seconds{'}'}s`);
+    console.log(`Completion: ${'{'}(event.data.completion_rate * 100).toFixed(0){'}'}%`);
+  {'}'}
+
+  res.sendStatus(200);
+{'}'});</pre>
+        </div>
+        <p>
+          Webhook payloads are signed with your secret using HMAC-SHA256. Verify the signature
+          in your handler to ensure the request came from Cloak.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Querying analytics directly</h2>
+        <p>
+          For batch reporting or dashboard integrations, pull analytics via the REST API. Get
+          per-link summaries or per-viewer breakdowns.
+        </p>
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">// Get analytics for a specific link</span>
+const analytics = await cloak.links.analytics('lnk_mN7pR3');
+
+console.log(analytics.total_views);       <span class="text-accent">// 47</span>
+console.log(analytics.unique_viewers);     <span class="text-accent">// 12</span>
+console.log(analytics.avg_completion);     <span class="text-accent">// 0.82</span>
+console.log(analytics.avg_time_seconds);   <span class="text-accent">// 234</span>
+
+<span class="text-text-tertiary">// Per-viewer breakdown</span>
+for (const viewer of analytics.viewers) {'{'}
+  console.log(`${'{'}viewer.email{'}'}: ${'{'}viewer.pages_viewed{'}'}/${'{'}analytics.total_pages{'}'} pages`);
+{'}'}</pre>
+        </div>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Using the Node.js SDK</h2>
+        <p>
+          The examples above use the official
+          <code class="text-accent font-mono text-sm">@cloakshare/sdk</code> package. Install it
+          from npm and initialize with your API key.
+        </p>
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">$</span> npm install @cloakshare/sdk</pre>
+        </div>
+        <p>
+          The SDK wraps all REST endpoints with TypeScript types, handles multipart file uploads,
+          verifies webhook signatures, and retries on transient failures. If you prefer raw HTTP,
+          every SDK method maps 1:1 to a REST endpoint documented at
+          <a href="https://docs.cloakshare.dev" class="text-accent hover:underline">docs.cloakshare.dev</a>.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Get started</h2>
+        <p>
+          Sign up at <a href="https://app.cloakshare.dev/register" class="text-accent hover:underline">app.cloakshare.dev</a>
+          and get a free API key in seconds. The free tier gives you 50 links and 500 views per
+          month — enough to build and test your integration. Scale to the Pro or Enterprise plan
+          when you're ready.
+        </p>
+        <p>
+          Cloak is open source. Explore the code, file issues, or contribute at
+          <a href="https://github.com/cloakshare/cloakshare" class="text-accent hover:underline">github.com/cloakshare/cloakshare</a>.
+          Self-host for unlimited usage with no per-user fees.
+        </p>
+      </div>
+    </div>
+  </article>
+</Base>

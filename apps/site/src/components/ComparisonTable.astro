@@ -1,0 +1,29 @@
+---
+interface Props {
+  competitor: string;
+  rows: Array<{ feature: string; cloak: string; other: string }>;
+}
+
+const { competitor, rows } = Astro.props;
+---
+
+<div class="bg-surface border border-border rounded-lg overflow-hidden">
+  <table class="w-full">
+    <thead>
+      <tr class="border-b border-border-subtle">
+        <th class="text-left text-xs text-text-tertiary font-mono font-normal uppercase tracking-wider px-5 py-3 w-1/3">Feature</th>
+        <th class="text-center text-xs text-accent font-mono font-normal uppercase tracking-wider px-5 py-3 w-1/3">Cloak</th>
+        <th class="text-center text-xs text-text-tertiary font-mono font-normal uppercase tracking-wider px-5 py-3 w-1/3">{competitor}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map(row => (
+        <tr class="border-b border-border-subtle last:border-0">
+          <td class="px-5 py-3 text-sm font-sans text-text-secondary">{row.feature}</td>
+          <td class="px-5 py-3 text-sm font-mono text-center text-foreground">{row.cloak}</td>
+          <td class="px-5 py-3 text-sm font-mono text-center text-text-tertiary">{row.other}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

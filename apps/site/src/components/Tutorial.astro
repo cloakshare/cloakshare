@@ -1,0 +1,194 @@
+---
+const step1Code = `<span class="text-text-tertiary"># Upload a file and get a secure link</span>
+<span class="text-text-tertiary"># Works with PDF, DOCX, PPTX, XLSX, images, and video</span>
+
+curl -X POST https://api.cloakshare.dev/v1/links \\
+  -H <span class="text-accent">"Authorization: Bearer YOUR_API_KEY"</span> \\
+  -F file=@proposal.pdf \\
+  -F expires_in=<span class="text-accent">"72h"</span> \\
+  -F require_email=<span class="text-accent">true</span> \\
+  -F watermark=<span class="text-accent">true</span>`;
+
+const step1Response = `{
+  <span class="text-text-secondary">"data"</span>: {
+    <span class="text-text-secondary">"id"</span>: <span class="text-accent">"lnk_xK9mP2nQ"</span>,
+    <span class="text-text-secondary">"secure_url"</span>: <span class="text-accent">"https://view.cloakshare.dev/s/lnk_xK9mP2nQ"</span>,
+    <span class="text-text-secondary">"status"</span>: <span class="text-accent">"active"</span>,
+    <span class="text-text-secondary">"page_count"</span>: <span class="text-warning">6</span>,
+    <span class="text-text-secondary">"rules"</span>: {
+      <span class="text-text-secondary">"expires_at"</span>: <span class="text-accent">"2026-03-03T..."</span>,
+      <span class="text-text-secondary">"watermark"</span>: <span class="text-accent">true</span>
+    }
+  }
+}`;
+
+const step2Code = `<span class="text-text-tertiary"># The secure_url is what you send
+# to your recipient.
+#
+# They see a secure viewer:
+# - Email gate
+# - Watermarked pages (or video frames)
+# - No download button
+# - Canvas rendering / HLS streaming</span>
+
+https://view.cloakshare.dev/s/lnk_xK9mP2nQ`;
+
+const step3Code = `<span class="text-text-tertiary"># Check analytics on your link</span>
+
+curl https://api.cloakshare.dev/v1/links/lnk_xK9mP2nQ/analytics \\
+  -H <span class="text-accent">"Authorization: Bearer YOUR_API_KEY"</span>`;
+
+const step3Response = `{
+  <span class="text-text-secondary">"data"</span>: {
+    <span class="text-text-secondary">"total_views"</span>: <span class="text-warning">3</span>,
+    <span class="text-text-secondary">"unique_viewers"</span>: <span class="text-warning">2</span>,
+    <span class="text-text-secondary">"avg_duration"</span>: <span class="text-warning">45</span>,
+    <span class="text-text-secondary">"viewers"</span>: [{
+      <span class="text-text-secondary">"email"</span>: <span class="text-accent">"john@acme.com"</span>,
+      <span class="text-text-secondary">"duration"</span>: <span class="text-warning">62</span>,
+      <span class="text-text-secondary">"completion"</span>: <span class="text-warning">0.83</span>,
+      <span class="text-text-secondary">"country"</span>: <span class="text-accent">"US"</span>
+    }]
+  }
+}`;
+
+const step4Code = `<span class="text-text-tertiary"># Set up a webhook for view events</span>
+
+curl -X POST https://api.cloakshare.dev/v1/webhooks \\
+  -H <span class="text-accent">"Authorization: Bearer YOUR_API_KEY"</span> \\
+  -d '{
+    <span class="text-text-secondary">"url"</span>: <span class="text-accent">"https://your-app.com/webhook"</span>,
+    <span class="text-text-secondary">"events"</span>: [<span class="text-accent">"link.viewed"</span>]
+  }'`;
+
+const step4Response = `{
+  <span class="text-text-secondary">"type"</span>: <span class="text-accent">"link.viewed"</span>,
+  <span class="text-text-secondary">"data"</span>: {
+    <span class="text-text-secondary">"link_id"</span>: <span class="text-accent">"lnk_xK9mP2nQ"</span>,
+    <span class="text-text-secondary">"viewer_email"</span>: <span class="text-accent">"john@acme.com"</span>,
+    <span class="text-text-secondary">"duration"</span>: <span class="text-warning">62</span>,
+    <span class="text-text-secondary">"completion"</span>: <span class="text-warning">0.83</span>
+  }
+}`;
+---
+
+<section id="tutorial" class="py-20 px-6 border-t border-border-subtle">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-center font-mono font-semibold text-2xl text-foreground mb-4">Integrate in 5 minutes</h2>
+    <p class="text-center text-text-secondary font-sans mb-12 max-w-xl mx-auto">Follow along &mdash; this code runs against the real API.</p>
+
+    <!-- Language tabs -->
+    <div class="flex items-center gap-1 mb-6">
+      <button class="tutorial-lang-tab px-3 py-1.5 rounded-md text-sm font-mono bg-accent/10 text-accent" data-lang="curl">cURL</button>
+      <button class="tutorial-lang-tab px-3 py-1.5 rounded-md text-sm font-mono text-text-tertiary hover:text-text-secondary transition-colors" data-lang="nodejs">Node.js</button>
+      <button class="tutorial-lang-tab px-3 py-1.5 rounded-md text-sm font-mono text-text-tertiary hover:text-text-secondary transition-colors" data-lang="python">Python</button>
+      <button class="tutorial-lang-tab px-3 py-1.5 rounded-md text-sm font-mono text-text-tertiary hover:text-text-secondary transition-colors" data-lang="go">Go</button>
+    </div>
+
+    <!-- Steps -->
+    <div class="space-y-6">
+
+      <!-- Step 1 -->
+      <div class="bg-surface border border-border rounded-lg overflow-hidden">
+        <div class="px-5 py-3 border-b border-border-subtle flex items-center justify-between">
+          <span class="text-sm font-mono text-foreground">Step 1 &mdash; Create a secure link</span>
+          <span class="text-xs text-text-tertiary font-mono">POST /v1/links</span>
+        </div>
+        <div class="grid md:grid-cols-2 divide-x divide-border-subtle">
+          <div class="p-5">
+            <pre class="text-sm font-mono text-text-secondary leading-relaxed overflow-x-auto" set:html={step1Code} />
+          </div>
+          <div class="p-5 bg-background/50">
+            <p class="text-xs text-text-tertiary font-mono mb-2">Response</p>
+            <pre class="text-sm font-mono text-text-secondary leading-relaxed overflow-x-auto" set:html={step1Response} />
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="bg-surface border border-border rounded-lg overflow-hidden">
+        <div class="px-5 py-3 border-b border-border-subtle flex items-center justify-between">
+          <span class="text-sm font-mono text-foreground">Step 2 &mdash; Share the link</span>
+          <span class="text-xs text-text-tertiary font-mono">Recipients open in browser</span>
+        </div>
+        <div class="grid md:grid-cols-2 divide-x divide-border-subtle">
+          <div class="p-5">
+            <pre class="text-sm font-mono text-text-secondary leading-relaxed" set:html={step2Code} />
+          </div>
+          <div class="p-5 bg-background/50 flex items-center justify-center">
+            <div class="bg-elevated border border-border rounded-lg p-6 w-full max-w-[220px] text-center">
+              <p class="text-xs text-text-tertiary font-mono mb-1">Q4 Proposal</p>
+              <p class="text-[10px] text-text-tertiary font-mono mb-4">6 pages &middot; PDF</p>
+              <div class="bg-input border border-border-subtle rounded px-2 py-1.5 mb-2">
+                <p class="text-[10px] text-text-tertiary font-mono text-left">email@example.com</p>
+              </div>
+              <div class="bg-accent text-background text-[10px] font-mono font-medium rounded px-2 py-1.5">View Document</div>
+              <p class="text-[8px] text-text-tertiary font-mono mt-3">Secured by Cloak</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="bg-surface border border-border rounded-lg overflow-hidden">
+        <div class="px-5 py-3 border-b border-border-subtle flex items-center justify-between">
+          <span class="text-sm font-mono text-foreground">Step 3 &mdash; Track engagement</span>
+          <span class="text-xs text-text-tertiary font-mono">GET /v1/links/:id/analytics</span>
+        </div>
+        <div class="grid md:grid-cols-2 divide-x divide-border-subtle">
+          <div class="p-5">
+            <pre class="text-sm font-mono text-text-secondary leading-relaxed overflow-x-auto" set:html={step3Code} />
+          </div>
+          <div class="p-5 bg-background/50">
+            <p class="text-xs text-text-tertiary font-mono mb-2">Response</p>
+            <pre class="text-sm font-mono text-text-secondary leading-relaxed overflow-x-auto" set:html={step3Response} />
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="bg-surface border border-border rounded-lg overflow-hidden">
+        <div class="px-5 py-3 border-b border-border-subtle flex items-center justify-between">
+          <span class="text-sm font-mono text-foreground">Step 4 &mdash; Get notified in real-time</span>
+          <span class="text-xs text-text-tertiary font-mono">POST /v1/webhooks</span>
+        </div>
+        <div class="grid md:grid-cols-2 divide-x divide-border-subtle">
+          <div class="p-5">
+            <pre class="text-sm font-mono text-text-secondary leading-relaxed overflow-x-auto" set:html={step4Code} />
+          </div>
+          <div class="p-5 bg-background/50">
+            <p class="text-xs text-text-tertiary font-mono mb-2">You'll receive</p>
+            <pre class="text-sm font-mono text-text-secondary leading-relaxed overflow-x-auto" set:html={step4Response} />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-10 text-center">
+      <p class="text-text-secondary font-sans mb-4">That&rsquo;s it. 4 API calls to secure, share, and track any document or video.</p>
+      <div class="flex items-center justify-center gap-4">
+        <a href="https://app.cloakshare.dev/register" class="px-6 py-2.5 bg-accent text-background font-mono font-semibold text-sm rounded-md hover:bg-accent-hover transition-colors">
+          Get your API key &mdash; free
+        </a>
+        <a href="https://docs.cloakshare.dev" class="px-6 py-2.5 bg-elevated border border-border text-text-secondary font-mono text-sm rounded-md hover:text-text-primary hover:border-text-tertiary transition-all">
+          Read full docs
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Language tab switching (visual only for MVP)
+  document.querySelectorAll('.tutorial-lang-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tutorial-lang-tab').forEach(t => {
+        t.classList.remove('bg-accent/10', 'text-accent');
+        t.classList.add('text-text-tertiary');
+      });
+      tab.classList.add('bg-accent/10', 'text-accent');
+      tab.classList.remove('text-text-tertiary');
+    });
+  });
+</script>

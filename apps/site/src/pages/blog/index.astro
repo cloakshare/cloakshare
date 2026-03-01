@@ -1,0 +1,60 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const posts = [
+  {
+    slug: 'secure-video-sharing-api',
+    title: 'Secure Video Sharing API: HLS Streaming with Watermarks and Analytics',
+    date: '2026-02-28',
+    description: 'How to share videos securely with adaptive HLS streaming, canvas watermark overlays, watch time tracking, and anti-download protections.',
+  },
+  {
+    slug: 'self-host-document-sharing',
+    title: 'Self-Host Your Document Sharing Platform with Docker',
+    date: '2026-02-28',
+    description: 'Deploy a secure document and video sharing platform on your own infrastructure in under 5 minutes with Docker Compose.',
+  },
+  {
+    slug: 'document-sharing-api-guide',
+    title: 'The Complete Guide to Building a Document Sharing API',
+    date: '2026-02-28',
+    description: 'Everything you need to know about building secure document sharing into your application: watermarks, access controls, analytics, and video.',
+  },
+  {
+    slug: 'introducing-cloak',
+    title: 'Introducing Cloak: Secure Document & Video Sharing as an API',
+    date: '2026-02-28',
+    description: 'Upload a file, get a secure link. Track views, watermark pages, stream video, set expiry — all via API. Open source.',
+  },
+  {
+    slug: 'secure-document-api',
+    title: 'How to Add Secure Document Sharing to Your App in 5 Minutes',
+    date: '2026-02-28',
+    description: 'A step-by-step tutorial showing how to integrate Cloak into your application with just 4 API calls.',
+  },
+  {
+    slug: 'docsend-vs-cloak',
+    title: "Why Your Sales Team's Docs Keep Leaking (And How to Fix It)",
+    date: '2026-02-28',
+    description: 'PDF attachments get forwarded. Google Drive links get shared. Here\'s a better way to share sensitive documents and videos.',
+  },
+];
+---
+
+<Base title="Blog — Cloak" description="Product updates, tutorials, and insights on secure document and video sharing." canonical="/blog">
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <h1 class="font-mono font-bold text-4xl text-foreground mb-12">Blog</h1>
+
+      <div class="space-y-8">
+        {posts.map(post => (
+          <a href={`/blog/${post.slug}`} class="block bg-surface border border-border rounded-lg p-6 card-glow">
+            <p class="text-xs text-text-tertiary font-mono mb-2">{post.date}</p>
+            <h2 class="font-mono font-medium text-lg text-foreground mb-2">{post.title}</h2>
+            <p class="text-sm text-text-secondary font-sans leading-relaxed">{post.description}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

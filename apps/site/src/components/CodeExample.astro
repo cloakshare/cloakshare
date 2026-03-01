@@ -1,0 +1,30 @@
+---
+const codeHtml = `<span class="text-text-tertiary">$</span> <span class="text-foreground">curl -X POST https://api.cloakshare.dev/v1/links \\</span>
+    <span class="text-text-secondary">-H</span> <span class="text-accent">"Authorization: Bearer ck_live_a1b2c3d4"</span> <span class="text-foreground">\\</span>
+    <span class="text-text-secondary">-F</span> <span class="text-foreground">file=@proposal.pdf \\</span>
+    <span class="text-text-secondary">-F</span> <span class="text-foreground">expires_in=</span><span class="text-accent">"72h"</span> <span class="text-foreground">\\</span>
+    <span class="text-text-secondary">-F</span> <span class="text-foreground">watermark=</span><span class="text-accent">true</span> <span class="text-foreground">\\</span>
+    <span class="text-text-secondary">-F</span> <span class="text-foreground">require_email=</span><span class="text-accent">true</span>
+
+<span class="text-text-tertiary">// Response:</span>
+<span class="text-foreground">{"data": {</span>
+    <span class="text-text-secondary">"secure_url"</span><span class="text-foreground">:</span> <span class="text-accent">"https://view.cloakshare.dev/s/lnk_xK9mP2"</span><span class="text-foreground">,</span>
+    <span class="text-text-secondary">"status"</span><span class="text-foreground">:</span> <span class="text-accent">"active"</span><span class="text-foreground">,</span>
+    <span class="text-text-secondary">"page_count"</span><span class="text-foreground">:</span> <span class="text-warning">6</span><span class="text-foreground">,</span>
+    <span class="text-text-secondary">"rules"</span><span class="text-foreground">: {"watermark":</span> <span class="text-accent">true</span><span class="text-foreground">, "require_email":</span> <span class="text-accent">true</span><span class="text-foreground">}</span>
+<span class="text-foreground">}}</span>`;
+---
+
+<div class="bg-surface border border-border rounded-lg overflow-hidden shadow-lg">
+  <div class="flex items-center gap-2 px-4 py-3 border-b border-border-subtle bg-elevated/50">
+    <div class="flex gap-1.5">
+      <span class="w-3 h-3 rounded-full bg-[#FF5F57]"></span>
+      <span class="w-3 h-3 rounded-full bg-[#FFBD2E]"></span>
+      <span class="w-3 h-3 rounded-full bg-[#28C840]"></span>
+    </div>
+    <span class="text-xs text-text-tertiary font-mono ml-2">terminal</span>
+  </div>
+  <div class="p-5 overflow-x-auto">
+    <pre class="text-sm font-mono leading-relaxed" set:html={codeHtml} />
+  </div>
+</div>

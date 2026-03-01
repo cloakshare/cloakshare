@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import PricingTable from '../components/PricingTable.astro';
+---
+
+<Base title="Pricing — Cloak" description="Simple, transparent pricing for secure document and video sharing. Start free, scale as you grow. No per-seat pricing." canonical="/pricing">
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-6xl mx-auto">
+      <h1 class="text-center font-mono font-bold text-4xl text-foreground mb-4">Pricing</h1>
+      <p class="text-center text-text-secondary font-sans mb-16 max-w-xl mx-auto">
+        Start free. Scale as you grow. No per-seat pricing, no contracts.
+      </p>
+
+      <PricingTable />
+
+      <!-- Overage pricing -->
+      <div class="mt-12 bg-surface border border-border rounded-lg p-6">
+        <h3 class="font-mono font-medium text-foreground mb-4">Overage pricing</h3>
+        <div class="grid md:grid-cols-3 gap-6 text-sm">
+          <div>
+            <p class="text-text-tertiary font-mono mb-1">Starter</p>
+            <p class="text-text-secondary font-sans">$0.05/link &middot; $0.005/view over included</p>
+          </div>
+          <div>
+            <p class="text-text-tertiary font-mono mb-1">Growth</p>
+            <p class="text-text-secondary font-sans">$0.04/link &middot; $0.004/view over included</p>
+          </div>
+          <div>
+            <p class="text-text-tertiary font-mono mb-1">Scale</p>
+            <p class="text-text-secondary font-sans">$0.03/link &middot; $0.003/view over included</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="mt-16">
+        <h2 class="font-mono font-semibold text-xl text-foreground mb-8 text-center">Frequently asked questions</h2>
+        <div class="max-w-2xl mx-auto space-y-6">
+          {[
+            { q: 'What counts as a link?', a: 'Each POST /v1/links call creates one link. Revoking or expiring a link does not return a credit.' },
+            { q: 'What counts as a view?', a: 'Each unique viewer session on a link counts as one view. The same person refreshing does not create a new view within 24 hours.' },
+            { q: 'Which plans support video?', a: 'Video sharing (MP4, MOV, WebM) with HLS streaming is available on Growth plans and above. Videos are transcoded to 720p and 1080p with adaptive bitrate streaming. Scale plans include unlimited video transcoding.' },
+            { q: 'Which file types are supported?', a: 'PDF, PNG, JPG, and WebP on all plans. Office documents (DOCX, PPTX, XLSX) on Starter and above. Video files (MP4, MOV, WebM) on Growth and above.' },
+            { q: 'Can I self-host?', a: 'Yes. Cloak is open source (MIT). Self-host with docker compose up for free. Enable video with ENABLE_VIDEO=true. The cloud version adds CDN delivery, analytics dashboard, webhooks, custom domains, and managed infrastructure.' },
+            { q: 'What happens if I exceed my limits?', a: 'Free tier has hard caps. Paid tiers have overage billing at the rates listed above. You can set spending caps in your dashboard.' },
+            { q: 'Can I cancel anytime?', a: 'Yes. No contracts, cancel any time. Your links remain active until their expiry date.' },
+            { q: 'Do you offer annual billing?', a: 'Yes. Save 20% with annual billing. Contact us for enterprise agreements.' },
+          ].map(faq => (
+            <div class="bg-surface border border-border rounded-lg p-5">
+              <h3 class="font-mono font-medium text-sm text-foreground mb-2">{faq.q}</h3>
+              <p class="text-sm text-text-secondary font-sans leading-relaxed">{faq.a}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

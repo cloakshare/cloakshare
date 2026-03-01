@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cloak-python"
+version = "0.1.0"
+description = "Official Python SDK for Cloak — secure document sharing"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.8"
+dependencies = ["requests>=2.28.0"]
+
+[project.urls]
+Homepage = "https://cloakshare.dev"
+Repository = "https://github.com/cloakshare/cloakshare"
+
+[tool.setuptools.packages.find]
+where = ["src"]

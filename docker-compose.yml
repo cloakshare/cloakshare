@@ -1,0 +1,35 @@
+# Cloak — Self-hosted secure document sharing
+# Quick start: docker compose up
+# Full docs: https://docs.cloakshare.dev/self-hosting
+
+services:
+  cloak:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - CLOAK_MODE=self-hosted
+      - STORAGE_PROVIDER=local
+      - STORAGE_LOCAL_PATH=/data/renders
+      - DB_PROVIDER=sqlite
+      - SQLITE_PATH=/data/cloak.db
+      - SESSION_SECRET=${SESSION_SECRET:?Set SESSION_SECRET in .env}
+      - JWT_SECRET=${JWT_SECRET:?Set JWT_SECRET in .env}
+      - CLOAK_SIGNING_SECRET=${CLOAK_SIGNING_SECRET:?Set CLOAK_SIGNING_SECRET in .env}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    volumes:
+      - cloak_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  cloak_data:

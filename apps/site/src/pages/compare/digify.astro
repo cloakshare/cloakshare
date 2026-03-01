@@ -1,0 +1,52 @@
+---
+import Base from '../../layouts/Base.astro';
+import ComparisonTable from '../../components/ComparisonTable.astro';
+
+const rows = [
+  { feature: 'API access', cloak: 'REST API', other: 'Enterprise only' },
+  { feature: 'Open source', cloak: 'MIT', other: 'No' },
+  { feature: 'Self-hostable', cloak: 'Yes', other: 'No' },
+  { feature: 'Video sharing', cloak: 'HLS streaming', other: 'No' },
+  { feature: 'Office documents', cloak: 'DOCX, PPTX, XLSX', other: 'Yes' },
+  { feature: 'Dynamic watermarks', cloak: 'Yes', other: 'Yes' },
+  { feature: 'Canvas-based viewer', cloak: 'Yes', other: 'No' },
+  { feature: 'Webhooks', cloak: 'Yes', other: 'Enterprise' },
+  { feature: 'Custom domains', cloak: 'Growth plan', other: 'Enterprise' },
+  { feature: 'Embeddable viewer', cloak: 'Scale plan', other: 'No' },
+  { feature: 'Teams & RBAC', cloak: 'Yes', other: 'Yes' },
+  { feature: 'Email gate', cloak: 'Yes', other: 'Yes' },
+  { feature: 'Analytics', cloak: 'Page-level + video', other: 'Basic' },
+  { feature: 'Starting price', cloak: '$0 (free tier)', other: 'Custom quote' },
+];
+---
+
+<Base title="Cloak vs Digify — Comparison" description="Compare Cloak and Digify for secure document and video sharing. Developer-first API access with video support, without enterprise pricing." canonical="/compare/digify">
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="font-mono font-bold text-4xl text-foreground mb-4">Cloak vs Digify</h1>
+      <p class="text-text-secondary font-sans mb-12 leading-relaxed max-w-2xl">
+        Digify offers enterprise DRM with custom pricing and limited API access.
+        Cloak gives you the same security features plus video sharing, with a public REST API, transparent pricing, and open source code.
+      </p>
+
+      <ComparisonTable competitor="Digify" rows={rows} />
+
+      <div class="mt-12 space-y-6">
+        <div class="bg-surface border border-accent/30 rounded-lg p-6">
+          <h2 class="font-mono font-medium text-accent mb-3">Video sharing</h2>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            Cloak supports secure video sharing with HLS adaptive streaming, canvas watermark overlay,
+            watch time analytics, and anti-download protections. Upload MP4, MOV, or WebM and share
+            with the same security controls as documents.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-12 text-center">
+        <a href="https://app.cloakshare.dev/register" class="px-6 py-2.5 bg-accent text-background font-mono font-semibold text-sm rounded-md hover:bg-accent-hover transition-colors">
+          Try Cloak free
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,83 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="Introducing Cloak — Secure Document Sharing as an API" description="Upload a file, get a secure link. Track views, watermark pages, set expiry — all via API. Open source.">
+  <article class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <p class="text-xs text-text-tertiary font-mono mb-4">February 28, 2026</p>
+      <h1 class="font-mono font-bold text-3xl md:text-4xl text-foreground mb-6 leading-tight">
+        Introducing Cloak: Secure Document Sharing as an API
+      </h1>
+
+      <div class="prose-cloak space-y-6 text-text-secondary font-sans leading-relaxed">
+        <p>
+          We're launching Cloak — an open-source API that turns any document into a secure,
+          trackable, watermarked link. One API call to upload, one link to share, real-time
+          analytics to track engagement.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">The problem</h2>
+        <p>
+          Every day, teams share sensitive documents as PDF attachments or Google Drive links.
+          These get forwarded, downloaded, and shared without the sender's knowledge. There's
+          no way to know who actually read your proposal, when they read it, or if they
+          forwarded it to a competitor.
+        </p>
+        <p>
+          Existing solutions like DocSend are GUI-only, expensive ($65/user/month), and
+          impossible to integrate programmatically. If you're building a platform that needs
+          to share documents securely — an LMS, a deal room, an investor portal — your only
+          option was to build it yourself.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">The solution</h2>
+        <p>
+          Cloak is a REST API. Upload a file, get back a tokenized secure link. Recipients view
+          the document in a browser-based viewer with:
+        </p>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Dynamic watermarks (viewer's email on every page)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Email gate (verify identity before viewing)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Link expiry (time-based or view-count limits)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Page-level analytics (time per page, completion rate)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Canvas-based rendering (no downloads, no screenshots)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Webhooks (get notified when someone views your doc)</li>
+        </ul>
+
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">$</span> curl -X POST https://api.cloakshare.dev/v1/links \
+    -H "Authorization: Bearer ck_live_xxx" \
+    -F file=@proposal.pdf \
+    -F expires_in="72h" \
+    -F watermark=true
+
+<span class="text-accent">{'{"secure_url": "https://view.cloakshare.dev/s/lnk_xK9mP2"}'}</span></pre>
+        </div>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Open source</h2>
+        <p>
+          Cloak is MIT licensed and fully self-hostable. Clone the repo, run
+          <code class="text-accent font-mono text-sm">docker compose up</code>, and you have
+          a working document security system on your own server. No vendor lock-in.
+        </p>
+        <p>
+          The cloud version at <a href="https://cloakshare.dev" class="text-accent hover:underline">cloakshare.dev</a> adds
+          CDN delivery, analytics dashboard, webhooks with retries, custom domains, embedded viewer,
+          email notifications, and managed infrastructure.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Get started</h2>
+        <p>
+          Sign up for a free API key at <a href="https://app.cloakshare.dev/register" class="text-accent hover:underline">app.cloakshare.dev</a>.
+          The free tier includes 50 links and 500 views per month — enough to evaluate and
+          prototype. Or self-host for unlimited usage.
+        </p>
+        <p>
+          Read the <a href="https://docs.cloakshare.dev" class="text-accent hover:underline">documentation</a>
+          or check out the <a href="https://github.com/cloakshare/cloakshare" class="text-accent hover:underline">source code on GitHub</a>.
+        </p>
+      </div>
+    </div>
+  </article>
+</Base>

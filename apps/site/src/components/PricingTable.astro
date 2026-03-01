@@ -1,0 +1,120 @@
+---
+const plans = [
+  {
+    name: 'Free',
+    price: '$0',
+    period: 'forever',
+    description: 'For side projects and evaluation',
+    features: [
+      '50 links/month',
+      '500 views/month',
+      'PDF & image support',
+      'Watermarks',
+      'Email gate',
+      'View tracking',
+      '7-day max expiry',
+      '"Secured by Cloak" badge',
+    ],
+    cta: 'Get Started',
+    href: 'https://app.cloakshare.dev/register',
+    highlight: false,
+  },
+  {
+    name: 'Starter',
+    price: '$29',
+    period: '/month',
+    description: 'For growing teams',
+    features: [
+      '500 links/month',
+      '10,000 views/month',
+      'Everything in Free',
+      'Office docs (DOCX, PPTX, XLSX)',
+      'No badge',
+      'Webhooks',
+      'Password protection',
+      'Teams & RBAC',
+      '90-day max expiry',
+    ],
+    cta: 'Start Free Trial',
+    href: 'https://app.cloakshare.dev/register',
+    highlight: false,
+  },
+  {
+    name: 'Growth',
+    price: '$99',
+    period: '/month',
+    description: 'For production workloads',
+    features: [
+      '2,500 links/month',
+      '25,000 views/month',
+      'Everything in Starter',
+      'Video sharing (MP4, MOV, WebM)',
+      'HLS streaming (720p + 1080p)',
+      'Custom domains',
+      'Custom branding',
+      'Audit log',
+      'Priority support',
+      '1-year max expiry',
+    ],
+    cta: 'Start Free Trial',
+    href: 'https://app.cloakshare.dev/register',
+    highlight: true,
+  },
+  {
+    name: 'Scale',
+    price: '$299',
+    period: '/month',
+    description: 'For enterprise needs',
+    features: [
+      '10,000 links/month',
+      '100,000 views/month',
+      'Everything in Growth',
+      'Unlimited video transcoding',
+      'Embedded viewer',
+      'White-label',
+      'SSO/SAML',
+      'Dedicated support',
+      'No expiry limits',
+    ],
+    cta: 'Start Free Trial',
+    href: 'https://app.cloakshare.dev/register',
+    highlight: false,
+  },
+];
+---
+
+<div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+  {plans.map(plan => (
+    <div class={`bg-surface border rounded-lg p-6 flex flex-col card-glow ${plan.highlight ? 'border-accent/40 shadow-glow' : 'border-border'}`}>
+      {plan.highlight && (
+        <span class="text-xs font-mono text-accent mb-3 uppercase tracking-wider">Most popular</span>
+      )}
+      <h3 class="font-mono font-semibold text-foreground text-lg">{plan.name}</h3>
+      <div class="flex items-baseline gap-1 mt-2">
+        <span class="text-3xl font-mono font-bold text-foreground tabular-nums">{plan.price}</span>
+        <span class="text-sm text-text-tertiary font-mono">{plan.period}</span>
+      </div>
+      <p class="text-xs text-text-tertiary font-sans mt-2">{plan.description}</p>
+
+      <ul class="mt-6 space-y-2.5 flex-1">
+        {plan.features.map(feature => (
+          <li class="flex items-start gap-2 text-sm font-sans text-text-secondary">
+            <span class="text-accent text-xs mt-0.5">+</span>
+            <span>{feature}</span>
+          </li>
+        ))}
+      </ul>
+
+      <a
+        href={plan.href}
+        class={`mt-6 block text-center px-4 py-2.5 rounded-md font-mono font-medium text-sm transition-colors ${
+          plan.highlight
+            ? 'bg-accent text-background hover:bg-accent-hover'
+            : 'bg-elevated border border-border text-text-secondary hover:text-text-primary hover:border-text-tertiary'
+        }`}
+      >
+        {plan.cta}
+      </a>
+    </div>
+  ))}
+</div>

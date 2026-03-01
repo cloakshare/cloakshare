@@ -1,0 +1,141 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="How to Self-Host a Secure Document Sharing Platform with Docker" description="Step-by-step guide to self-hosting Cloak, the open-source DocSend alternative, with Docker Compose. Secure document and video sharing on your own server." type="article" publishedAt="2026-02-28" canonical="/blog/self-host-document-sharing">
+  <article class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <p class="text-xs text-text-tertiary font-mono mb-4">February 28, 2026</p>
+      <h1 class="font-mono font-bold text-3xl md:text-4xl text-foreground mb-6 leading-tight">
+        How to Self-Host a Secure Document Sharing Platform with Docker
+      </h1>
+
+      <div class="prose-cloak space-y-6 text-text-secondary font-sans leading-relaxed">
+        <p>
+          If you need secure document sharing but don't want your files sitting on someone else's
+          servers, self-hosting is the answer. Cloak is an open-source, MIT-licensed platform that
+          gives you tokenized links with watermarks, analytics, and access controls — all running
+          on your own infrastructure. This guide walks you through setting it up with Docker Compose
+          in under ten minutes.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Prerequisites</h2>
+        <p>
+          You need a machine (local or cloud) with Docker and Docker Compose installed. That's it.
+          Cloak's Docker image bundles everything — the API server, the document viewer, the
+          processing pipeline, and ffmpeg for video transcoding. No external dependencies.
+        </p>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Docker Engine 20.10 or newer</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Docker Compose v2</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> 2 GB of RAM minimum (4 GB recommended for video processing)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> A domain name (optional, but required for HTTPS in production)</li>
+        </ul>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Step 1: Clone the repository</h2>
+        <p>
+          Pull down the Cloak source code and navigate to the project root.
+        </p>
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">$</span> git clone https://github.com/cloakshare/cloakshare.git
+<span class="text-text-tertiary">$</span> cd cloak</pre>
+        </div>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Step 2: Configure environment</h2>
+        <p>
+          Copy the example environment file and set your secrets. The only required value is a
+          random string for <code class="text-accent font-mono text-sm">SECRET_KEY</code> — this
+          signs your API tokens and link URLs.
+        </p>
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">$</span> cp .env.example .env
+<span class="text-text-tertiary">$</span> nano .env
+
+<span class="text-text-tertiary"># .env</span>
+SECRET_KEY=<span class="text-accent">your-random-secret-at-least-32-chars</span>
+DATABASE_URL=postgres://cloak:cloak@db:5432/cloak
+STORAGE_PATH=/data/uploads
+BASE_URL=https://your-domain.com</pre>
+        </div>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Step 3: Start the server</h2>
+        <p>
+          One command brings up the API server, PostgreSQL database, and file storage — all
+          pre-configured and networked together.
+        </p>
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">$</span> docker compose up -d
+
+<span class="text-accent">✓ Container cloak-db      Started
+✓ Container cloak-server  Started</span>
+
+<span class="text-text-tertiary">$</span> curl http://localhost:3000/health
+<span class="text-accent">{'{"status": "ok"}'}</span></pre>
+        </div>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Step 4: Create your API key</h2>
+        <p>
+          Use the built-in CLI to generate your first API key. This key authenticates all
+          subsequent API calls.
+        </p>
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">$</span> docker compose exec server cloak apikey create --name "my-key"
+
+<span class="text-accent">{'{"api_key": "ck_live_s3cR3tK3y...", "name": "my-key", "created_at": "2026-02-28T12:00:00Z"}'}</span></pre>
+        </div>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Step 5: Upload your first document</h2>
+        <p>
+          With the API key in hand, upload a PDF and get a secure link back. Set watermarking and
+          email gating to protect the content.
+        </p>
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">$</span> curl -X POST http://localhost:3000/v1/links \
+    -H "Authorization: Bearer ck_live_s3cR3tK3y..." \
+    -F file=@contract.pdf \
+    -F watermark=true \
+    -F email_required=true
+
+<span class="text-accent">{'{"id": "lnk_aB3xZ9", "secure_url": "http://localhost:3000/s/lnk_aB3xZ9", "type": "document", "pages": 12}'}</span></pre>
+        </div>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Step 6: Share the link</h2>
+        <p>
+          Send the <code class="text-accent font-mono text-sm">secure_url</code> to your
+          recipient. They'll see a browser-based document viewer with your watermark overlay. Every
+          page view, time-on-page, and completion event is logged and queryable via the analytics
+          API. No plugins, no downloads — it just works.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Video support</h2>
+        <p>
+          Cloak also supports video files. When you upload an MP4, WebM, or MOV, the server
+          transcodes it to HLS using ffmpeg, which is already included in the Docker image. No
+          additional setup is needed. The same security features — watermarks, email gate, expiry,
+          and analytics — apply to video links.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Production considerations</h2>
+        <p>
+          For production deployments, put a reverse proxy (Nginx, Caddy, or Traefik) in front of
+          Cloak to handle TLS termination. Point your domain's DNS to the server, set the
+          <code class="text-accent font-mono text-sm">BASE_URL</code> in your
+          <code class="text-accent font-mono text-sm">.env</code>, and your secure links will use
+          your custom domain automatically.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Next steps</h2>
+        <p>
+          You now have a fully functional secure document sharing platform on your own server. No
+          vendor lock-in, no per-user fees, and full control over your data.
+        </p>
+        <p>
+          Sign up at <a href="https://app.cloakshare.dev/register" class="text-accent hover:underline">app.cloakshare.dev</a>
+          if you'd prefer a managed cloud version with CDN delivery, custom domains, and team
+          management. Or explore the full API in the
+          <a href="https://github.com/cloakshare/cloakshare" class="text-accent hover:underline">GitHub repository</a>.
+        </p>
+      </div>
+    </div>
+  </article>
+</Base>

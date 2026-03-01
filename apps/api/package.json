@@ -1,0 +1,41 @@
+{
+  "name": "@cloak/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsup src/index.ts --format esm --dts",
+    "start": "node dist/index.js",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
+    "db:migrate": "tsx src/db/migrate.ts",
+    "test": "vitest run",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.750.0",
+    "@aws-sdk/s3-request-presigner": "^3.750.0",
+    "@cloak/shared": "workspace:*",
+    "@hono/node-server": "^1.19.9",
+    "@libsql/client": "^0.14.0",
+    "bcrypt": "^5.1.1",
+    "drizzle-orm": "^0.38.0",
+    "hono": "^4.7.0",
+    "nanoid": "^5.0.9",
+    "p-limit": "^6.2.0",
+    "pino": "^9.6.0",
+    "sharp": "^0.33.0",
+    "stripe": "^20.4.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/node": "^22.0.0",
+    "drizzle-kit": "^0.30.0",
+    "pino-pretty": "^13.0.0",
+    "tsup": "^8.3.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0"
+  }
+}
