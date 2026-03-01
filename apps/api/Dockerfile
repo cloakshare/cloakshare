@@ -40,9 +40,6 @@ RUN pnpm --filter @cloak/shared build && pnpm --filter @cloak/api build
 # Build the migration runner separately (tsup only bundles index.ts)
 RUN cd apps/api && npx tsup src/db/migrate.ts --format esm --outDir dist/db
 
-# Prune dev dependencies
-RUN CI=true pnpm prune --prod
-
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
   CMD curl -f http://localhost:3000/health || exit 1
