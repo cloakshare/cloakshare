@@ -174,6 +174,20 @@ auth.post('/login', async (c) => {
     path: '/',
   });
 
+  // Generate a dashboard API key so the frontend can make authenticated calls
+  const keyRaw = `${API_KEY_LIVE_PREFIX}${randomBytes(16).toString('hex')}`;
+  const keyHash = sha256(keyRaw);
+  const keyPrefix = keyRaw.slice(0, 12) + '...';
+
+  await db.insert(apiKeys).values({
+    id: generateId('key'),
+    userId: user.id,
+    orgId: user.defaultOrgId || null,
+    name: 'Dashboard',
+    keyHash,
+    keyPrefix,
+  });
+
   logger.info({ userId: user.id }, 'User logged in');
 
   return successResponse(c, {
@@ -183,6 +197,7 @@ auth.post('/login', async (c) => {
       name: user.name,
       plan: user.plan,
     },
+    api_key: keyRaw,
   });
 });
 

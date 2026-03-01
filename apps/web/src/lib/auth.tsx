@@ -66,6 +66,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password: string) => {
     const result = await authApi.login(email, password);
+    if (result.api_key) {
+      localStorage.setItem('cloak_api_key', result.api_key);
+    }
     setUser({
       id: result.user.id,
       email: result.user.email,

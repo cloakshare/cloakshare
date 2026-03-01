@@ -62,7 +62,7 @@ export const auth = {
     }),
 
   login: (email: string, password: string) =>
-    request<{ user: { id: string; email: string; plan: string }; session_token: string }>('/v1/auth/login', {
+    request<{ user: { id: string; email: string; plan: string }; api_key: string }>('/v1/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     }),
