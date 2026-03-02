@@ -9,6 +9,7 @@ import { config } from '../lib/config.js';
 import { logger } from '../lib/logger.js';
 import { createStorage } from '../services/storage.js';
 import { ALL_SUPPORTED_EXTENSIONS, OFFICE_FILE_EXTENSIONS, VIDEO_FILE_EXTENSIONS } from '@cloak/shared';
+import bcrypt from 'bcrypt';
 import { nanoid } from 'nanoid';
 import type { Variables } from '../lib/types.js';
 
@@ -59,6 +60,12 @@ demoRouter.post(
       fileType = 'video';
     }
 
+    // Read optional config from form fields
+    const requireEmail = body['require_email'] === 'true' || body['require_email'] === '1';
+    const watermark = body['watermark'] !== 'false' && body['watermark'] !== '0'; // default true
+    const password = (body['password'] as string) || null;
+    const expiry = (body['expiry'] as string) || '1h';
+
     const arrayBuffer = await file.arrayBuffer();
     const fileBuffer = Buffer.from(arrayBuffer);
 
@@ -87,9 +94,21 @@ demoRouter.post(
     const r2Key = `temp/${nanoid()}/${file.name}`;
     await storage.upload(r2Key, fileBuffer, file.type);
 
-    // Create link with 1-hour expiry, watermark, email gate on
+    // Create link with user-selected config
     const linkId = generateId('lnk');
-    const expiresAt = new Date(Date.now() + 3600000).toISOString(); // 1 hour
+    const expiryMs: Record<string, number> = {
+      '1h': 3600000,
+      '24h': 86400000,
+      '72h': 259200000,
+      '7d': 604800000,
+    };
+    const expiresAt = new Date(Date.now() + (expiryMs[expiry] || 3600000)).toISOString();
+
+    // Hash password if provided
+    let passwordHash: string | null = null;
+    if (password) {
+      passwordHash = await bcrypt.hash(password, 12);
+    }
 
     await db.insert(links).values({
       id: linkId,
@@ -99,8 +118,9 @@ demoRouter.post(
       fileSize: file.size,
       r2Prefix: `renders/${linkId}/`,
       expiresAt,
-      requireEmail: true,
-      watermarkEnabled: true,
+      requireEmail: requireEmail,
+      watermarkEnabled: watermark,
+      passwordHash,
       blockDownload: true,
       status: 'processing',
       name: `Demo: ${file.name || 'document'}`,

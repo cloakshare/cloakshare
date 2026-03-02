@@ -20,20 +20,7 @@
               <p class="text-xs text-text-tertiary font-mono">PDF, images, Office docs, or video &middot; max 20 MB</p>
               <input type="file" id="demo-file-input" accept=".pdf,.png,.jpg,.jpeg,.webp,.docx,.doc,.pptx,.ppt,.odt,.odp,.rtf,.mp4,.mov,.webm" class="hidden" />
             </div>
-            <div class="mt-4">
-              <p class="text-xs text-text-tertiary font-mono mb-2">Or try a sample:</p>
-              <div class="flex flex-col gap-2">
-                <button class="demo-sample-btn text-left px-3 py-2 rounded-md border border-border-subtle bg-background text-sm font-mono text-text-secondary hover:text-text-primary hover:border-border transition-all" data-sample="sales-proposal">
-                  Q4 Sales Proposal &middot; PDF &middot; 6 pages
-                </button>
-                <button class="demo-sample-btn text-left px-3 py-2 rounded-md border border-border-subtle bg-background text-sm font-mono text-text-secondary hover:text-text-primary hover:border-border transition-all" data-sample="pitch-deck">
-                  Series A Pitch Deck &middot; PPTX &middot; 12 pages
-                </button>
-                <button class="demo-sample-btn text-left px-3 py-2 rounded-md border border-accent/30 bg-accent-muted/30 text-sm font-mono text-accent hover:text-accent-hover hover:border-accent/50 transition-all" data-sample="training-video">
-                  Product Demo &middot; MP4 &middot; 2:30
-                </button>
-              </div>
-            </div>
+            <p class="mt-4 text-xs text-text-tertiary font-mono">Supports PDF, DOCX, PPTX, images, and video</p>
           </div>
           <div>
             <h3 class="text-sm font-mono text-foreground mb-4">Configure</h3>
@@ -145,12 +132,6 @@
   });
   fileInput.addEventListener('change', () => { if (fileInput.files?.[0]) selectFile(fileInput.files[0]); });
 
-  // Sample buttons — disabled for now (no pre-built samples)
-  document.querySelectorAll('.demo-sample-btn').forEach(btn => {
-    (btn as HTMLButtonElement).disabled = true;
-    btn.classList.add('opacity-40', 'cursor-not-allowed');
-  });
-
   const SUPPORTED_EXTS = ['.pdf','.png','.jpg','.jpeg','.webp','.docx','.doc','.pptx','.ppt','.odt','.odp','.rtf','.mp4','.mov','.webm'];
   const VIDEO_EXTS = ['.mp4','.mov','.webm'];
 
@@ -191,6 +172,11 @@
     try {
       const formData = new FormData();
       formData.append('file', selectedFile);
+      formData.append('require_email', (document.getElementById('demo-email') as HTMLInputElement).checked ? 'true' : 'false');
+      formData.append('watermark', (document.getElementById('demo-watermark') as HTMLInputElement).checked ? 'true' : 'false');
+      formData.append('expiry', (document.getElementById('demo-expiry') as HTMLSelectElement).value);
+      const pw = (document.getElementById('demo-password') as HTMLInputElement).value.trim();
+      if (pw) formData.append('password', pw);
 
       const res = await fetch(`${API_BASE}/v1/demo/link`, {
         method: 'POST',
