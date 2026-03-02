@@ -65,7 +65,7 @@ export const PLAN_LIMITS = {
   },
   starter: {
     linksPerMonth: 500,
-    viewsPerMonth: 5_000,
+    viewsPerMonth: 10_000,
     maxExpiryDays: 90,
     apiRateLimit: 60,
     webhooks: true,

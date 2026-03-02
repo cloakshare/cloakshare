@@ -6,8 +6,9 @@ import { apiKeyAuth } from '../middleware/apiKey.js';
 import { rateLimiter } from '../middleware/rateLimit.js';
 import { generateId, generateToken, isPrivateUrl } from '../lib/utils.js';
 import { Errors, errorResponse, successResponse } from '../lib/errors.js';
-import { WEBHOOK_EVENTS } from '@cloak/shared';
+import { WEBHOOK_EVENTS, PLAN_LIMITS } from '@cloak/shared';
 import type { Variables } from '../lib/types.js';
+import type { Plan } from '@cloak/shared';
 
 const webhooksRouter = new Hono<{ Variables: Variables }>();
 
@@ -16,8 +17,16 @@ const webhooksRouter = new Hono<{ Variables: Variables }>();
 // ============================================
 
 webhooksRouter.post('/v1/webhooks', apiKeyAuth, rateLimiter('default'), async (c) => {
-  const user = c.get('user') as { id: string };
+  const user = c.get('user') as { id: string; plan: string };
   const orgId = c.get('orgId') as string | undefined;
+  const org = c.get('org') as { plan: string } | undefined;
+
+  // Plan gate: Starter+ only
+  const plan = (org?.plan || user.plan) as Plan;
+  if (!PLAN_LIMITS[plan]?.webhooks) {
+    return errorResponse(c, Errors.forbidden('Webhooks require a Starter plan or above. Upgrade at https://cloakshare.dev/pricing'));
+  }
+
   const { url, events } = await c.req.json();
 
   if (!url || !events || !Array.isArray(events)) {

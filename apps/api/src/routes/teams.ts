@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { eq, and, isNull, gt } from 'drizzle-orm';
+import { eq, and, isNull, gt, count } from 'drizzle-orm';
 import { db } from '../db/client.js';
 import { organizations, orgMembers, orgInvites, users } from '../db/schema.js';
 import { sessionAuth } from '../middleware/session.js';
@@ -10,7 +10,7 @@ import { Errors, errorResponse, successResponse } from '../lib/errors.js';
 import { logger } from '../lib/logger.js';
 import { logAudit, auditorFromContext } from '../services/audit.js';
 import { sendTeamInviteEmail } from '../services/email.js';
-import { ORG_ROLES } from '@cloak/shared';
+import { ORG_ROLES, SEAT_LIMITS } from '@cloak/shared';
 import type { Variables } from '../lib/types.js';
 
 const teamsRouter = new Hono<{ Variables: Variables }>();
@@ -76,10 +76,26 @@ teamsRouter.post('/v1/org/members/invite', sessionAuth, orgResolver, requirePerm
   const orgId = c.get('orgId');
   const user = c.get('user');
   const orgRole = c.get('orgRole');
+  const org = c.get('org') as { plan: string } | undefined;
   const { email, role } = await c.req.json();
 
   if (!email) {
     return errorResponse(c, Errors.validation('email is required'));
+  }
+
+  // Plan gate: Free users cannot invite team members
+  const orgPlan = (org?.plan || user.plan || 'free') as keyof typeof SEAT_LIMITS;
+  const seatLimit = SEAT_LIMITS[orgPlan];
+  if (!seatLimit || !seatLimit.additional) {
+    return errorResponse(c, Errors.forbidden('Team members require a Starter plan or above. Upgrade at https://cloakshare.dev/pricing'));
+  }
+
+  // Seat limit: check current member count against plan limit
+  const memberCount = await db.select({ count: count() }).from(orgMembers).where(eq(orgMembers.orgId, orgId)).get();
+  const pendingCount = await db.select({ count: count() }).from(orgInvites).where(and(eq(orgInvites.orgId, orgId), isNull(orgInvites.acceptedAt))).get();
+  const totalSeats = (memberCount?.count ?? 0) + (pendingCount?.count ?? 0);
+  if (totalSeats >= seatLimit.included) {
+    return errorResponse(c, Errors.limitReached(`Your ${orgPlan} plan includes ${seatLimit.included} seats. Contact support for additional seats.`));
   }
 
   const inviteRole = role || 'member';
@@ -141,10 +157,10 @@ teamsRouter.post('/v1/org/members/invite', sessionAuth, orgResolver, requirePerm
   logger.info({ orgId, email, role: inviteRole, invitedBy: user.id }, 'Team invite sent');
 
   // Send invite email (best-effort)
-  const org = c.get('org') as { name: string };
+  const orgData = c.get('org') as { name: string };
   sendTeamInviteEmail({
     inviteeEmail: email,
-    orgName: org.name,
+    orgName: orgData.name,
     inviterName: user.name || user.email,
     role: inviteRole,
     inviteToken: token,

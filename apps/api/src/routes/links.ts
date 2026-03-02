@@ -11,7 +11,8 @@ import { Errors, errorResponse, successResponse } from '../lib/errors.js';
 import { config } from '../lib/config.js';
 import { logger } from '../lib/logger.js';
 import { createStorage } from '../services/storage.js';
-import { MAX_FILE_SIZE, ALL_SUPPORTED_EXTENSIONS, OFFICE_FILE_EXTENSIONS, OFFICE_MIME_TYPES, VIDEO_FILE_EXTENSIONS, VIDEO_MAX_FILE_SIZE } from '@cloak/shared';
+import { MAX_FILE_SIZE, ALL_SUPPORTED_EXTENSIONS, OFFICE_FILE_EXTENSIONS, OFFICE_MIME_TYPES, VIDEO_FILE_EXTENSIONS, VIDEO_MAX_FILE_SIZE, PLAN_LIMITS } from '@cloak/shared';
+import type { Plan } from '@cloak/shared';
 import { dispatchWebhook } from '../services/webhooks.js';
 import { reportUsage } from '../services/billing.js';
 import { logAudit, auditorFromContext } from '../services/audit.js';
@@ -175,6 +176,31 @@ linksRouter.post('/v1/links', apiKeyAuth, rateLimiter('upload'), enforceUsageLim
   const notifyUrl = (body.notify_url as string) || null;
   const notifyEmail = (body.notify_email as string) || null;
 
+  // ============================================
+  // PLAN ENFORCEMENT — feature gates per tier
+  // ============================================
+  const plan = (c.get('org') as { plan: string } | undefined)?.plan || user.plan;
+  const planLimits = PLAN_LIMITS[plan as Plan];
+
+  // File type gate: Free = PDF + images only, Starter = + Office, Growth+ = + Video
+  const ext = originalFilename.split('.').pop()?.toLowerCase();
+  if (ext && (OFFICE_FILE_EXTENSIONS as readonly string[]).includes(ext) && plan === 'free') {
+    return errorResponse(c, Errors.forbidden('Office document support requires a Starter plan or above. Upgrade at https://cloakshare.dev/pricing'));
+  }
+  if (fileType === 'video' && (plan === 'free' || plan === 'starter')) {
+    return errorResponse(c, Errors.forbidden('Video sharing requires a Growth plan or above. Upgrade at https://cloakshare.dev/pricing'));
+  }
+
+  // Password gate: Starter+ only
+  if (password && !planLimits?.passwordProtection) {
+    return errorResponse(c, Errors.forbidden('Password protection requires a Starter plan or above. Upgrade at https://cloakshare.dev/pricing'));
+  }
+
+  // Watermark gate: Free tier must have watermarks enabled
+  if (!watermark && plan === 'free') {
+    return errorResponse(c, Errors.forbidden('Watermarks cannot be disabled on the Free plan. Upgrade at https://cloakshare.dev/pricing'));
+  }
+
   // Calculate expiry
   let expiresAt: string | null = null;
   if (expiresAtRaw) {
@@ -188,6 +214,15 @@ linksRouter.post('/v1/links', apiKeyAuth, rateLimiter('upload'), enforceUsageLim
         : unit === 'd' ? value * 86400000
         : value * 365 * 86400000;
       expiresAt = new Date(Date.now() + ms).toISOString();
+    }
+  }
+
+  // Expiry gate: enforce max expiry per plan
+  if (expiresAt && planLimits && planLimits.maxExpiryDays > 0) {
+    const maxMs = planLimits.maxExpiryDays * 86400000;
+    const expiryMs = new Date(expiresAt).getTime() - Date.now();
+    if (expiryMs > maxMs) {
+      return errorResponse(c, Errors.forbidden(`Your plan allows a maximum expiry of ${planLimits.maxExpiryDays} days. Upgrade at https://cloakshare.dev/pricing`));
     }
   }
 

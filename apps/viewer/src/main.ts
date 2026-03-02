@@ -84,6 +84,7 @@ interface LinkMetadata {
   brand_color: string | null;
   brand_logo_url: string | null;
   watermark_enabled: boolean;
+  show_badge: boolean;
   name: string | null;
   progress_url?: string;
 }
@@ -877,6 +878,13 @@ async function init() {
   if (!meta) return; // Error already shown by fetchMetadata
 
   metadata = meta;
+
+  // Hide "Secured by CloakShare" badge if paid plan
+  if (meta.show_badge === false) {
+    document.querySelectorAll('.secured-badge, .secured-by').forEach(el => {
+      (el as HTMLElement).style.display = 'none';
+    });
+  }
 
   // Handle processing state — show SSE progress
   if (meta.status === 'processing') {

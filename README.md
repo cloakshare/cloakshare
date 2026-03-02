@@ -136,19 +136,23 @@ One API, every format. CloakShare detects the file type and handles conversion a
 
 | Feature | Free | Starter $29/mo | Growth $99/mo | Scale $299/mo |
 |---------|:----:|:--------------:|:-------------:|:-------------:|
-| Secure links | 10/mo | 100/mo | 500/mo | 2,000/mo |
+| Secure links | 50/mo | 500/mo | 2,500/mo | 10,000/mo |
+| Views | 500/mo | 10,000/mo | 25,000/mo | 100,000/mo |
+| Max expiry | 7 days | 90 days | 1 year | Unlimited |
 | Email gate | ✅ | ✅ | ✅ | ✅ |
 | Dynamic watermarks | ✅ | ✅ | ✅ | ✅ |
-| Video sharing | — | ✅ | ✅ | ✅ |
-| Office docs | — | ✅ | ✅ | ✅ |
+| Office docs (DOCX, PPTX) | — | ✅ | ✅ | ✅ |
+| Video sharing (MP4, MOV) | — | — | ✅ | ✅ |
 | Password protection | — | ✅ | ✅ | ✅ |
-| Page analytics | — | ✅ | ✅ | ✅ |
 | Webhooks | — | ✅ | ✅ | ✅ |
+| Page analytics | — | ✅ | ✅ | ✅ |
 | Brand removal | — | ✅ | ✅ | ✅ |
 | Custom domains | — | — | ✅ | ✅ |
-| Embedded viewer | — | — | ✅ | ✅ |
+| Custom branding | — | — | ✅ | ✅ |
+| Embedded viewer | — | — | — | ✅ |
 | Teams | — | 2 seats | 5 seats | 15 seats |
 | Audit log | — | — | 90 days | 1 year |
+| SSO/SAML | — | — | — | ✅ |
 | Self-hosted | ✅ | ✅ | ✅ | ✅ |
 
 Annual billing: 20% off. [See full pricing](https://cloakshare.dev/pricing)

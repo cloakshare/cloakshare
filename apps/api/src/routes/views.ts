@@ -10,7 +10,8 @@ import { createStorage } from '../services/storage.js';
 import { generateWatermarkedPages, getWatermarkedPageOnDemand } from '../services/watermarkRenderer.js';
 import { config } from '../lib/config.js';
 import { logger } from '../lib/logger.js';
-import { LINK_STATUS } from '@cloak/shared';
+import { LINK_STATUS, PLAN_LIMITS } from '@cloak/shared';
+import type { Plan } from '@cloak/shared';
 import { dispatchWebhook } from '../services/webhooks.js';
 import { reportUsage } from '../services/billing.js';
 import { sendViewNotification } from '../services/email.js';
@@ -69,6 +70,10 @@ viewsRouter.get('/v1/viewer/:token', async (c) => {
     return errorResponse(c, Errors.linkExpired());
   }
 
+  // Determine badge visibility based on link owner's plan
+  const linkOwner = await db.select({ plan: users.plan }).from(users).where(eq(users.id, link.userId)).get();
+  const showBadge = !linkOwner || linkOwner.plan === 'free';
+
   return successResponse(c, {
     status: link.status,
     file_type: link.fileType,
@@ -86,6 +91,7 @@ viewsRouter.get('/v1/viewer/:token', async (c) => {
     brand_color: link.brandColor,
     brand_logo_url: link.brandLogo,
     watermark_enabled: link.watermarkEnabled,
+    show_badge: showBadge,
     name: link.name,
   });
 });
@@ -121,10 +127,28 @@ viewsRouter.post(
       return errorResponse(c, Errors.linkExpired());
     }
 
-    // Check max views
+    // Check max views (per-link limit)
     if (link.maxViews && link.viewCount >= link.maxViews) {
       await db.update(links).set({ status: 'expired' }).where(eq(links.id, linkId));
       return errorResponse(c, Errors.linkExpired());
+    }
+
+    // Check monthly view limit for link owner's plan
+    const linkOwner = await db.select({ plan: users.plan }).from(users).where(eq(users.id, link.userId)).get();
+    if (linkOwner) {
+      const ownerPlan = linkOwner.plan as Plan;
+      const planLimits = PLAN_LIMITS[ownerPlan];
+      if (planLimits) {
+        const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+        const monthlyViews = await db.select({ count: sql<number>`count(*)` }).from(views)
+          .where(and(
+            eq(views.linkId, linkId),
+            sql`${views.viewedAt} like ${currentMonth + '%'}`,
+          )).get();
+        if ((monthlyViews?.count ?? 0) >= planLimits.viewsPerMonth) {
+          return errorResponse(c, Errors.limitReached('This document has reached its monthly view limit.'));
+        }
+      }
     }
 
     // Verify email requirement
