@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { eq, and, sql } from 'drizzle-orm';
+import { eq, and, sql, like } from 'drizzle-orm';
 import bcrypt from 'bcrypt';
 import { db } from '../db/client.js';
 import { links, views, viewerSessions, users } from '../db/schema.js';
@@ -92,6 +92,7 @@ viewsRouter.get('/v1/viewer/:token', async (c) => {
     brand_logo_url: link.brandLogo,
     watermark_enabled: link.watermarkEnabled,
     show_badge: showBadge,
+    view_count: link.viewCount,
     name: link.name,
   });
 });
@@ -143,7 +144,7 @@ viewsRouter.post(
         const monthlyViews = await db.select({ count: sql<number>`count(*)` }).from(views)
           .where(and(
             eq(views.linkId, linkId),
-            sql`${views.viewedAt} like ${currentMonth + '%'}`,
+            like(views.createdAt, `${currentMonth}%`),
           )).get();
         if ((monthlyViews?.count ?? 0) >= planLimits.viewsPerMonth) {
           return errorResponse(c, Errors.limitReached('This document has reached its monthly view limit.'));

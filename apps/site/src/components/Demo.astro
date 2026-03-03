@@ -230,6 +230,37 @@
 
       (document.getElementById('demo-url') as HTMLElement).textContent = secureUrl;
       (document.getElementById('demo-open-viewer') as HTMLAnchorElement).href = secureUrl;
+
+      // Poll for live analytics
+      let lastViewCount = 0;
+      const analyticsEl = document.getElementById('demo-analytics')!;
+      const pollAnalytics = async () => {
+        try {
+          const metaRes = await fetch(`${API_BASE}/v1/viewer/${linkId}`);
+          if (metaRes.ok) {
+            const meta = await metaRes.json();
+            const d = meta.data || meta;
+            const vc = d.view_count || 0;
+            if (vc > 0) {
+              const lines = [
+                `<div class="flex items-center justify-between mb-2"><span class="text-text-secondary text-sm font-sans">Total views</span><span class="text-accent font-mono text-sm">${vc}</span></div>`,
+                `<div class="flex items-center justify-between mb-2"><span class="text-text-secondary text-sm font-sans">Status</span><span class="text-accent font-mono text-sm">${d.status}</span></div>`,
+                d.page_count ? `<div class="flex items-center justify-between"><span class="text-text-secondary text-sm font-sans">Pages</span><span class="text-text-primary font-mono text-sm">${d.page_count}</span></div>` : '',
+              ];
+              analyticsEl.innerHTML = lines.join('');
+              if (vc !== lastViewCount) {
+                analyticsEl.classList.add('ring-1', 'ring-accent/30');
+                setTimeout(() => analyticsEl.classList.remove('ring-1', 'ring-accent/30'), 1500);
+              }
+              lastViewCount = vc;
+            }
+          }
+        } catch { /* ignore */ }
+      };
+      const analyticsInterval = setInterval(pollAnalytics, 3000);
+      pollAnalytics();
+      // Stop polling after 10 minutes
+      setTimeout(() => clearInterval(analyticsInterval), 600000);
     } catch (err: any) {
       progressSection.classList.add('hidden');
       uploadSection.classList.remove('hidden');
