@@ -1,6 +1,25 @@
 ---
 const plans = [
   {
+    name: 'npm Package',
+    price: '$0',
+    period: 'forever',
+    description: 'Client-side viewer, no API key',
+    features: [
+      'Unlimited usage',
+      'PDF & image viewing',
+      'Client-side watermarks',
+      'Client-side email gate',
+      'Client-side password',
+      'Print & copy protection',
+      '"Secured by CloakShare" badge',
+      'Works offline',
+    ],
+    cta: 'npm install',
+    href: '/embed',
+    highlight: false,
+  },
+  {
     name: 'Free',
     price: '$0',
     period: 'forever',
@@ -83,7 +102,7 @@ const plans = [
 ];
 ---
 
-<div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
   {plans.map(plan => (
     <div class={`bg-surface border rounded-lg p-6 flex flex-col card-glow ${plan.highlight ? 'border-accent/40 shadow-glow' : 'border-border'}`}>
       {plan.highlight && (

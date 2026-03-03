@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { eq } from 'drizzle-orm';
-import { app, registerUser, apiRequest, createTestLink, minimalPdf } from './helpers.js';
+import { app, registerUser, apiRequest, createTestLink, minimalPdf, upgradeUserPlan } from './helpers.js';
 import { db } from '../db/client.js';
 import { links, renderingJobs } from '../db/schema.js';
 
@@ -34,6 +34,8 @@ describe('Office Document Conversion', () => {
     const user = await registerUser();
     apiKey = user.apiKey;
     userId = user.userId;
+    // Office docs require Starter plan or above
+    await upgradeUserPlan(userId, 'starter');
   });
 
   // -------------------------------------------------------

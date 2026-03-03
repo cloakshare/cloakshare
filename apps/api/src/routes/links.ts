@@ -20,6 +20,15 @@ import { nanoid } from 'nanoid';
 import bcrypt from 'bcrypt';
 import type { Variables } from '../lib/types.js';
 
+function safeJsonParse<T>(json: string | null | undefined, fallback: T): T {
+  if (!json) return fallback;
+  try {
+    return JSON.parse(json);
+  } catch {
+    return fallback;
+  }
+}
+
 const linksRouter = new Hono<{ Variables: Variables }>();
 
 // ============================================
@@ -167,7 +176,7 @@ linksRouter.post('/v1/links', apiKeyAuth, rateLimiter('upload'), enforceUsageLim
   const maxViews = body.max_views ? parseInt(body.max_views as string, 10) : null;
   const requireEmail = body.require_email !== 'false' && body.require_email !== false;
   const allowedDomains = body.allowed_domains
-    ? (typeof body.allowed_domains === 'string' ? JSON.parse(body.allowed_domains) : body.allowed_domains)
+    ? (typeof body.allowed_domains === 'string' ? safeJsonParse(body.allowed_domains, null) : body.allowed_domains)
     : null;
   const password = body.password as string | undefined;
   const blockDownload = body.block_download !== 'false' && body.block_download !== false;
@@ -537,14 +546,14 @@ linksRouter.get('/v1/links/:id', apiKeyAuth, async (c) => {
       duration: link.videoDuration,
       width: link.videoWidth,
       height: link.videoHeight,
-      qualities: link.videoQualities ? JSON.parse(link.videoQualities) : [],
+      qualities: safeJsonParse(link.videoQualities, []),
     } : undefined,
     status: link.status,
     rules: {
       expires_at: link.expiresAt,
       max_views: link.maxViews,
       require_email: link.requireEmail,
-      allowed_domains: link.allowedDomains ? JSON.parse(link.allowedDomains) : null,
+      allowed_domains: safeJsonParse(link.allowedDomains, null),
       has_password: !!link.passwordHash,
       block_download: link.blockDownload,
       watermark: link.watermarkEnabled,
@@ -655,8 +664,8 @@ linksRouter.get('/v1/links/:id/analytics', apiKeyAuth, rateLimiter('analytics'),
       return {
         email,
         total_views: emailViews.length,
-        first_viewed: emailViews[emailViews.length - 1]?.createdAt,
-        last_viewed: emailViews[0]?.createdAt,
+        first_viewed: emailViews[0]?.createdAt,
+        last_viewed: emailViews[emailViews.length - 1]?.createdAt,
         total_duration: emailViews.reduce((sum, v) => sum + (v.duration || 0), 0),
         avg_completion_rate: parseFloat(
           (emailViews.reduce((sum, v) => sum + (v.completionRate || 0), 0) / emailViews.length).toFixed(2),
@@ -769,7 +778,7 @@ linksRouter.get('/v1/links/:id/progress', async (c) => {
       // Only send if progress changed
       if (progressJson !== lastProgress) {
         lastProgress = progressJson;
-        const progress = JSON.parse(progressJson) as {
+        const progress = safeJsonParse(progressJson, {}) as {
           currentPage?: number;
           totalPages?: number;
           percent?: number;

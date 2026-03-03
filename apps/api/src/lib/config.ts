@@ -44,6 +44,12 @@ export const config = {
     ? process.env.CORS_ORIGINS.split(',').map(s => s.trim())
     : ['https://cloakshare.dev', 'https://www.cloakshare.dev', 'https://app.cloakshare.dev'],
 
+  // Embed allowed origins — for <cloak-viewer> Web Component embedded on third-party domains
+  // Default: '*' (viewer endpoints use token auth, not cookies, so open CORS is safe)
+  embedAllowedOrigins: process.env.EMBED_ALLOWED_ORIGINS
+    ? process.env.EMBED_ALLOWED_ORIGINS.split(',').map(s => s.trim())
+    : ['*'],
+
   // Stripe (cloud mode only)
   stripe: {
     secretKey: process.env.STRIPE_SECRET_KEY,

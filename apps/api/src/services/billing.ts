@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
 import { eq } from 'drizzle-orm';
 import { db } from '../db/client.js';
-import { users, usageRecords } from '../db/schema.js';
+import { users, usageRecords, organizations } from '../db/schema.js';
 import { generateId, getCurrentBillingPeriodStart } from '../lib/utils.js';
 import { config } from '../lib/config.js';
 import { logger } from '../lib/logger.js';
@@ -149,11 +149,22 @@ export async function handleStripeWebhook(body: string, signature: string) {
       const userId = session.metadata?.userId;
       const plan = session.metadata?.plan;
       if (userId && plan) {
+        const now = new Date().toISOString();
         await db.update(users).set({
           plan,
           stripeSubscriptionId: session.subscription as string,
-          updatedAt: new Date().toISOString(),
+          updatedAt: now,
         }).where(eq(users.id, userId));
+
+        // Sync plan to user's default organization
+        const updatedUser = await db.select({ defaultOrgId: users.defaultOrgId }).from(users).where(eq(users.id, userId)).get();
+        if (updatedUser?.defaultOrgId) {
+          await db.update(organizations).set({
+            plan,
+            stripeSubscriptionId: session.subscription as string,
+            updatedAt: now,
+          }).where(eq(organizations.id, updatedUser.defaultOrgId));
+        }
         logger.info({ userId, plan }, 'Subscription activated');
       }
       break;
@@ -166,8 +177,13 @@ export async function handleStripeWebhook(body: string, signature: string) {
       if (user) {
         const status = sub.status;
         if (status === 'canceled' || status === 'unpaid') {
-          await db.update(users).set({ plan: 'free', updatedAt: new Date().toISOString() })
+          const now = new Date().toISOString();
+          await db.update(users).set({ plan: 'free', updatedAt: now })
             .where(eq(users.id, user.id));
+          if (user.defaultOrgId) {
+            await db.update(organizations).set({ plan: 'free', updatedAt: now })
+              .where(eq(organizations.id, user.defaultOrgId));
+          }
           logger.info({ userId: user.id }, 'Subscription cancelled, reverted to free');
         }
       }
@@ -179,11 +195,19 @@ export async function handleStripeWebhook(body: string, signature: string) {
       const user = await db.select().from(users)
         .where(eq(users.stripeSubscriptionId, sub.id)).get();
       if (user) {
+        const now = new Date().toISOString();
         await db.update(users).set({
           plan: 'free',
           stripeSubscriptionId: null,
-          updatedAt: new Date().toISOString(),
+          updatedAt: now,
         }).where(eq(users.id, user.id));
+        if (user.defaultOrgId) {
+          await db.update(organizations).set({
+            plan: 'free',
+            stripeSubscriptionId: null,
+            updatedAt: now,
+          }).where(eq(organizations.id, user.defaultOrgId));
+        }
         logger.info({ userId: user.id }, 'Subscription deleted');
       }
       break;

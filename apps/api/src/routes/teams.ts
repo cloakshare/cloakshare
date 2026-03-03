@@ -92,7 +92,7 @@ teamsRouter.post('/v1/org/members/invite', sessionAuth, orgResolver, requirePerm
 
   // Seat limit: check current member count against plan limit
   const memberCount = await db.select({ count: count() }).from(orgMembers).where(eq(orgMembers.orgId, orgId)).get();
-  const pendingCount = await db.select({ count: count() }).from(orgInvites).where(and(eq(orgInvites.orgId, orgId), isNull(orgInvites.acceptedAt))).get();
+  const pendingCount = await db.select({ count: count() }).from(orgInvites).where(and(eq(orgInvites.orgId, orgId), isNull(orgInvites.acceptedAt), isNull(orgInvites.revokedAt))).get();
   const totalSeats = (memberCount?.count ?? 0) + (pendingCount?.count ?? 0);
   if (totalSeats >= seatLimit.included) {
     return errorResponse(c, Errors.limitReached(`Your ${orgPlan} plan includes ${seatLimit.included} seats. Contact support for additional seats.`));

@@ -18,7 +18,30 @@ import { sendViewNotification } from '../services/email.js';
 import { createNotification } from './notifications.js';
 import type { Variables } from '../lib/types.js';
 
+function safeJsonParse<T>(json: string | null | undefined, fallback: T): T {
+  if (!json) return fallback;
+  try {
+    return JSON.parse(json);
+  } catch {
+    return fallback;
+  }
+}
+
 const viewsRouter = new Hono<{ Variables: Variables }>();
+
+// ============================================
+// GET /v1/time — Server time for client-side expiry mitigation
+// ============================================
+
+viewsRouter.get('/v1/time', (c) => {
+  const now = new Date();
+  return c.json({
+    data: {
+      timestamp: now.getTime(),
+      iso: now.toISOString(),
+    },
+  });
+});
 
 // ============================================
 // GET /v1/viewer/:token — Get link metadata for viewer
@@ -79,13 +102,13 @@ viewsRouter.get('/v1/viewer/:token', async (c) => {
     file_type: link.fileType,
     require_email: link.requireEmail,
     has_password: !!link.passwordHash,
-    allowed_domains: link.allowedDomains ? JSON.parse(link.allowedDomains) : null,
+    allowed_domains: safeJsonParse(link.allowedDomains, null),
     page_count: link.pageCount,
     video_metadata: link.fileType === 'video' ? {
       duration: link.videoDuration,
       width: link.videoWidth,
       height: link.videoHeight,
-      qualities: link.videoQualities ? JSON.parse(link.videoQualities) : [],
+      qualities: safeJsonParse(link.videoQualities, []),
     } : undefined,
     brand_name: link.brandName,
     brand_color: link.brandColor,
@@ -159,7 +182,7 @@ viewsRouter.post(
 
     // Verify allowed domains
     if (link.allowedDomains && email) {
-      const domains = JSON.parse(link.allowedDomains) as string[];
+      const domains = safeJsonParse<string[]>(link.allowedDomains, []);
       const emailDomain = '@' + email.split('@')[1];
       if (!domains.includes(emailDomain)) {
         return errorResponse(c, Errors.domainNotAllowed(domains));
@@ -287,7 +310,7 @@ viewsRouter.post(
       const { generateSessionManifest } = await import('../services/transcoder.js');
 
       // Generate per-session manifest with pre-signed URLs baked in (for Safari/iOS)
-      const qualities = link.videoQualities ? JSON.parse(link.videoQualities) : [];
+      const qualities = safeJsonParse<string[]>(link.videoQualities, []);
       const sessionManifestContent = await generateSessionManifest(linkId, qualities);
 
       // Also provide the static master playlist URL for HLS.js (which re-signs per segment)

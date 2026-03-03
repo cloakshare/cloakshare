@@ -1,0 +1,544 @@
+---
+import Base from '../layouts/Base.astro';
+
+const features = [
+  { icon: '~', title: 'Watermarking', desc: 'Tiled diagonal watermarks with {{email}}, {{date}}, and {{session_id}} template variables. Canvas-rendered, not CSS overlay.' },
+  { icon: '@', title: 'Email Gate', desc: 'Require viewers to enter their email before viewing. Stored in localStorage for return visits. Pre-fill via prop if you know the user.' },
+  { icon: '#', title: 'Password Protection', desc: 'Optional password gate before document access. Client-side for free tier, server-verified with API key.' },
+  { icon: '>', title: 'Canvas Rendering', desc: 'Documents render to HTML Canvas, not DOM. Prevents select-all copy and makes screenshots harder.' },
+  { icon: '!', title: 'Print Protection', desc: 'CSS @media print hides the viewer. Right-click and drag are disabled. Deters casual sharing.' },
+  { icon: '%', title: 'Link Expiry', desc: 'Set an ISO 8601 expiry date. Server time fetch prevents clock tampering. API-connected mode enforces server-side.' },
+  { icon: '=', title: 'Page Analytics', desc: 'Track which pages were viewed, time per page, scroll depth, and device type. Client events free, dashboard with API.' },
+  { icon: '&', title: 'Webhook Events', desc: 'cloak:view, cloak:ready, cloak:error, cloak:email-submitted — wire up your own tracking or CRM integration.' },
+  { icon: '*', title: 'Dark & Light Themes', desc: 'Dark mode by default. Light theme via theme="light" attribute. Both with full color system.' },
+  { icon: '^', title: 'Framework Agnostic', desc: 'Web Component works in React, Vue, Svelte, Angular, and vanilla HTML. Zero framework lock-in.' },
+  { icon: '+', title: 'Custom Branding', desc: '"Secured by CloakShare" badge included free. Remove it on Starter plan and above.' },
+  { icon: '?', title: 'Accessible', desc: 'Keyboard navigation, ARIA labels, screen reader announcements, focus management, and prefers-reduced-motion support.' },
+];
+
+const comparisonRows = [
+  { feature: 'Embeddable component', cloak: true, docsend: false, papermark: false, reactpdf: true, pdfjs: true },
+  { feature: 'Watermarking', cloak: true, docsend: true, papermark: true, reactpdf: false, pdfjs: false },
+  { feature: 'Email gate', cloak: true, docsend: true, papermark: true, reactpdf: false, pdfjs: false },
+  { feature: 'View tracking', cloak: true, docsend: true, papermark: true, reactpdf: false, pdfjs: false },
+  { feature: 'Office docs', cloak: 'API', docsend: true, papermark: true, reactpdf: false, pdfjs: false },
+  { feature: 'Video', cloak: 'API', docsend: true, papermark: false, reactpdf: false, pdfjs: false },
+  { feature: 'Self-hostable', cloak: true, docsend: false, papermark: true, reactpdf: false, pdfjs: false },
+  { feature: 'Open source', cloak: 'MIT', docsend: false, papermark: 'AGPL', reactpdf: 'MIT', pdfjs: 'Apache' },
+  { feature: 'Starting price', cloak: 'Free', docsend: '$45/user', papermark: '$59/mo', reactpdf: 'Free', pdfjs: 'Free' },
+];
+---
+
+<Base
+  title="Embeddable Viewer — CloakShare"
+  description="Secure document viewer in one line of code. Watermarks, email gates, and view tracking. Free for PDF & images. No API key needed."
+  canonical="/embed"
+>
+  <!-- Section 1: Hero -->
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/30 bg-accent-muted text-xs font-mono text-accent mb-6">
+        <span>NEW</span>
+        <span class="text-text-tertiary">|</span>
+        <span>@cloakshare/viewer</span>
+      </div>
+
+      <h1 class="font-mono font-bold text-4xl md:text-5xl text-foreground mb-6 leading-tight">
+        Secure document viewer<br />
+        <span class="text-shimmer">in one line of code</span>
+      </h1>
+
+      <p class="text-text-secondary font-sans text-lg mb-10 max-w-2xl mx-auto">
+        Watermarks, email gates, and view tracking. Free for PDF & images.
+        No API key needed. Works in React, Vue, Svelte, Angular, and vanilla HTML.
+      </p>
+
+      <!-- Code snippet -->
+      <div class="bg-surface border border-border rounded-lg p-4 max-w-2xl mx-auto mb-8 text-left">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-3 h-3 rounded-full bg-[#FF5F57]"></span>
+          <span class="w-3 h-3 rounded-full bg-[#FEBC2E]"></span>
+          <span class="w-3 h-3 rounded-full bg-[#28C840]"></span>
+        </div>
+        <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><code><span class="text-text-tertiary">$</span> npm install @cloakshare/viewer
+
+<span class="text-text-tertiary">&lt;!-- That's it. One tag. --&gt;</span>
+<span class="text-accent">&lt;cloak-viewer</span>
+  <span class="text-foreground">src</span>=<span class="text-[#E9950C]">"/deck.pdf"</span>
+  <span class="text-foreground">watermark</span>=<span class="text-[#E9950C]">"Confidential"</span>
+  <span class="text-foreground">email-gate</span>
+<span class="text-accent">/&gt;</span></code></pre>
+      </div>
+
+      <!-- CTAs -->
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <button
+          id="copy-install"
+          class="px-6 py-2.5 bg-accent text-background font-mono font-semibold text-sm rounded-md hover:bg-accent-hover transition-colors flex items-center gap-2"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+          npm install @cloakshare/viewer
+        </button>
+        <a
+          href="https://github.com/cloakshare/cloakshare"
+          class="px-6 py-2.5 bg-elevated border border-border text-text-secondary font-mono text-sm rounded-md hover:text-text-primary hover:border-text-tertiary transition-all flex items-center gap-2"
+          target="_blank"
+          rel="noopener"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          View on GitHub
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Interactive Demo -->
+  <section class="py-20 px-6 border-t border-border-subtle">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-center font-mono font-semibold text-2xl text-foreground mb-4">Try it live</h2>
+      <p class="text-center text-text-secondary font-sans mb-12 max-w-xl mx-auto">
+        Edit the code on the left. The viewer updates in real time on the right.
+      </p>
+
+      <div class="grid lg:grid-cols-2 gap-6">
+        <!-- Code editor panel -->
+        <div class="bg-surface border border-border rounded-lg overflow-hidden">
+          <div class="flex items-center gap-2 px-4 py-3 border-b border-border-subtle bg-elevated">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#FF5F57]"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-[#28C840]"></span>
+            <span class="text-xs font-mono text-text-tertiary ml-2">playground.html</span>
+          </div>
+          <div class="p-4 space-y-4">
+            <!-- Toggle controls -->
+            <div class="flex flex-wrap gap-3">
+              <label class="flex items-center gap-2 text-sm font-mono text-text-secondary cursor-pointer">
+                <input type="checkbox" id="demo-watermark" checked class="accent-accent" />
+                watermark
+              </label>
+              <label class="flex items-center gap-2 text-sm font-mono text-text-secondary cursor-pointer">
+                <input type="checkbox" id="demo-emailgate" class="accent-accent" />
+                email-gate
+              </label>
+              <label class="flex items-center gap-2 text-sm font-mono text-text-secondary cursor-pointer">
+                <input type="checkbox" id="demo-branding" checked class="accent-accent" />
+                branding
+              </label>
+            </div>
+            <div>
+              <label class="block text-xs font-mono text-text-tertiary mb-1">Watermark text</label>
+              <input
+                type="text"
+                id="demo-watermark-text"
+                value="{`{{email}}`} &middot; {`{{date}}`}"
+                class="w-full bg-input border border-border rounded px-3 py-1.5 text-sm font-mono text-foreground focus:border-accent focus:outline-none"
+              />
+            </div>
+            <!-- Live code preview -->
+            <pre id="demo-code" class="text-sm font-mono text-text-secondary bg-background rounded-lg p-4 overflow-x-auto border border-border-subtle"><code>&lt;cloak-viewer
+  src="/sample.pdf"
+  watermark="{`{{email}}`} &middot; {`{{date}}`}"
+  branding
+/&gt;</code></pre>
+          </div>
+        </div>
+
+        <!-- Viewer preview panel — live component -->
+        <div class="bg-surface border border-border rounded-lg overflow-hidden min-h-[400px]">
+          <div id="demo-viewer-container" style="width:100%;height:450px;">
+            <cloak-viewer
+              id="demo-viewer"
+              src="/samples/sample-deck.pdf"
+              watermark="demo@company.com · 2026-03-02"
+              branding="true"
+              width="100%"
+              height="450px"
+            ></cloak-viewer>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Free vs API -->
+  <section class="py-20 px-6 border-t border-border-subtle">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="text-center font-mono font-semibold text-2xl text-foreground mb-4">Free forever. Pay when you need more.</h2>
+      <p class="text-center text-text-secondary font-sans mb-12 max-w-xl mx-auto">
+        PDF and image support runs entirely client-side. No API key, no server, no cost.
+        Office docs and video require server-side processing via the CloakShare API.
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Free tier -->
+        <div class="bg-surface border border-border rounded-lg p-8 card-glow">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="px-2.5 py-1 rounded-md border border-border-subtle bg-elevated text-xs font-mono text-text-tertiary">FREE</span>
+            <span class="text-sm font-sans text-text-secondary">No API key needed</span>
+          </div>
+          <h3 class="font-mono font-semibold text-xl text-foreground mb-4">Client-side rendering</h3>
+          <ul class="space-y-3 mb-8">
+            {[
+              'PDF viewing (lazy-loaded PDF.js)',
+              'Image viewing (PNG, JPG, WebP, GIF, SVG)',
+              'Canvas watermarks with templates',
+              'Client-side email gate',
+              'Client-side password protection',
+              'Print and right-click protection',
+              'Link expiry (with server time check)',
+              'Client-side view events',
+            ].map(item => (
+              <li class="flex items-start gap-2 text-sm text-text-secondary font-sans">
+                <span class="text-accent text-xs mt-1">+</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+          <div class="bg-background rounded-lg p-3 border border-border-subtle">
+            <code class="text-xs font-mono text-text-secondary">npm install @cloakshare/viewer</code>
+          </div>
+        </div>
+
+        <!-- API tier -->
+        <div class="bg-surface border border-accent/40 rounded-lg p-8 card-glow shadow-glow">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="px-2.5 py-1 rounded-md border border-accent/30 bg-accent-muted text-xs font-mono text-accent">API</span>
+            <span class="text-sm font-sans text-text-secondary">Requires API key</span>
+          </div>
+          <h3 class="font-mono font-semibold text-xl text-foreground mb-4">+ Server-side processing</h3>
+          <ul class="space-y-3 mb-8">
+            {[
+              'Office docs (DOCX, PPTX, XLSX)',
+              'Video (MP4, MOV, WebM + HLS streaming)',
+              'Server-burned watermarks (unremovable)',
+              'Server-verified email gate',
+              'Server-verified password',
+              'Analytics dashboard + webhooks',
+              'Custom domains and team management',
+              '50 links/mo + 500 views/mo free',
+            ].map(item => (
+              <li class="flex items-start gap-2 text-sm text-text-secondary font-sans">
+                <span class="text-accent text-xs mt-1">+</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+          <a
+            href="https://app.cloakshare.dev/register"
+            class="block text-center px-6 py-2.5 bg-accent text-background font-mono font-semibold text-sm rounded-md hover:bg-accent-hover transition-colors"
+          >
+            Get free API key
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: Feature Grid -->
+  <section class="py-20 px-6 border-t border-border-subtle">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-center font-mono font-semibold text-2xl text-foreground mb-4">Everything you need</h2>
+      <p class="text-center text-text-secondary font-sans mb-12 max-w-xl mx-auto">
+        DocSend features in an npm package. No SaaS lock-in.
+      </p>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {features.map(f => (
+          <div class="bg-surface border border-border rounded-lg p-5 card-glow">
+            <span class="inline-flex items-center justify-center w-8 h-8 rounded-md bg-accent-muted text-accent font-mono font-bold text-sm mb-3">{f.icon}</span>
+            <h3 class="font-mono font-medium text-sm text-foreground mb-2">{f.title}</h3>
+            <p class="text-xs text-text-secondary font-sans leading-relaxed">{f.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: Framework Support -->
+  <section class="py-20 px-6 border-t border-border-subtle">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-center font-mono font-semibold text-2xl text-foreground mb-4">Works everywhere</h2>
+      <p class="text-center text-text-secondary font-sans mb-12 max-w-xl mx-auto">
+        Web Component with framework wrappers. Same API, any stack.
+      </p>
+
+      <div class="grid sm:grid-cols-2 gap-5">
+        <!-- React -->
+        <div class="bg-surface border border-border rounded-lg p-5 card-glow">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-[#61DAFB] font-mono font-bold text-sm">React</span>
+            <span class="text-xs font-mono text-text-tertiary">@cloakshare/react</span>
+          </div>
+          <pre class="text-xs font-mono text-text-secondary bg-background rounded p-3 border border-border-subtle overflow-x-auto"><code>import {'{'} CloakViewer {'}'} from '@cloakshare/react';
+
+&lt;CloakViewer
+  src="/deck.pdf"
+  watermark="Confidential"
+  emailGate
+  onView={(e) => console.log(e)}
+/&gt;</code></pre>
+        </div>
+
+        <!-- Vue -->
+        <div class="bg-surface border border-border rounded-lg p-5 card-glow">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-[#42B883] font-mono font-bold text-sm">Vue</span>
+            <span class="text-xs font-mono text-text-tertiary">native Web Component</span>
+          </div>
+          <pre class="text-xs font-mono text-text-secondary bg-background rounded p-3 border border-border-subtle overflow-x-auto"><code>&lt;script setup&gt;
+import '@cloakshare/viewer';
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;cloak-viewer
+    src="/deck.pdf"
+    watermark="Confidential"
+    email-gate
+  /&gt;
+&lt;/template&gt;</code></pre>
+        </div>
+
+        <!-- Vanilla HTML -->
+        <div class="bg-surface border border-border rounded-lg p-5 card-glow">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-[#F7DF1E] font-mono font-bold text-sm">Vanilla</span>
+            <span class="text-xs font-mono text-text-tertiary">CDN / script tag</span>
+          </div>
+          <pre class="text-xs font-mono text-text-secondary bg-background rounded p-3 border border-border-subtle overflow-x-auto"><code>&lt;script src="https://unpkg.com/
+  @cloakshare/viewer"&gt;&lt;/script&gt;
+
+&lt;cloak-viewer
+  src="/deck.pdf"
+  watermark="Confidential"
+  email-gate
+&gt;&lt;/cloak-viewer&gt;</code></pre>
+        </div>
+
+        <!-- Svelte / Angular -->
+        <div class="bg-surface border border-border rounded-lg p-5 card-glow">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-[#FF3E00] font-mono font-bold text-sm">Svelte</span>
+            <span class="text-text-tertiary font-mono text-xs">/</span>
+            <span class="text-[#DD0031] font-mono font-bold text-sm">Angular</span>
+          </div>
+          <pre class="text-xs font-mono text-text-secondary bg-background rounded p-3 border border-border-subtle overflow-x-auto"><code>&lt;!-- Web Components work natively --&gt;
+import '@cloakshare/viewer';
+
+&lt;cloak-viewer
+  src="/deck.pdf"
+  watermark="Confidential"
+  email-gate
+/&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6: Comparison Table -->
+  <section class="py-20 px-6 border-t border-border-subtle">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="text-center font-mono font-semibold text-2xl text-foreground mb-4">How it compares</h2>
+      <p class="text-center text-text-secondary font-sans mb-12 max-w-xl mx-auto">
+        No npm package combines viewing + watermarks + email gates + tracking. Until now.
+      </p>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-border">
+              <th class="text-left font-mono font-medium text-text-tertiary py-3 pr-4">Feature</th>
+              <th class="text-center font-mono font-medium text-accent py-3 px-3">CloakViewer</th>
+              <th class="text-center font-mono font-medium text-text-tertiary py-3 px-3">DocSend</th>
+              <th class="text-center font-mono font-medium text-text-tertiary py-3 px-3">Papermark</th>
+              <th class="text-center font-mono font-medium text-text-tertiary py-3 px-3">react-pdf</th>
+              <th class="text-center font-mono font-medium text-text-tertiary py-3 px-3">PDF.js</th>
+            </tr>
+          </thead>
+          <tbody>
+            {comparisonRows.map(row => (
+              <tr class="border-b border-border-subtle">
+                <td class="py-3 pr-4 font-sans text-text-secondary">{row.feature}</td>
+                <td class="py-3 px-3 text-center">
+                  {row.cloak === true ? <span class="text-accent">&#10003;</span>
+                    : row.cloak === false ? <span class="text-text-tertiary">&mdash;</span>
+                    : <span class="text-xs font-mono text-accent">{row.cloak}</span>}
+                </td>
+                <td class="py-3 px-3 text-center">
+                  {row.docsend === true ? <span class="text-text-secondary">&#10003;</span>
+                    : row.docsend === false ? <span class="text-text-tertiary">&mdash;</span>
+                    : <span class="text-xs font-mono text-text-tertiary">{row.docsend}</span>}
+                </td>
+                <td class="py-3 px-3 text-center">
+                  {row.papermark === true ? <span class="text-text-secondary">&#10003;</span>
+                    : row.papermark === false ? <span class="text-text-tertiary">&mdash;</span>
+                    : <span class="text-xs font-mono text-text-tertiary">{row.papermark}</span>}
+                </td>
+                <td class="py-3 px-3 text-center">
+                  {row.reactpdf === true ? <span class="text-text-secondary">&#10003;</span>
+                    : row.reactpdf === false ? <span class="text-text-tertiary">&mdash;</span>
+                    : <span class="text-xs font-mono text-text-tertiary">{row.reactpdf}</span>}
+                </td>
+                <td class="py-3 px-3 text-center">
+                  {row.pdfjs === true ? <span class="text-text-secondary">&#10003;</span>
+                    : row.pdfjs === false ? <span class="text-text-tertiary">&mdash;</span>
+                    : <span class="text-xs font-mono text-text-tertiary">{row.pdfjs}</span>}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 7: Bundle Size Honesty -->
+  <section class="py-20 px-6 border-t border-border-subtle">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-center font-mono font-semibold text-2xl text-foreground mb-4">Honest bundle sizes</h2>
+      <p class="text-center text-text-secondary font-sans mb-12 max-w-xl mx-auto">
+        We don't hide the real cost. Here's exactly what loads.
+      </p>
+
+      <div class="space-y-4">
+        <div class="bg-surface border border-border rounded-lg p-5">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-mono text-sm text-foreground">Shell component</span>
+            <span class="font-mono text-sm text-accent">~7 KB gzipped</span>
+          </div>
+          <div class="w-full bg-background rounded-full h-2">
+            <div class="bg-accent rounded-full h-2" style="width: 2%"></div>
+          </div>
+          <p class="text-xs text-text-tertiary font-sans mt-2">Web Component, watermark engine, email gate, toolbar, theme. Loads on page init.</p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-5">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-mono text-sm text-foreground">+ PDF renderer</span>
+            <span class="font-mono text-sm text-[#E9950C]">~400 KB gzipped</span>
+          </div>
+          <div class="w-full bg-background rounded-full h-2">
+            <div class="bg-[#E9950C] rounded-full h-2" style="width: 80%"></div>
+          </div>
+          <p class="text-xs text-text-tertiary font-sans mt-2">PDF.js — lazy-loaded only when src is a .pdf file. Never loads for images or API mode. Use <code class="text-accent">renderer="external"</code> if your app already has PDF.js.</p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-5">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-mono text-sm text-foreground">+ Image renderer</span>
+            <span class="font-mono text-sm text-accent">0 KB</span>
+          </div>
+          <div class="w-full bg-background rounded-full h-2">
+            <div class="bg-accent rounded-full h-2" style="width: 0%"></div>
+          </div>
+          <p class="text-xs text-text-tertiary font-sans mt-2">Uses native Canvas API. Zero additional JavaScript.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 8: Get Started -->
+  <section class="py-20 px-6 border-t border-border-subtle">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="font-mono font-semibold text-2xl text-foreground mb-4">Get started in 30 seconds</h2>
+      <p class="text-text-secondary font-sans mb-10">
+        Install the package. Add the tag. Ship secure documents.
+      </p>
+
+      <div class="bg-surface border border-border rounded-lg p-6 text-left mb-10">
+        <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><code><span class="text-text-tertiary"># Install</span>
+<span class="text-accent">$</span> npm install @cloakshare/viewer
+
+<span class="text-text-tertiary"># Use in your HTML</span>
+<span class="text-accent">&lt;script</span> <span class="text-foreground">type</span>=<span class="text-[#E9950C]">"module"</span><span class="text-accent">&gt;</span>
+  import '@cloakshare/viewer';
+<span class="text-accent">&lt;/script&gt;</span>
+
+<span class="text-accent">&lt;cloak-viewer</span>
+  <span class="text-foreground">src</span>=<span class="text-[#E9950C]">"/your-document.pdf"</span>
+  <span class="text-foreground">watermark</span>=<span class="text-[#E9950C]">"{`{{email}}`} &middot; {`{{date}}`}"</span>
+  <span class="text-foreground">email-gate</span>
+<span class="text-accent">/&gt;</span></code></pre>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a
+          href="https://github.com/cloakshare/cloakshare/tree/main/packages/viewer-core"
+          class="px-6 py-2.5 bg-accent text-background font-mono font-semibold text-sm rounded-md hover:bg-accent-hover transition-colors"
+          target="_blank"
+          rel="noopener"
+        >
+          Read the docs
+        </a>
+        <a
+          href="https://app.cloakshare.dev/register"
+          class="px-6 py-2.5 bg-elevated border border-border text-text-secondary font-mono text-sm rounded-md hover:text-text-primary hover:border-text-tertiary transition-all"
+        >
+          Get free API key
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Load the viewer component
+  import('@cloakshare/viewer');
+
+  // Copy install command
+  const copyBtn = document.getElementById('copy-install');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async () => {
+      await navigator.clipboard.writeText('npm install @cloakshare/viewer');
+      copyBtn.textContent = 'Copied!';
+      setTimeout(() => {
+        copyBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>npm install @cloakshare/viewer`;
+      }, 2000);
+    });
+  }
+
+  // Interactive demo controls
+  const watermarkCheck = document.getElementById('demo-watermark') as HTMLInputElement;
+  const emailGateCheck = document.getElementById('demo-emailgate') as HTMLInputElement;
+  const brandingCheck = document.getElementById('demo-branding') as HTMLInputElement;
+  const watermarkText = document.getElementById('demo-watermark-text') as HTMLInputElement;
+  const codePreview = document.getElementById('demo-code');
+  const viewer = document.getElementById('demo-viewer');
+
+  function updateDemo() {
+    // Update code preview
+    if (codePreview) {
+      let code = '&lt;cloak-viewer\n  src="/sample-deck.pdf"';
+      if (watermarkCheck?.checked && watermarkText?.value) {
+        code += `\n  watermark="${watermarkText.value}"`;
+      }
+      if (emailGateCheck?.checked) {
+        code += '\n  email-gate';
+      }
+      if (brandingCheck?.checked) {
+        code += '\n  branding';
+      }
+      code += '\n/&gt;';
+      codePreview.innerHTML = `<code>${code}</code>`;
+    }
+
+    // Update live viewer attributes
+    if (viewer) {
+      if (watermarkCheck?.checked && watermarkText?.value) {
+        viewer.setAttribute('watermark', watermarkText.value);
+      } else {
+        viewer.removeAttribute('watermark');
+      }
+      if (emailGateCheck?.checked) {
+        viewer.setAttribute('email-gate', '');
+      } else {
+        viewer.removeAttribute('email-gate');
+      }
+      viewer.setAttribute('branding', brandingCheck?.checked ? 'true' : 'false');
+    }
+  }
+
+  watermarkCheck?.addEventListener('change', updateDemo);
+  emailGateCheck?.addEventListener('change', updateDemo);
+  brandingCheck?.addEventListener('change', updateDemo);
+  watermarkText?.addEventListener('input', updateDemo);
+</script>

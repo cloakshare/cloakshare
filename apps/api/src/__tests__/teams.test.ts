@@ -3,6 +3,7 @@ import {
   registerUser,
   loginUser,
   sessionRequest,
+  upgradeUserPlan,
 } from './helpers.js';
 
 describe('Teams & Organization API', () => {
@@ -12,6 +13,8 @@ describe('Teams & Organization API', () => {
   beforeAll(async () => {
     const user = await registerUser();
     ownerId = user.userId;
+    // Scale plan needed: provides 15 seats for multiple invite/member tests
+    await upgradeUserPlan(ownerId, 'scale');
     const login = await loginUser(user.email, user.password);
     ownerCookie = login.sessionCookie;
   });

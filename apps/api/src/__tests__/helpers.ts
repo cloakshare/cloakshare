@@ -1,4 +1,7 @@
+import { eq } from 'drizzle-orm';
 import app from '../index.js';
+import { db } from '../db/client.js';
+import { users, organizations } from '../db/schema.js';
 
 const uid = Date.now();
 let userCounter = 0;
@@ -160,6 +163,20 @@ export async function createTestLink(
 
   const body = await res.json();
   return { res, body, linkId: body.data?.id as string };
+}
+
+/**
+ * Upgrade a test user's plan. Updates both the user row and their default org.
+ */
+export async function upgradeUserPlan(userId: string, plan: 'starter' | 'growth' | 'scale') {
+  // Update user plan
+  await db.update(users).set({ plan }).where(eq(users.id, userId));
+
+  // Also update their default org's plan
+  const [user] = await db.select({ defaultOrgId: users.defaultOrgId }).from(users).where(eq(users.id, userId));
+  if (user?.defaultOrgId) {
+    await db.update(organizations).set({ plan }).where(eq(organizations.id, user.defaultOrgId));
+  }
 }
 
 export { app };

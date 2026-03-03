@@ -1,0 +1,106 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+
+2 0 obj
+<< /Type /Pages /Kids [3 0 R 4 0 R 5 0 R] /Count 3 >>
+endobj
+
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792]
+   /Contents 6 0 R /Resources << /Font << /F1 9 0 R >> >> >>
+endobj
+
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792]
+   /Contents 7 0 R /Resources << /Font << /F1 9 0 R >> >> >>
+endobj
+
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792]
+   /Contents 8 0 R /Resources << /Font << /F1 9 0 R >> >> >>
+endobj
+
+6 0 obj
+<< /Length 245 >>
+stream
+BT
+/F1 36 Tf
+100 700 Td
+(CloakShare Viewer) Tj
+0 -60 Td
+/F1 18 Tf
+(Secure Document Sharing) Tj
+0 -40 Td
+/F1 14 Tf
+(Watermarks - Email Gates - View Tracking) Tj
+0 -30 Td
+(Free for PDF and Images) Tj
+ET
+endstream
+endobj
+
+7 0 obj
+<< /Length 230 >>
+stream
+BT
+/F1 24 Tf
+100 700 Td
+(Features) Tj
+0 -50 Td
+/F1 14 Tf
+(+ Canvas-based rendering) Tj
+0 -25 Td
+(+ Template watermarks) Tj
+0 -25 Td
+(+ Email gate with localStorage) Tj
+0 -25 Td
+(+ Password protection) Tj
+0 -25 Td
+(+ Link expiry) Tj
+ET
+endstream
+endobj
+
+8 0 obj
+<< /Length 195 >>
+stream
+BT
+/F1 24 Tf
+100 700 Td
+(Get Started) Tj
+0 -50 Td
+/F1 14 Tf
+(npm install @cloakshare/viewer) Tj
+0 -30 Td
+(<cloak-viewer src="/deck.pdf" />) Tj
+0 -40 Td
+/F1 12 Tf
+(cloakshare.dev/embed) Tj
+ET
+endstream
+endobj
+
+9 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+
+xref
+0 10
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000125 00000 n 
+0000000272 00000 n 
+0000000419 00000 n 
+0000000566 00000 n 
+0000000863 00000 n 
+0000001145 00000 n 
+0000001392 00000 n 
+
+trailer
+<< /Size 10 /Root 1 0 R >>
+startxref
+1467
+%%EOF

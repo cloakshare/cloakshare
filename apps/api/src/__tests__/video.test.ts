@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import { eq } from 'drizzle-orm';
 import { mkdirSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { app, registerUser, apiRequest, createTestLink } from './helpers.js';
+import { app, registerUser, apiRequest, createTestLink, upgradeUserPlan } from './helpers.js';
 import { db } from '../db/client.js';
 import { links, views, viewerSessions } from '../db/schema.js';
 import { config } from '../lib/config.js';
@@ -77,6 +77,8 @@ describe('Video Pipeline', () => {
     const user = await registerUser();
     apiKey = user.apiKey;
     userId = user.userId;
+    // Video requires Growth plan or above
+    await upgradeUserPlan(userId, 'growth');
   });
 
   // -------------------------------------------------------

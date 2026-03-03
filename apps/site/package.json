@@ -9,8 +9,9 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "astro": "^5.7.10",
     "@astrojs/tailwind": "^6.0.2",
+    "@cloakshare/viewer": "workspace:*",
+    "astro": "^5.7.10",
     "tailwindcss": "^3.4.17"
   }
 }

@@ -14,7 +14,6 @@ export function getActiveOrgId() {
 }
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const session = localStorage.getItem('cloak_session');
   const apiKey = localStorage.getItem('cloak_api_key');
 
   const headers: Record<string, string> = {
@@ -24,8 +23,6 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
   if (apiKey) {
     headers['Authorization'] = `Bearer ${apiKey}`;
-  } else if (session) {
-    headers['Cookie'] = `cloak_session=${session}`;
   }
 
   if (activeOrgId) {

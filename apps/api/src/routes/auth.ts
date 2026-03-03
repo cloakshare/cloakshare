@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { setCookie, deleteCookie } from 'hono/cookie';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import bcrypt from 'bcrypt';
 import { db } from '../db/client.js';
 import { users, apiKeys, sessions, organizations, orgMembers } from '../db/schema.js';
@@ -174,7 +174,17 @@ auth.post('/login', async (c) => {
     path: '/',
   });
 
-  // Generate a dashboard API key so the frontend can make authenticated calls
+  // Rotate dashboard API key: revoke old ones, create fresh one.
+  // This prevents unbounded key accumulation from repeated logins.
+  await db.update(apiKeys)
+    .set({ revokedAt: new Date().toISOString() })
+    .where(
+      and(
+        eq(apiKeys.userId, user.id),
+        eq(apiKeys.name, 'Dashboard'),
+      ),
+    );
+
   const keyRaw = `${API_KEY_LIVE_PREFIX}${randomBytes(16).toString('hex')}`;
   const keyHash = sha256(keyRaw);
   const keyPrefix = keyRaw.slice(0, 12) + '...';

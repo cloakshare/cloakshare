@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CloakViewer — React 18 Harness</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="../cloak-viewer.iife.js"></script>
+  <style>
+    body { margin: 0; padding: 20px; background: #111; color: #fff; font-family: monospace; }
+    #status { padding: 12px; border: 1px solid #333; border-radius: 6px; margin-bottom: 16px; font-size: 13px; }
+    .pass { color: #00ff88; }
+    .fail { color: #ef4444; }
+    .check { margin: 4px 0; }
+  </style>
+</head>
+<body>
+  <h1>React 18 Harness</h1>
+  <div id="status">Running checks...</div>
+  <div id="app"></div>
+
+  <script type="text/babel">
+    const { useRef, useEffect, useState } = React;
+
+    function App() {
+      const [events, setEvents] = useState({ ready: false, view: false });
+      const viewerRef = useRef(null);
+
+      useEffect(() => {
+        const el = viewerRef.current;
+        if (!el) return;
+
+        const handleReady = (e) => {
+          console.log('React18: cloak:ready', e.detail);
+          setEvents(prev => ({ ...prev, ready: true }));
+          window.__react18Ready = e.detail;
+        };
+        const handleView = (e) => {
+          console.log('React18: cloak:view', e.detail);
+          setEvents(prev => ({ ...prev, view: true }));
+          window.__react18View = e.detail;
+        };
+
+        el.addEventListener('cloak:ready', handleReady);
+        el.addEventListener('cloak:view', handleView);
+
+        return () => {
+          el.removeEventListener('cloak:ready', handleReady);
+          el.removeEventListener('cloak:view', handleView);
+        };
+      }, []);
+
+      return (
+        <div>
+          <cloak-viewer
+            ref={viewerRef}
+            src="../sample.pdf"
+            watermark="react18@test.com"
+            width="100%"
+            height="400px"
+          />
+          <div style={{ marginTop: 12, fontSize: 13 }}>
+            <div className={events.ready ? 'pass' : ''}>
+              cloak:ready: {events.ready ? 'RECEIVED' : 'waiting...'}
+            </div>
+            <div className={events.view ? 'pass' : ''}>
+              cloak:view: {events.view ? 'RECEIVED' : 'waiting...'}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('app'));
+    root.render(<App />);
+
+    // Status check after timeout
+    setTimeout(() => {
+      const status = document.getElementById('status');
+      const checks = [];
+      const ce = customElements.get('cloak-viewer');
+      checks.push({ name: 'Custom element registered', pass: !!ce });
+
+      const viewer = document.querySelector('cloak-viewer');
+      checks.push({ name: 'Component mounted in DOM', pass: !!viewer });
+      checks.push({ name: 'Shadow root attached', pass: !!viewer?.shadowRoot });
+
+      const canvas = viewer?.shadowRoot?.querySelector('.viewer-canvas');
+      checks.push({ name: 'Canvas rendered', pass: !!canvas });
+
+      checks.push({ name: 'cloak:ready event received', pass: !!window.__react18Ready });
+      checks.push({ name: 'cloak:view event received', pass: !!window.__react18View });
+
+      const allPass = checks.every(c => c.pass);
+      status.innerHTML = checks.map(c =>
+        `<div class="check ${c.pass ? 'pass' : 'fail'}">${c.pass ? '✓' : '✗'} ${c.name}</div>`
+      ).join('');
+      status.innerHTML += `<div style="margin-top:8px;font-weight:bold" class="${allPass ? 'pass' : 'fail'}">${allPass ? 'ALL CHECKS PASSED' : 'SOME CHECKS FAILED'}</div>`;
+      window.__harnessResult = allPass ? 'PASS' : 'FAIL';
+    }, 5000);
+  </script>
+</body>
+</html>

@@ -155,6 +155,13 @@ export const SEAT_LIMITS = {
   scale: { included: 15, additional: true as const, perSeatPrice: 10 },
 } as const;
 
+// Overage rates (cents) — charged per unit over plan limits
+export const OVERAGE_RATES = {
+  starter: { perLink: 5, perView: 0.5 },  // $0.05/link, $0.005/view
+  growth:  { perLink: 4, perView: 0.4 },  // $0.04/link, $0.004/view
+  scale:   { perLink: 3, perView: 0.3 },  // $0.03/link, $0.003/view
+} as const;
+
 // Rate limits per tier (requests per minute)
 export const RATE_LIMITS = {
   free:    { default: 30,   upload: 3,   analytics: 10  },

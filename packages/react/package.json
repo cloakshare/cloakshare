@@ -1,0 +1,55 @@
+{
+  "name": "@cloakshare/react",
+  "version": "0.1.0",
+  "description": "React wrapper for @cloakshare/viewer — secure document viewer component.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "lint": "tsc --noEmit"
+  },
+  "keywords": [
+    "react",
+    "document-viewer",
+    "pdf-viewer",
+    "watermark",
+    "cloakshare"
+  ],
+  "license": "MIT",
+  "homepage": "https://cloakshare.dev/embed",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cloakshare/cloakshare",
+    "directory": "packages/react"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@cloakshare/viewer": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0"
+  }
+}

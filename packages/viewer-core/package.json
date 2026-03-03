@@ -1,0 +1,59 @@
+{
+  "name": "@cloakshare/viewer",
+  "version": "0.1.0",
+  "description": "Drop-in secure document viewer component. Watermarks, email gates, and view tracking. Free for PDF & images.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./style.css": "./dist/style.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "node scripts/prepare-fixtures.mjs && playwright test",
+    "test:e2e:ui": "node scripts/prepare-fixtures.mjs && playwright test --ui"
+  },
+  "keywords": [
+    "document-viewer",
+    "pdf-viewer",
+    "watermark",
+    "email-gate",
+    "secure-viewer",
+    "web-component",
+    "cloakshare",
+    "docsend-alternative"
+  ],
+  "license": "MIT",
+  "homepage": "https://cloakshare.dev/embed",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cloakshare/cloakshare",
+    "directory": "packages/viewer-core"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "pdfjs-dist": "^4.10.38"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "serve": "^14.2.5",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}

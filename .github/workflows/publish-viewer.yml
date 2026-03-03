@@ -1,0 +1,57 @@
+name: Publish Viewer Packages
+
+on:
+  push:
+    tags:
+      - 'viewer-v*'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: |
+          pnpm --filter @cloakshare/viewer run build
+          pnpm --filter @cloakshare/react run build
+
+      - name: Run tests
+        run: pnpm --filter @cloakshare/viewer run test
+
+      - name: Check bundle size (shell must be under 20KB gzipped)
+        run: |
+          GZIP_SIZE=$(gzip -c packages/viewer-core/dist/index.js | wc -c)
+          echo "ESM gzipped size: ${GZIP_SIZE} bytes"
+          if [ "$GZIP_SIZE" -gt 20480 ]; then
+            echo "::error::Bundle size ${GZIP_SIZE} bytes exceeds 20KB gzipped limit"
+            exit 1
+          fi
+          echo "Bundle size OK: ${GZIP_SIZE} bytes (limit: 20480)"
+
+      - name: Publish @cloakshare/viewer
+        run: pnpm --filter @cloakshare/viewer publish --no-git-checks --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @cloakshare/react
+        run: pnpm --filter @cloakshare/react publish --no-git-checks --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

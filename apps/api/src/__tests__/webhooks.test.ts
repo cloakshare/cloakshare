@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from 'vitest';
-import { registerUser, apiRequest } from './helpers.js';
+import { registerUser, apiRequest, upgradeUserPlan } from './helpers.js';
 
 describe('Webhooks API', () => {
   let apiKey: string;
@@ -7,6 +7,8 @@ describe('Webhooks API', () => {
   beforeAll(async () => {
     const user = await registerUser();
     apiKey = user.apiKey;
+    // Webhooks require Starter plan or above
+    await upgradeUserPlan(user.userId, 'starter');
   });
 
   // -------------------------------------------------------

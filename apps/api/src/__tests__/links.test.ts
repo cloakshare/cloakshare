@@ -6,6 +6,7 @@ import {
   createTestLink,
   minimalPng,
   minimalPdf,
+  upgradeUserPlan,
 } from './helpers.js';
 
 describe('Links API', () => {
@@ -14,6 +15,8 @@ describe('Links API', () => {
   beforeAll(async () => {
     const user = await registerUser();
     apiKey = user.apiKey;
+    // Starter plan needed for password protection tests
+    await upgradeUserPlan(user.userId, 'starter');
   });
 
   // -------------------------------------------------------

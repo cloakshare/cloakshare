@@ -49,7 +49,23 @@ const app = new Hono<{ Variables: Variables }>();
 // Compression
 app.use('*', compress());
 
-// CORS
+// CORS — viewer endpoints allow any origin (token auth, not cookies)
+app.use('/v1/viewer/*', cors({
+  origin: config.isDev
+    ? '*'
+    : config.embedAllowedOrigins.includes('*')
+      ? '*'
+      : config.embedAllowedOrigins,
+  allowHeaders: ['Content-Type', 'X-Session-Token', 'X-Request-Id'],
+  allowMethods: ['GET', 'POST', 'OPTIONS'],
+}));
+
+app.use('/v1/time', cors({
+  origin: '*',
+  allowMethods: ['GET', 'OPTIONS'],
+}));
+
+// CORS — default for all other routes
 app.use('*', cors({
   origin: config.isDev
     ? '*'
@@ -114,6 +130,13 @@ app.use('/v1/*', orgResolver);
 // Strict IP-based rate limiting for auth to prevent brute-force
 app.use('/v1/auth/login', rateLimitByIp({ max: 10, window: 60 }));
 app.use('/v1/auth/register', rateLimitByIp({ max: 5, window: 60 }));
+
+// Rate limiting for viewer endpoints (embedded <cloak-viewer> component)
+app.use('/v1/viewer/:token', rateLimitByIp({ max: 100, window: 60 }));
+app.use('/v1/viewer/:token/page/*', rateLimitByIp({ max: 100, window: 60 }));
+app.use('/v1/viewer/:token/sign-segment', rateLimitByIp({ max: 60, window: 60 }));
+app.use('/v1/viewer/:token/track', rateLimitByIp({ max: 60, window: 60 }));
+app.use('/v1/time', rateLimitByIp({ max: 30, window: 60 }));
 
 // ============================================
 // ROUTES

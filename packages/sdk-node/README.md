@@ -1,21 +1,12 @@
-# @cloakshare/sdk
+# @cloakshare/sdk — Node.js SDK for CloakShare
 
-Official Node.js SDK for the [CloakShare](https://cloakshare.dev) API — secure document and video sharing with tokenized links, dynamic watermarks, and real-time analytics.
-
-## Installation
-
-```bash
-npm install @cloakshare/sdk
-```
-
-## Quick Start
+Official Node.js SDK for the [CloakShare](https://cloakshare.dev) secure document and video sharing API. Create watermarked, tracked, expiring links with one function call. TypeScript types included. Zero external dependencies.
 
 ```typescript
 import CloakShare from '@cloakshare/sdk';
 
-const cloakshare = new CloakShare('ck_live_xxx');
+const cloakshare = new CloakShare('ck_live_your_api_key');
 
-// Create a secure link from a file
 const link = await cloakshare.links.create({
   file: './pitch-deck.pdf',
   requireEmail: true,
@@ -27,107 +18,257 @@ console.log(link.secure_url);
 // → https://view.cloakshare.dev/s/xK9mP2
 ```
 
-## Resources
+---
 
-### Links
+## Install
+
+```bash
+npm install @cloakshare/sdk
+```
+
+Requires Node.js 18+. Zero external dependencies.
+
+---
+
+## Quick Start
 
 ```typescript
-// Create from file path
+import CloakShare from '@cloakshare/sdk';
+
+const cloakshare = new CloakShare('ck_live_your_api_key');
+
+// Create a secure link from a file
 const link = await cloakshare.links.create({
-  file: './document.pdf',
+  file: './pitch-deck.pdf',
   requireEmail: true,
   watermark: true,
   expiresIn: '7d',
   maxViews: 50,
-  password: 'secret',
+});
+
+console.log(link.secure_url);
+// → https://view.cloakshare.dev/s/xK9mP2
+
+// Check who viewed it
+const analytics = await cloakshare.links.analytics(link.id);
+console.log(analytics.viewers);
+// → [{ email: "investor@acme.com", duration: 142, completion_rate: 0.83 }]
+```
+
+Get your API key at [cloakshare.dev](https://cloakshare.dev). Keys start with `ck_live_` (production) or `ck_test_` (testing).
+
+---
+
+## Links
+
+### Create a Link
+
+```typescript
+// From a file path
+const link = await cloakshare.links.create({
+  file: './proposal.pdf',
+  requireEmail: true,
+  watermark: true,
+  expiresIn: '7d',
+  maxViews: 50,
+  password: 'secret123',
   allowedDomains: ['@acme.com'],
 });
 
-// Create from Buffer
+// From a Buffer
 const link = await cloakshare.links.create({
   file: pdfBuffer,
-  filename: 'document.pdf',
+  filename: 'proposal.pdf',
+  requireEmail: true,
+  watermark: true,
+});
+```
+
+**CreateLinkParams:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `file` | `string \| Buffer \| Uint8Array` | File path, Buffer, or Uint8Array |
+| `uploadKey` | `string` | Pre-uploaded file key (from `getUploadUrl`) |
+| `filename` | `string` | Explicit filename (required when `file` is a Buffer) |
+| `name` | `string` | Display name for the link |
+| `requireEmail` | `boolean` | Require email gate |
+| `watermark` | `boolean` | Enable dynamic watermark |
+| `watermarkTemplate` | `string` | Custom watermark template (e.g., `"{{email}} · {{date}}"`) |
+| `password` | `string` | Password protection |
+| `expiresIn` | `string` | Expiration duration (e.g., `"7d"`, `"24h"`, `"1y"`) |
+| `maxViews` | `number` | Maximum view count |
+| `allowedDomains` | `string[]` | Restrict viewing to specific email domains |
+| `blockDownload` | `boolean` | Prevent downloads |
+| `notifyUrl` | `string` | Webhook URL for view notifications |
+| `notifyEmail` | `string` | Email address for view notifications |
+
+### Get a Link
+
+```typescript
+const link = await cloakshare.links.get('lnk_abc123');
+console.log(link.status);      // "active"
+console.log(link.view_count);  // 12
+console.log(link.secure_url);  // "https://view.cloakshare.dev/s/..."
+```
+
+### List Links
+
+```typescript
+// Paginated
+const { links, pagination } = await cloakshare.links.list({
+  status: 'active',
+  page: 1,
+  limit: 20,
 });
 
-// Get a link
-const link = await cloakshare.links.get('lnk_abc123');
-
-// List links
-const { links, pagination } = await cloakshare.links.list({ status: 'active' });
-
-// Iterate all links
+// Iterate all links (auto-paginates)
 for await (const link of cloakshare.links.listAll()) {
   console.log(link.id, link.status);
 }
+```
 
-// Get analytics
+### Get Analytics
+
+```typescript
 const analytics = await cloakshare.links.analytics('lnk_abc123');
 
-// Revoke a link
-await cloakshare.links.revoke('lnk_abc123');
+console.log(analytics.total_views);     // 47
+console.log(analytics.unique_viewers);  // 12
+console.log(analytics.avg_duration);    // 94.5 (seconds)
 
-// Large file upload (presigned URL)
+for (const viewer of analytics.viewers) {
+  console.log(viewer.email, viewer.duration, viewer.completion_rate);
+}
+```
+
+### Revoke a Link
+
+```typescript
+await cloakshare.links.revoke('lnk_abc123');
+// Link is now inaccessible. Viewers see a "revoked" message.
+```
+
+### Large File Upload (Presigned URL)
+
+```typescript
+// Step 1: Get a presigned upload URL
 const { upload_url, upload_key } = await cloakshare.links.getUploadUrl({
-  filename: 'large-video.mp4',
+  filename: 'product-demo.mp4',
   content_type: 'video/mp4',
   file_size: 500_000_000,
 });
-// Upload to upload_url, then create link with uploadKey
+
+// Step 2: Upload the file directly to storage
+await fetch(upload_url, {
+  method: 'PUT',
+  body: fileBuffer,
+  headers: { 'Content-Type': 'video/mp4' },
+});
+
+// Step 3: Create the link using the upload key
+const link = await cloakshare.links.create({
+  uploadKey: upload_key,
+  requireEmail: true,
+  watermark: true,
+});
 ```
 
-### Webhooks
+---
+
+## Webhooks
 
 ```typescript
-// Create a webhook
+// Create a webhook endpoint
 const webhook = await cloakshare.webhooks.create(
   'https://your-app.com/webhook',
   ['link.viewed', 'link.expired'],
 );
+console.log(webhook.secret); // Save this — only shown once
 
-// List webhooks
+// List all webhooks
 const { webhooks } = await cloakshare.webhooks.list();
+
+// Get webhook details with recent deliveries
+const details = await cloakshare.webhooks.get('whk_abc123');
+console.log(details.deliveries); // Last 20 delivery attempts
 
 // Delete a webhook
 await cloakshare.webhooks.delete('whk_abc123');
 ```
 
-### Webhook Verification
+### Webhook Events
+
+| Event | Description |
+|-------|-------------|
+| `link.created` | New link created |
+| `link.ready` | Rendering/transcoding complete |
+| `link.viewed` | Someone viewed the link |
+| `link.expired` | Link reached expiry date |
+| `link.revoked` | Link was revoked |
+| `link.render_failed` | Rendering failed |
+| `link.max_views_reached` | View limit reached |
+| `link.password_failed` | Incorrect password attempt |
+
+### Verify Webhook Signatures
 
 ```typescript
-// Verify webhook signatures (works without instantiation)
 import { CloakShare } from '@cloakshare/sdk';
 
+// Verify HMAC-SHA256 signature (works without client instantiation)
 const isValid = CloakShare.webhooks.verify(
-  rawBody,       // string or Buffer
-  signature,     // from x-cloakshare-signature header
-  webhookSecret, // from webhook creation
+  rawBody,        // string or Buffer — the raw request body
+  signature,      // from the x-cloakshare-signature header
+  webhookSecret,  // from webhook creation response
 );
+
+if (!isValid) {
+  return res.status(401).send('Invalid signature');
+}
 ```
 
-### Viewers (GDPR)
+---
+
+## Viewers (GDPR)
 
 ```typescript
-// Delete all data for a viewer email
-await cloakshare.viewers.delete('john@example.com');
+// Delete all viewing data for an email address
+const result = await cloakshare.viewers.delete('john@example.com');
+console.log(result.deleted_views);     // 23
+console.log(result.deleted_sessions);  // 5
 ```
 
-### Organization
+---
+
+## Organization
 
 ```typescript
-// List members
+// List org members
 const { members } = await cloakshare.org.listMembers();
 
-// Invite a member
-await cloakshare.org.invite('new@acme.com', 'member');
+// Invite a team member
+await cloakshare.org.invite('colleague@acme.com', 'member');
 
-// Get audit log
+// Change member role
+await cloakshare.org.changeRole('mem_abc123', 'admin');
+
+// Remove a member
+await cloakshare.org.removeMember('mem_abc123');
+
+// Get audit log (Growth plan and above)
 const { entries } = await cloakshare.org.auditLog({ limit: 50 });
 ```
+
+---
 
 ## Error Handling
 
 ```typescript
-import { CloakShareError, RateLimitError, AuthenticationError } from '@cloakshare/sdk';
+import CloakShare, {
+  CloakShareError,
+  RateLimitError,
+  AuthenticationError,
+} from '@cloakshare/sdk';
 
 try {
   await cloakshare.links.create({ file: './doc.pdf' });
@@ -143,22 +284,58 @@ try {
 }
 ```
 
-## Self-Hosted
+The SDK automatically retries on transient errors (5xx, network timeouts) with exponential backoff. Default: 2 retries, max 30s between attempts.
+
+---
+
+## Configuration
 
 ```typescript
-const cloakshare = new CloakShare('ck_live_xxx', {
+const cloakshare = new CloakShare('ck_live_your_api_key', {
+  baseUrl: 'https://api.cloakshare.dev',  // Override for self-hosted
+  timeout: 30000,                          // Request timeout in ms (default: 30s)
+  maxRetries: 2,                           // Retry attempts (default: 2)
+});
+```
+
+### Self-Hosted
+
+```typescript
+const cloakshare = new CloakShare('ck_live_your_api_key', {
   baseUrl: 'https://your-cloak-instance.com',
 });
 ```
+
+---
 
 ## TypeScript
 
 Full TypeScript types are included. Every method parameter and return type is fully typed.
 
-## Requirements
+```typescript
+import CloakShare from '@cloakshare/sdk';
+import type {
+  CreateLinkParams,
+  Link,
+  LinkAnalytics,
+  CloakShareError,
+  RateLimitError,
+  AuthenticationError,
+} from '@cloakshare/sdk';
+```
 
-- Node.js >= 18.0.0
-- Zero external dependencies
+---
+
+## Links
+
+- [CloakShare Website](https://cloakshare.dev)
+- [API Documentation](https://docs.cloakshare.dev)
+- [API Reference](https://docs.cloakshare.dev/api)
+- [GitHub](https://github.com/cloakshare/cloakshare)
+- [npm: @cloakshare/viewer](https://www.npmjs.com/package/@cloakshare/viewer) — Embeddable viewer
+- [npm: @cloakshare/react](https://www.npmjs.com/package/@cloakshare/react) — React wrapper
+
+---
 
 ## License
 

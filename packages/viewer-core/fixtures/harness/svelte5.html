@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CloakViewer — Svelte 5 Harness (Vanilla Fallback)</title>
+  <script src="../cloak-viewer.iife.js"></script>
+  <style>
+    body { margin: 0; padding: 20px; background: #111; color: #fff; font-family: monospace; }
+    #status { padding: 12px; border: 1px solid #333; border-radius: 6px; margin-bottom: 16px; font-size: 13px; }
+    .pass { color: #00ff88; }
+    .fail { color: #ef4444; }
+    .check { margin: 4px 0; }
+    .event-log { margin-top: 12px; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h1>Svelte 5 Harness</h1>
+  <p style="font-size: 12px; color: #666;">
+    Svelte 5 uses Web Components natively — no wrapper needed. This harness uses the same vanilla
+    Web Component approach that Svelte components would use.
+  </p>
+  <div id="status">Running checks...</div>
+
+  <!-- Svelte uses Web Components natively — identical to vanilla HTML -->
+  <cloak-viewer
+    id="svelte-viewer"
+    src="../sample.pdf"
+    watermark="svelte5@test.com"
+    width="100%"
+    height="400px"
+  ></cloak-viewer>
+
+  <div class="event-log">
+    <div id="ready-status">cloak:ready: waiting...</div>
+    <div id="view-status">cloak:view: waiting...</div>
+  </div>
+
+  <script>
+    const viewer = document.getElementById('svelte-viewer');
+
+    viewer.addEventListener('cloak:ready', (e) => {
+      console.log('Svelte5: cloak:ready', e.detail);
+      window.__svelte5Ready = e.detail;
+      const el = document.getElementById('ready-status');
+      el.textContent = 'cloak:ready: RECEIVED';
+      el.classList.add('pass');
+    });
+
+    viewer.addEventListener('cloak:view', (e) => {
+      console.log('Svelte5: cloak:view', e.detail);
+      window.__svelte5View = e.detail;
+      const el = document.getElementById('view-status');
+      el.textContent = 'cloak:view: RECEIVED';
+      el.classList.add('pass');
+    });
+
+    setTimeout(() => {
+      const status = document.getElementById('status');
+      const checks = [];
+      const ce = customElements.get('cloak-viewer');
+      checks.push({ name: 'Custom element registered', pass: !!ce });
+
+      checks.push({ name: 'Component mounted in DOM', pass: !!viewer });
+      checks.push({ name: 'Shadow root attached', pass: !!viewer?.shadowRoot });
+
+      const canvas = viewer?.shadowRoot?.querySelector('.viewer-canvas');
+      checks.push({ name: 'Canvas rendered', pass: !!canvas });
+
+      checks.push({ name: 'cloak:ready event received', pass: !!window.__svelte5Ready });
+      checks.push({ name: 'cloak:view event received', pass: !!window.__svelte5View });
+
+      const allPass = checks.every(c => c.pass);
+      status.innerHTML = checks.map(c =>
+        `<div class="check ${c.pass ? 'pass' : 'fail'}">${c.pass ? '✓' : '✗'} ${c.name}</div>`
+      ).join('');
+      status.innerHTML += `<div style="margin-top:8px;font-weight:bold" class="${allPass ? 'pass' : 'fail'}">${allPass ? 'ALL CHECKS PASSED' : 'SOME CHECKS FAILED'}</div>`;
+      window.__harnessResult = allPass ? 'PASS' : 'FAIL';
+    }, 5000);
+  </script>
+</body>
+</html>

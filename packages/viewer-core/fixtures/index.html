@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CloakViewer Test Fixture</title>
+  <script src="./cloak-viewer.iife.js"></script>
+  <style>
+    body { margin: 0; padding: 20px; background: #111; color: #fff; font-family: sans-serif; }
+    .test-container { margin-bottom: 40px; }
+    h2 { font-size: 14px; color: #888; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <!-- Test 1: Basic PDF viewer -->
+  <div class="test-container" id="test-basic">
+    <h2>Basic PDF Viewer</h2>
+    <cloak-viewer
+      id="viewer-basic"
+      src="./sample.pdf"
+      width="100%"
+      height="400px"
+    ></cloak-viewer>
+  </div>
+
+  <!-- Test 2: With watermark -->
+  <div class="test-container" id="test-watermark">
+    <h2>With Watermark</h2>
+    <cloak-viewer
+      id="viewer-watermark"
+      src="./sample.pdf"
+      watermark="test@example.com · {{date}}"
+      width="100%"
+      height="400px"
+    ></cloak-viewer>
+  </div>
+
+  <!-- Test 3: Email gate -->
+  <div class="test-container" id="test-emailgate">
+    <h2>Email Gate</h2>
+    <cloak-viewer
+      id="viewer-emailgate"
+      src="./sample.pdf"
+      email-gate
+      width="100%"
+      height="400px"
+    ></cloak-viewer>
+  </div>
+
+  <!-- Test 4: Password protected -->
+  <div class="test-container" id="test-password">
+    <h2>Password Protected</h2>
+    <cloak-viewer
+      id="viewer-password"
+      src="./sample.pdf"
+      password="secret123"
+      width="100%"
+      height="400px"
+    ></cloak-viewer>
+  </div>
+
+  <!-- Test 5: Email gate + password -->
+  <div class="test-container" id="test-combined">
+    <h2>Email Gate + Password</h2>
+    <cloak-viewer
+      id="viewer-combined"
+      src="./sample.pdf"
+      email-gate
+      password="secret123"
+      width="100%"
+      height="400px"
+    ></cloak-viewer>
+  </div>
+
+  <!-- Test 6: Branding hidden -->
+  <div class="test-container" id="test-nobranding">
+    <h2>No Branding</h2>
+    <cloak-viewer
+      id="viewer-nobranding"
+      src="./sample.pdf"
+      branding="false"
+      width="100%"
+      height="400px"
+    ></cloak-viewer>
+  </div>
+
+  <!-- Test 7: Light theme -->
+  <div class="test-container" id="test-light">
+    <h2>Light Theme</h2>
+    <cloak-viewer
+      id="viewer-light"
+      src="./sample.pdf"
+      theme="light"
+      width="100%"
+      height="400px"
+    ></cloak-viewer>
+  </div>
+
+  <!-- Test 8: Expired -->
+  <div class="test-container" id="test-expired">
+    <h2>Expired</h2>
+    <cloak-viewer
+      id="viewer-expired"
+      src="./sample.pdf"
+      expires="2020-01-01T00:00:00Z"
+      width="100%"
+      height="400px"
+    ></cloak-viewer>
+  </div>
+
+  <!-- Test 9: Pre-filled email (skips gate) -->
+  <div class="test-container" id="test-prefilled">
+    <h2>Pre-filled Email (skips gate)</h2>
+    <cloak-viewer
+      id="viewer-prefilled"
+      src="./sample.pdf"
+      email-gate
+      email="known@user.com"
+      width="100%"
+      height="400px"
+    ></cloak-viewer>
+  </div>
+
+  <!-- Test 10: Unsupported format without API key -->
+  <div class="test-container" id="test-unsupported">
+    <h2>Unsupported Format (no API key)</h2>
+    <cloak-viewer
+      id="viewer-unsupported"
+      src="./presentation.pptx"
+      width="100%"
+      height="400px"
+    ></cloak-viewer>
+  </div>
+</body>
+</html>

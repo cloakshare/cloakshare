@@ -1,205 +1,123 @@
-<p align="center">
-  <img src=".github/assets/logo.png" width="140" alt="CloakShare" />
-</p>
+# CloakShare — Secure Document & Video Sharing API
 
-<h3 align="center">Secure any document or video. One API call.</h3>
+Open-source API and embeddable viewer for sharing documents and videos with watermarks, email gates, expiry, and per-page analytics.
 
-<p align="center">
-  Open-source API for tokenized links with dynamic watermarks, real-time analytics, and viewer tracking.<br/>
-  PDF · Video · DOCX · PPTX · XLSX — self-hostable, MIT licensed.
-</p>
-
-<p align="center">
-  <a href="https://cloakshare.dev">Website</a> ·
-  <a href="https://docs.cloakshare.dev">Docs</a> ·
-  <a href="https://cloakshare.dev/pricing">Pricing</a> ·
-  <a href="https://discord.gg/cloakshare">Discord</a> ·
-  <a href="https://cloakshare.dev/blog">Blog</a>
-</p>
-
-<p align="center">
-  <a href="https://github.com/cloakshare/cloakshare/stargazers"><img src="https://img.shields.io/github/stars/cloakshare/cloakshare?style=flat&color=orange" alt="GitHub Stars" /></a>
-  <a href="https://github.com/cloakshare/cloakshare/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License" /></a>
-  <a href="https://github.com/cloakshare/cloakshare/actions"><img src="https://img.shields.io/github/actions/workflow/status/cloakshare/cloakshare/ci.yml?label=tests" alt="Tests" /></a>
-  <a href="https://img.shields.io/badge/PRs-welcome-brightgreen"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen" alt="PRs Welcome" /></a>
-</p>
-
-<p align="center">
-  <img src=".github/assets/hero-screenshot.png" width="720" alt="CloakShare — secure document viewer with watermark and analytics" />
-</p>
+[![MIT License](https://img.shields.io/badge/license-MIT-blue)](LICENSE) [![GitHub Stars](https://img.shields.io/github/stars/cloakshare/cloakshare?style=flat&color=orange)](https://github.com/cloakshare/cloakshare/stargazers) [![Tests](https://img.shields.io/github/actions/workflow/status/cloakshare/cloakshare/ci.yml?label=tests)](https://github.com/cloakshare/cloakshare/actions) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](CONTRIBUTING.md)
 
 ---
 
-## What is CloakShare?
+## What CloakShare Does
 
-CloakShare is an open-source API for secure document and video sharing. Upload a file, get a tokenized link with dynamic watermarks, email gates, expiry, and real-time analytics. Know exactly who viewed your content, which pages they read, and which video segments they watched.
+**Secure document sharing** — Turn any PDF, DOCX, PPTX, or image into a tracked, watermarked link. Know who viewed it, which pages they read, and how long they spent.
 
-**Built for developers.** One API call. SDKs in three languages. Webhooks for everything. Self-host with Docker or use our cloud.
+**Secure video sharing** — Share MP4, MOV, and WebM videos with dynamic watermarks, email gates, and engagement analytics. HLS adaptive streaming for large files.
+
+**Embeddable document viewer** — Drop a secure viewer into any web app with one line of code. Watermarks, email gates, and password protection built in. No iframe, no external redirect. Works in React, Vue, Svelte, Angular, and vanilla HTML.
+
+**Document analytics API** — Per-page view tracking, time-on-page, scroll depth, viewer email, device, location. Webhooks for real-time notifications on 8 event types with HMAC-SHA256 signed payloads.
+
+**Open-source alternative to DocSend** — Self-host with Docker (MIT license) or use the managed cloud API. No per-user pricing. Free tier available.
 
 ---
 
 ## Quick Start
 
-### Cloud (fastest)
+### API
 
 ```bash
-# Secure a document
+# Create a secure link
 curl -X POST https://api.cloakshare.dev/v1/links \
-  -H "Authorization: Bearer cs_live_xxx" \
+  -H "Authorization: Bearer ck_live_your_api_key" \
   -F file=@pitch-deck.pdf \
   -F require_email=true \
-  -F watermark=true
+  -F watermark=true \
+  -F expires_in=7d
 
 # Response:
 # {
 #   "data": {
 #     "id": "lnk_xK9mP2",
 #     "secure_url": "https://view.cloakshare.dev/s/xK9mP2",
-#     "page_count": 12,
-#     "status": "active"
+#     "status": "processing",
+#     "file_type": "pdf"
 #   }
 # }
 ```
 
 Get your free API key at [cloakshare.dev](https://cloakshare.dev).
 
-### Self-Hosted
+### Embeddable Viewer
 
 ```bash
-git clone https://github.com/cloakshare/cloakshare.git
-cd cloakshare
-cp .env.example .env
-docker compose up
+npm install @cloakshare/viewer
 ```
 
-Open `http://localhost:3000` — that's it. Full docs: [Self-hosting guide](https://docs.cloakshare.dev/self-hosting)
+```html
+<script src="https://unpkg.com/@cloakshare/viewer"></script>
 
----
+<!-- Free — PDF & images, no API key needed -->
+<cloak-viewer src="/deck.pdf" watermark="Confidential" email-gate></cloak-viewer>
 
-## Video Sharing (Flagship Feature)
-
-Secure video sharing with HLS adaptive streaming, dynamic watermarks on every frame, and engagement heatmaps showing exactly which segments viewers watched, skipped, or rewatched.
-
-```typescript
-const link = await cloakshare.links.create({
-  file: './product-demo.mp4',
-  watermark: true,
-  requireEmail: true,
-});
-
-// Viewer sees: email gate → HLS player with watermark overlay
-// You see: who watched, completion %, segment-by-segment heatmap
+<!-- With API key — adds Office docs, video, server-side analytics -->
+<cloak-viewer src="/proposal.docx" api-key="ck_live_..." watermark="{{email}}"></cloak-viewer>
 ```
 
-**Supported formats:** MP4, MOV, WebM — delivered via HLS with adaptive bitrate.
-
-No other open-source platform offers secure video sharing with engagement heatmaps.
-
----
-
-## Features
-
-### Core
-
-| Feature | Description |
-|---------|-------------|
-| **Tokenized links** | Every link is a unique, non-guessable token |
-| **Dynamic watermarks** | Viewer's email + date + session ID on every page/frame |
-| **Email gate** | Require email before viewing |
-| **Password protection** | Optional password on any link |
-| **Link expiry** | Time-based and view-count-based |
-| **Domain allowlist** | Restrict viewing to specific email domains |
-| **Page-by-page analytics** | Time spent per page, completion rate |
-| **Video engagement heatmaps** | Segment-level watch/skip/rewatch data |
-| **Webhooks** | 8 events with HMAC-SHA256 signed payloads |
-| **Office docs** | DOCX, PPTX, XLSX auto-convert to secure viewer |
-| **Teams & RBAC** | Organizations with Owner/Admin/Member/Viewer roles |
-| **Audit log** | Every action tracked with configurable retention |
-| **Custom domains** | `docs.yourcompany.com` with CNAME verification |
-| **Embedded viewer** | iframe embed with PostMessage API |
-| **Real-time notifications** | SSE push when links are viewed |
-| **Self-hostable** | MIT licensed, Docker, any S3-compatible storage |
-
-### Supported File Types
-
-```
-Documents:  PDF · DOCX · PPTX · XLSX · ODP · ODS · ODT · CSV
-Video:      MP4 · MOV · WebM
-Images:     PNG · JPG · WebP
-```
-
-One API, every format. CloakShare detects the file type and handles conversion automatically.
-
----
-
-## Plan Comparison
-
-| Feature | Free | Starter $29/mo | Growth $99/mo | Scale $299/mo |
-|---------|:----:|:--------------:|:-------------:|:-------------:|
-| Secure links | 50/mo | 500/mo | 2,500/mo | 10,000/mo |
-| Views | 500/mo | 10,000/mo | 25,000/mo | 100,000/mo |
-| Max expiry | 7 days | 90 days | 1 year | Unlimited |
-| Email gate | ✅ | ✅ | ✅ | ✅ |
-| Dynamic watermarks | ✅ | ✅ | ✅ | ✅ |
-| Office docs (DOCX, PPTX) | — | ✅ | ✅ | ✅ |
-| Video sharing (MP4, MOV) | — | — | ✅ | ✅ |
-| Password protection | — | ✅ | ✅ | ✅ |
-| Webhooks | — | ✅ | ✅ | ✅ |
-| Page analytics | — | ✅ | ✅ | ✅ |
-| Brand removal | — | ✅ | ✅ | ✅ |
-| Custom domains | — | — | ✅ | ✅ |
-| Custom branding | — | — | ✅ | ✅ |
-| Embedded viewer | — | — | — | ✅ |
-| Teams | — | 2 seats | 5 seats | 15 seats |
-| Audit log | — | — | 90 days | 1 year |
-| SSO/SAML | — | — | — | ✅ |
-| Self-hosted | ✅ | ✅ | ✅ | ✅ |
-
-Annual billing: 20% off. [See full pricing](https://cloakshare.dev/pricing)
-
----
-
-## SDKs
+### React
 
 ```bash
-npm install @cloakshare/sdk                  # Node.js / TypeScript
-pip install cloakshare                        # Python
-go get github.com/cloakshare/cloakshare-go   # Go
+npm install @cloakshare/react
 ```
 
-### Node.js
+```jsx
+import { CloakViewer } from '@cloakshare/react';
+
+function App() {
+  return (
+    <CloakViewer
+      src="/pitch-deck.pdf"
+      watermark="Confidential · {{email}}"
+      emailGate
+      onView={(e) => console.log('Viewed page:', e.page)}
+    />
+  );
+}
+```
+
+### Node.js SDK
+
+```bash
+npm install @cloakshare/sdk
+```
 
 ```typescript
 import CloakShare from '@cloakshare/sdk';
 
-const cloak = new CloakShare('cs_live_xxx');
+const cloakshare = new CloakShare('ck_live_your_api_key');
 
-// Secure a document
-const link = await cloak.links.create({
-  file: './proposal.pdf',
+const link = await cloakshare.links.create({
+  file: './pitch-deck.pdf',
   requireEmail: true,
   watermark: true,
   expiresIn: '7d',
 });
 
-console.log(link.secureUrl);
+console.log(link.secure_url);
 // → https://view.cloakshare.dev/s/xK9mP2
-
-// Check analytics
-const analytics = await cloak.links.getAnalytics(link.id);
-console.log(analytics.viewers);
-// → [{ email: "investor@acme.com", duration: 142, completion: 0.83 }]
 ```
 
 ### Python
 
+```bash
+pip install cloakshare
+```
+
 ```python
 import cloakshare
 
-client = cloakshare.Client("cs_live_xxx")
+client = cloakshare.Client("ck_live_your_api_key")
 
 link = client.links.create(
-    file="./proposal.pdf",
+    file="./pitch-deck.pdf",
     require_email=True,
     watermark=True,
     expires_in="7d",
@@ -211,11 +129,15 @@ print(link.secure_url)
 
 ### Go
 
+```bash
+go get github.com/cloakshare/cloakshare-go
+```
+
 ```go
-client := cloakshare.NewClient("cs_live_xxx")
+client := cloakshare.NewClient("ck_live_your_api_key")
 
 link, _ := client.Links.Create(&cloakshare.LinkParams{
-    File:         "./proposal.pdf",
+    File:         "./pitch-deck.pdf",
     RequireEmail: true,
     Watermark:    true,
     ExpiresIn:    "7d",
@@ -227,121 +149,155 @@ fmt.Println(link.SecureURL)
 
 ---
 
-## API at a Glance
+## Features
+
+- **Dynamic watermarks** — Text overlay on every page with template variables: `{{email}}`, `{{date}}`, `{{session_id}}`. Server-side compositing (not removable via DevTools).
+- **Email gate** — Require viewer to enter their email before accessing the document. Verified server-side.
+- **Password protection** — Lock documents behind a password. Server-side verification. Available on Starter plan and above.
+- **Link expiry** — Set documents to expire after a duration (1 hour to 1 year) or on a specific date.
+- **View limits** — Limit the number of times a link can be viewed. Webhook fired when limit reached.
+- **Per-page analytics** — Track which pages were viewed, time on each page, scroll depth, and total engagement. Available on Starter plan and above.
+- **Webhooks** — Real-time HTTP notifications with HMAC-SHA256 signatures. 8 events: `link.created`, `link.viewed`, `link.expired`, `link.revoked`, `link.ready`, `link.render_failed`, `link.max_views_reached`, `link.password_failed`.
+- **Print and download blocking** — Canvas-based rendering prevents easy copy/paste, printing, and downloading.
+- **Video support** — MP4, MOV, WebM with HLS adaptive streaming, watermark overlay, and engagement heatmaps. Available on Growth plan and above.
+- **Office document support** — DOCX, PPTX, XLSX rendered securely via server-side conversion. Available on Starter plan and above.
+- **Embeddable viewer** — Web Component (`<cloak-viewer>`) that works in React, Vue, Svelte, Angular, and vanilla HTML. Free for PDF and images, no API key required.
+- **Self-hostable** — Run CloakShare on your own infrastructure with Docker. MIT license. SQLite database, any S3-compatible storage.
+- **REST API** — Full API for creating links, uploading files, checking analytics, managing webhooks, teams, and custom domains.
+- **Node.js SDK** — `@cloakshare/sdk` with TypeScript types, automatic retries, and pagination helpers. Zero external dependencies.
+
+### Supported File Types
 
 ```
-POST   /v1/links                    Create a secure link
-POST   /v1/links/upload-url         Get presigned upload URL (large files)
-POST   /v1/links/bulk               Create multiple links at once
-GET    /v1/links                    List your links
-GET    /v1/links/:id                Get link details
-GET    /v1/links/:id/analytics      View analytics + engagement data
-DELETE /v1/links/:id                Revoke a link
-
-POST   /v1/webhooks                 Create a webhook endpoint
-GET    /v1/webhooks                 List webhooks
-DELETE /v1/webhooks/:id             Delete a webhook
-
-GET    /v1/notifications/stream     SSE real-time view notifications
-
-GET    /v1/viewer/:token            Get viewer metadata
-POST   /v1/viewer/:token/verify     Verify email/password to view
-POST   /v1/viewer/:token/track      Track viewing engagement
-
-DELETE /v1/viewers/:email           GDPR data deletion
+Documents:  PDF · DOCX · PPTX · XLSX · ODP · ODS · ODT · CSV
+Video:      MP4 · MOV · WebM · MKV · AVI
+Images:     PNG · JPG · WebP · GIF · BMP · SVG
 ```
 
-Full API reference: [API Docs](https://docs.cloakshare.dev)
+One API, every format. CloakShare detects the file type and handles rendering and conversion automatically.
 
 ---
 
-## How It Works
+## Use Cases
 
-```
-You                         CloakShare                      Viewer
- │                              │                              │
- │  POST /v1/links              │                              │
- │  + file + rules ──────────►  │                              │
- │                              │  Render / transcode          │
- │  ◄──── secure_url ────────── │                              │
- │                              │                              │
- │  Share the link ─────────────────────────────────────────►  │
- │                              │                              │
- │                              │  ◄──── enters email ──────── │
- │                              │  ──── watermarked viewer ──► │
- │                              │  ◄──── tracking pings ─────  │
- │                              │                              │
- │  ◄──── webhook: link.viewed  │                              │
- │  GET /v1/links/:id/analytics │                              │
- │  ◄──── who, pages, time ──── │                              │
-```
+### Fundraising and Investor Relations
+Share pitch decks with investors and track which slides they read. Know if they forwarded your deck. Watermark each viewer's email on every page.
 
----
+### Sales Proposals and Pricing
+Send proposals that expire after 7 days. Get notified the moment a prospect opens your pricing page. See which sections they spent the most time on.
 
-## Comparison
+### Training and Education
+Distribute course materials that cannot be easily downloaded or reshared. Watermark each student's email. Track completion and engagement per page.
 
-|  | CloakShare | DocSend | Papermark | Digify |
-|--|:----------:|:-------:|:---------:|:------:|
-| API-first | ✅ | ❌ | Partial | ❌ |
-| Video + heatmaps | ✅ | ❌ | ❌ | ❌ |
-| Dynamic watermarks | ✅ | Advanced only | Business+ | ✅ |
-| Webhooks + HMAC | ✅ | ✅ | ✅ | ✅ |
-| Self-hostable | ✅ | ❌ | ✅ | ❌ |
-| Open source | ✅ MIT | ❌ | ✅ AGPL | ❌ |
-| SDKs | 3 | 0 | 0 | 0 |
-| Teams + RBAC | ✅ | ✅ | ✅ | ✅ |
-| Starting price | Free | ~$15/user/mo | Free | ~$190/user/mo |
+### Legal and Compliance
+Share contracts and NDAs with email-verified access. Audit trail of who viewed what, when, and from where. Password protection for sensitive documents.
+
+### Real Estate
+Share property documents, inspection reports, and appraisals with buyers. Each viewer sees their own watermarked copy. Links expire after the transaction closes.
+
+### Healthcare
+Share patient documents securely with access controls. Email-verified viewing, link expiry, and audit logs for compliance.
 
 ---
 
-## Self-Hosting
+## CloakShare vs Alternatives
 
-CloakShare runs anywhere Docker runs. The self-hosted version includes PDF rendering, email gate, watermarks, webhooks, analytics, and the full viewer.
-
-**Requirements:** Docker, 1GB RAM, S3-compatible storage (MinIO included).
-
-**Works with:** MinIO · AWS S3 · Backblaze B2 · Cloudflare R2 · any S3-compatible provider.
-
-```yaml
-# docker-compose.yml (included in repo)
-services:
-  cloakshare:
-    image: ghcr.io/cloakshare/cloakshare:latest
-    ports:
-      - "3000:3000"
-    environment:
-      - DATABASE_URL=file:./data/cloakshare.db
-      - S3_ENDPOINT=http://minio:9000
-    volumes:
-      - ./data:/app/data
-    depends_on:
-      - minio
-
-  minio:
-    image: minio/minio
-    command: server /data
-    ports:
-      - "9000:9000"
-```
-
-**Note:** Video transcoding requires FFmpeg. Set `ENABLE_VIDEO=true` to enable. Self-hosted supports all document and video types.
-
-Full guide: [Self-Hosting Guide](https://docs.cloakshare.dev/self-hosting)
+| Feature | CloakShare | DocSend | Papermark | PandaDoc |
+|---------|-----------|---------|-----------|----------|
+| Open source | MIT | No | AGPL | No |
+| Self-hostable | Yes | No | Yes | No |
+| API-first | Yes | Limited | Limited | Yes |
+| Embeddable viewer | Yes | No | No | No |
+| npm package | Yes | No | No | No |
+| Dynamic watermarks | Yes | Yes | Yes | No |
+| Video support | Yes | Yes | No | No |
+| Per-page analytics | Yes | Yes | Yes | Yes |
+| Webhooks with HMAC | Yes | Yes | Yes | Yes |
+| SDKs | Node.js, Python, Go | None | None | None |
+| Teams and RBAC | Yes | Yes | Yes | Yes |
+| Free tier | Yes | No | Yes | No |
+| Starting price | Free / $29/mo | $45/user/mo | $59/mo | $35/user/mo |
 
 ---
 
 ## Tech Stack
 
-- **Runtime:** Node.js + [Hono](https://hono.dev) (ultrafast web framework)
-- **Database:** SQLite via [Turso](https://turso.tech) (cloud) / local SQLite (self-hosted)
+- **Runtime:** Node.js + [Hono](https://hono.dev) (lightweight web framework)
+- **Database:** SQLite via [Turso](https://turso.tech) (cloud) or local SQLite (self-hosted)
 - **ORM:** [Drizzle](https://orm.drizzle.team)
-- **Storage:** Cloudflare R2 / any S3-compatible
-- **Video:** FFmpeg HLS transcoding (adaptive bitrate)
-- **PDF Rendering:** Poppler (`pdftoppm`) + Sharp
-- **Office Conversion:** LibreOffice headless
-- **Viewer:** Canvas-based rendering (no downloadable files)
-- **Marketing Site:** [Astro](https://astro.build)
+- **Storage:** Cloudflare R2 / any S3-compatible (MinIO, AWS S3, Backblaze B2)
+- **PDF rendering:** Poppler (`pdftoppm`) + Sharp
+- **Office conversion:** LibreOffice headless
+- **Video:** FFmpeg HLS transcoding (adaptive bitrate: 720p + 1080p)
+- **Viewer:** Custom canvas-based renderer with Shadow DOM Web Component
+- **Dashboard:** React + Tailwind CSS
+- **Marketing site:** [Astro](https://astro.build)
 - **Monorepo:** pnpm workspaces + [Turborepo](https://turbo.build)
+
+---
+
+## Self-Hosting
+
+```bash
+git clone https://github.com/cloakshare/cloakshare.git
+cd cloakshare
+cp .env.example .env
+# Edit .env: set SESSION_SECRET, JWT_SECRET, CLOAK_SIGNING_SECRET
+docker compose up -d
+```
+
+Open `http://localhost:3000` — that's it. CloakShare runs on a single server with 1GB RAM.
+
+The self-hosted version includes PDF rendering, office document conversion, video transcoding, email gates, watermarks, webhooks, analytics, teams, and the full secure viewer.
+
+**Works with:** MinIO, AWS S3, Backblaze B2, Cloudflare R2, or any S3-compatible storage provider.
+
+Full configuration guide: [Self-Hosting Guide](https://docs.cloakshare.dev/self-hosting)
+
+---
+
+## API Reference
+
+```
+POST   /v1/links                    Create a secure link (multipart file upload)
+POST   /v1/links/upload-url         Get presigned upload URL (large files)
+POST   /v1/links/bulk               Create multiple links at once
+GET    /v1/links                    List your links (paginated)
+GET    /v1/links/:id                Get link details
+GET    /v1/links/:id/analytics      Get per-page view analytics
+GET    /v1/links/:id/progress       SSE stream for rendering progress
+DELETE /v1/links/:id                Revoke a link
+
+POST   /v1/webhooks                 Create a webhook endpoint
+GET    /v1/webhooks                 List webhooks
+GET    /v1/webhooks/:id             Get webhook details + delivery history
+DELETE /v1/webhooks/:id             Delete a webhook
+
+GET    /v1/viewer/:token            Get viewer metadata (email gate, password)
+POST   /v1/viewer/:token/verify     Verify email/password to access document
+GET    /v1/viewer/:token/page/:num  Get rendered page image (with watermark)
+POST   /v1/viewer/:token/track      Track viewing engagement
+
+GET    /v1/notifications/stream     SSE real-time view notifications
+DELETE /v1/viewers/:email           GDPR data deletion
+```
+
+Full API documentation: [docs.cloakshare.dev](https://docs.cloakshare.dev)
+
+---
+
+## Pricing
+
+| Plan | Price | Links/mo | Views/mo |
+|------|-------|----------|----------|
+| Free | $0 | 50 | 500 |
+| Starter | $29/mo | 500 | 10,000 |
+| Growth | $99/mo | 2,500 | 25,000 |
+| Scale | $299/mo | 10,000 | 100,000 |
+
+The `@cloakshare/viewer` npm package is free forever for PDF and image viewing. No API key required.
+
+Annual billing: 20% off. [See full pricing](https://cloakshare.dev/pricing)
 
 ---
 
@@ -352,10 +308,15 @@ cloakshare/
 ├── apps/
 │   ├── api/          # Hono API server
 │   ├── site/         # Astro marketing site
-│   ├── web/          # React dashboard SPA
+│   ├── web/          # React dashboard
 │   └── viewer/       # Secure document/video viewer
 ├── packages/
-│   └── shared/       # Shared types, utils, config
+│   ├── shared/       # Shared types, constants, config
+│   ├── sdk-node/     # @cloakshare/sdk (Node.js SDK)
+│   ├── sdk-python/   # Python SDK
+│   ├── sdk-go/       # Go SDK
+│   ├── viewer-core/  # @cloakshare/viewer (Web Component)
+│   └── react/        # @cloakshare/react (React wrapper)
 ├── docker-compose.yml
 ├── .env.example
 └── turbo.json
@@ -365,10 +326,9 @@ cloakshare/
 
 ## Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+We welcome contributions. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ```bash
-# Development setup
 git clone https://github.com/cloakshare/cloakshare.git
 cd cloakshare
 pnpm install
@@ -380,20 +340,19 @@ Good first issues are labeled [`good first issue`](https://github.com/cloakshare
 
 ---
 
-## License
+## Links
 
-[MIT](LICENSE) — use it however you want.
+- [Website](https://cloakshare.dev)
+- [Documentation](https://docs.cloakshare.dev)
+- [API Reference](https://docs.cloakshare.dev/api)
+- [npm: @cloakshare/viewer](https://www.npmjs.com/package/@cloakshare/viewer)
+- [npm: @cloakshare/react](https://www.npmjs.com/package/@cloakshare/react)
+- [npm: @cloakshare/sdk](https://www.npmjs.com/package/@cloakshare/sdk)
+- [Discord](https://discord.gg/cloakshare)
+- [Twitter](https://twitter.com/cloakshare)
 
 ---
 
-<p align="center">
-  <a href="https://cloakshare.dev">Website</a> ·
-  <a href="https://docs.cloakshare.dev">Docs</a> ·
-  <a href="https://cloakshare.dev/pricing">Pricing</a> ·
-  <a href="https://twitter.com/cloakshare">Twitter</a> ·
-  <a href="https://discord.gg/cloakshare">Discord</a>
-</p>
+## License
 
-<p align="center">
-  <sub>Built with love by the CloakShare team. If CloakShare helps you, consider <a href="https://github.com/cloakshare/cloakshare">giving us a star</a></sub>
-</p>
+MIT — use CloakShare however you want. Free forever for self-hosting.

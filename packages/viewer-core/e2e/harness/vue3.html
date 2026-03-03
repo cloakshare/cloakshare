@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CloakViewer — Vue 3 Harness</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="../cloak-viewer.iife.js"></script>
+  <style>
+    body { margin: 0; padding: 20px; background: #111; color: #fff; font-family: monospace; }
+    #status { padding: 12px; border: 1px solid #333; border-radius: 6px; margin-bottom: 16px; font-size: 13px; }
+    .pass { color: #00ff88; }
+    .fail { color: #ef4444; }
+    .check { margin: 4px 0; }
+  </style>
+</head>
+<body>
+  <h1>Vue 3 Harness</h1>
+  <div id="status">Running checks...</div>
+  <div id="app">
+    <cloak-viewer
+      ref="viewer"
+      src="../sample.pdf"
+      watermark="vue3@test.com"
+      width="100%"
+      height="400px"
+      @cloak:ready="onReady"
+      @cloak:view="onView"
+    ></cloak-viewer>
+    <div style="margin-top: 12px; font-size: 13px;">
+      <div :class="{ pass: events.ready }">
+        cloak:ready: {{ events.ready ? 'RECEIVED' : 'waiting...' }}
+      </div>
+      <div :class="{ pass: events.view }">
+        cloak:view: {{ events.view ? 'RECEIVED' : 'waiting...' }}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref, onMounted } = Vue;
+
+    const app = createApp({
+      // Tell Vue these are custom elements, not Vue components
+      compilerOptions: {
+        isCustomElement: tag => tag === 'cloak-viewer',
+      },
+      setup() {
+        const viewer = ref(null);
+        const events = ref({ ready: false, view: false });
+
+        const onReady = (e) => {
+          console.log('Vue3: cloak:ready', e.detail);
+          events.value.ready = true;
+          window.__vue3Ready = e.detail;
+        };
+
+        const onView = (e) => {
+          console.log('Vue3: cloak:view', e.detail);
+          events.value.view = true;
+          window.__vue3View = e.detail;
+        };
+
+        // Vue 3 custom event listeners on custom elements: use addEventListener
+        onMounted(() => {
+          const el = viewer.value;
+          if (el) {
+            el.addEventListener('cloak:ready', onReady);
+            el.addEventListener('cloak:view', onView);
+          }
+        });
+
+        return { viewer, events, onReady, onView };
+      },
+    });
+
+    app.config.compilerOptions.isCustomElement = tag => tag === 'cloak-viewer';
+    app.mount('#app');
+
+    setTimeout(() => {
+      const status = document.getElementById('status');
+      const checks = [];
+      const ce = customElements.get('cloak-viewer');
+      checks.push({ name: 'Custom element registered', pass: !!ce });
+
+      const viewer = document.querySelector('cloak-viewer');
+      checks.push({ name: 'Component mounted in DOM', pass: !!viewer });
+      checks.push({ name: 'Shadow root attached', pass: !!viewer?.shadowRoot });
+
+      const canvas = viewer?.shadowRoot?.querySelector('.viewer-canvas');
+      checks.push({ name: 'Canvas rendered', pass: !!canvas });
+
+      checks.push({ name: 'cloak:ready event received', pass: !!window.__vue3Ready });
+      checks.push({ name: 'cloak:view event received', pass: !!window.__vue3View });
+
+      const allPass = checks.every(c => c.pass);
+      status.innerHTML = checks.map(c =>
+        `<div class="check ${c.pass ? 'pass' : 'fail'}">${c.pass ? '✓' : '✗'} ${c.name}</div>`
+      ).join('');
+      status.innerHTML += `<div style="margin-top:8px;font-weight:bold" class="${allPass ? 'pass' : 'fail'}">${allPass ? 'ALL CHECKS PASSED' : 'SOME CHECKS FAILED'}</div>`;
+      window.__harnessResult = allPass ? 'PASS' : 'FAIL';
+    }, 5000);
+  </script>
+</body>
+</html>
