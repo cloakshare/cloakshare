@@ -10,8 +10,10 @@ primary_region = "iad"
   CLOAK_MODE = "cloud"
   DB_PROVIDER = "sqlite"
   SQLITE_PATH = "/data/cloak.db"
-  STORAGE_PROVIDER = "s3"
-  # R2/S3 credentials set via `fly secrets set` — not in fly.toml
+  STORAGE_PROVIDER = "local"
+  STORAGE_LOCAL_PATH = "/data/renders"
+  # To use S3/R2 (recommended for production): set STORAGE_PROVIDER=s3 and run:
+  # fly secrets set R2_ACCOUNT_ID=... R2_ACCESS_KEY_ID=... R2_SECRET_ACCESS_KEY=... R2_BUCKET_NAME=...
   API_URL = "https://api.cloakshare.dev"
   VIEWER_URL = "https://view.cloakshare.dev"
   DASHBOARD_URL = "https://app.cloakshare.dev"
