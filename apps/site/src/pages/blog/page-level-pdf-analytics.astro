@@ -77,7 +77,7 @@ pdftoppm -r 150 -jpeg proposal.pdf page
           JPEGs are then compressed with Sharp:
         </p>
         <div class="bg-surface border border-border rounded-lg p-5 my-8">
-          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">// Compress to WebP with Sharp</span>
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto" set:html={`<span class="text-text-tertiary">// Compress to WebP with Sharp</span>
 await sharp('page-1.jpg')
   .resize({ width: 1600, withoutEnlargement: true })
   .webp({ quality: 85 })
@@ -89,11 +89,11 @@ await sharp('page-1.jpg')
   .webp({ quality: 80 })
   .toFile('thumb-1.webp');
 
-<span class="text-text-tertiary">// ~400KB JPEG → ~80KB WebP per page</span></pre>
+<span class="text-text-tertiary">// ~400KB JPEG → ~80KB WebP per page</span>`} />
         </div>
         <p>
           Rendered images are uploaded to storage under
-          <code class="text-accent font-mono text-sm">renders/{linkId}/page-{n}.webp</code>.
+          <code class="text-accent font-mono text-sm">{'renders/{linkId}/page-{n}.webp'}</code>.
           An SSE endpoint streams rendering progress to the client in real-time.
         </p>
 
@@ -127,14 +127,14 @@ await sharp('page-1.jpg')
           <code class="text-accent font-mono text-sm">POST /v1/viewer/:token/track</code>:
         </p>
         <div class="bg-surface border border-border rounded-lg p-5 my-8">
-          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">// Viewer sends per-page metrics</span>
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto" set:html={`<span class="text-text-tertiary">// Viewer sends per-page metrics</span>
 {
   "page": 3,
   "duration": 45,
   "scrollDepth": 0.92,
   "email": "viewer@company.com",
   "device": "desktop"
-}</pre>
+}`} />
         </div>
 
         <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Step 5: Server-side aggregation</h2>
@@ -142,7 +142,7 @@ await sharp('page-1.jpg')
           The server stores per-page engagement in the views table:
         </p>
         <div class="bg-surface border border-border rounded-lg p-5 my-8">
-          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">// views.pageDetails (JSON column)</span>
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto" set:html={`<span class="text-text-tertiary">// views.pageDetails (JSON column)</span>
 [
   {"page": 1, "seconds": 12, "scrollDepth": 1.0},
   {"page": 2, "seconds": 45, "scrollDepth": 0.92},
@@ -150,7 +150,7 @@ await sharp('page-1.jpg')
 ]
 
 <span class="text-text-tertiary">// Completion rate = pages with 3+ seconds / total pages</span>
-completionRate = engagedPages / totalPages</pre>
+completionRate = engagedPages / totalPages`} />
         </div>
         <p>
           We use a 3-second threshold for "engagement." Scrolling past a page takes 1-2 seconds,
@@ -159,7 +159,7 @@ completionRate = engagedPages / totalPages</pre>
 
         <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">The analytics API</h2>
         <div class="bg-surface border border-border rounded-lg p-5 my-8">
-          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">GET /v1/links/:id/analytics</span>
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto" set:html={`<span class="text-text-tertiary">GET /v1/links/:id/analytics</span>
 
 {
   "total_views": 47,
@@ -183,7 +183,7 @@ completionRate = engagedPages / totalPages</pre>
       "device": "mobile"
     }
   ]
-}</pre>
+}`} />
         </div>
 
         <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">What this enables</h2>

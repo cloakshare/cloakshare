@@ -58,7 +58,7 @@ import Base from '../../layouts/Base.astro';
     -F watermark=true \
     -F expires_in=7d
 
-<span class="text-accent">{"secure_url": "https://view.cloakshare.dev/s/lnk_xK9mP2"}</span></pre>
+<span class="text-accent">{'{"secure_url": "https://view.cloakshare.dev/s/lnk_xK9mP2"}'}</span></pre>
         </div>
         <p>
           One API call. Secure link. Done. If you're building an LMS that shares course materials,
@@ -67,7 +67,7 @@ import Base from '../../layouts/Base.astro';
         </p>
         <p>
           We also ship an embeddable viewer as an npm package. Drop
-          <code class="text-accent font-mono text-sm">&lt;cloak-viewer src="/deck.pdf" watermark="{{email}}" email-gate&gt;</code>
+          <code class="text-accent font-mono text-sm">&lt;cloak-viewer src="/deck.pdf" watermark={'{{email}}'}" email-gate&gt;</code>
           into any web app and you have a secure document viewer. No iframe, no redirect.
         </p>
 
