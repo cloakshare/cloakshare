@@ -1,0 +1,228 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="How We Built Page-Level Analytics for Shared PDFs" description="Technical deep dive into rendering PDFs as images, tracking scroll depth per page, and aggregating engagement data in real-time.">
+  <article class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <p class="text-xs text-text-tertiary font-mono mb-4">March 6, 2026</p>
+      <h1 class="font-mono font-bold text-3xl md:text-4xl text-foreground mb-6 leading-tight">
+        How We Built Page-Level Analytics for Shared PDFs
+      </h1>
+
+      <div class="prose-cloak space-y-6 text-text-secondary font-sans leading-relaxed">
+        <p>
+          When you share a PDF via email or Google Drive, you lose all visibility the moment
+          someone downloads it. Even link-based solutions only tell you "someone opened the link."
+          Not which pages they read, how long they spent on each one, or their scroll depth.
+        </p>
+        <p>
+          We built CloakShare to fix this. But page-level analytics for PDFs isn't trivial. This
+          post walks through our approach: server-side rendering with Poppler, canvas-based viewing,
+          and real-time engagement tracking.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">The goal</h2>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Know exactly which pages a viewer read</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Track time spent on each page (not just total time)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Measure scroll depth per page</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Calculate completion rate</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Aggregate per viewer across multiple sessions</li>
+        </ul>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Why it's hard</h2>
+        <p>
+          PDFs are static binary files. JavaScript can't reliably read PDF internals. You can
+          embed a PDF in an iframe, but then the browser downloads it — game over. PDF.js works
+          but bottlenecks on large documents and gives you limited control over the viewing
+          experience.
+        </p>
+        <p>
+          The solution: render each PDF page as an image server-side, serve those images through
+          a controlled viewer, and track every interaction.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Step 1: The rendering pipeline</h2>
+        <p>
+          When a user uploads a PDF, the file goes to S3-compatible storage and a background
+          rendering job is created with status <code class="text-accent font-mono text-sm">pending</code>.
+        </p>
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">-- Worker atomically claims the job (no duplicate rendering)</span>
+UPDATE rendering_jobs
+SET status = 'rendering', claimed_at = CURRENT_TIMESTAMP
+WHERE id = ? AND status = 'pending'</pre>
+        </div>
+        <p>
+          The <code class="text-accent font-mono text-sm">WHERE status = 'pending'</code> clause
+          ensures only one worker processes each job. If two workers race, one gets zero rows
+          and moves on.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Step 2: PDF to images with Poppler</h2>
+        <p>
+          We use Poppler's <code class="text-accent font-mono text-sm">pdftoppm</code> to convert
+          each page to an image. Poppler is MIT licensed — unlike MuPDF which is AGPL and
+          incompatible with open-source commercial use.
+        </p>
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">// Spawn Poppler process</span>
+pdftoppm -r 150 -jpeg proposal.pdf page
+
+<span class="text-text-tertiary">// Output: page-1.jpg, page-2.jpg, page-3.jpg ...</span></pre>
+        </div>
+        <p>
+          150 DPI is the sweet spot: sharp on all devices, reasonable file size. The intermediate
+          JPEGs are then compressed with Sharp:
+        </p>
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">// Compress to WebP with Sharp</span>
+await sharp('page-1.jpg')
+  .resize({ width: 1600, withoutEnlargement: true })
+  .webp({ quality: 85 })
+  .toFile('page-1.webp');
+
+<span class="text-text-tertiary">// Thumbnail for navigation sidebar</span>
+await sharp('page-1.jpg')
+  .resize({ width: 400 })
+  .webp({ quality: 80 })
+  .toFile('thumb-1.webp');
+
+<span class="text-text-tertiary">// ~400KB JPEG → ~80KB WebP per page</span></pre>
+        </div>
+        <p>
+          Rendered images are uploaded to storage under
+          <code class="text-accent font-mono text-sm">renders/{linkId}/page-{n}.webp</code>.
+          An SSE endpoint streams rendering progress to the client in real-time.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Step 3: The canvas-based viewer</h2>
+        <p>
+          The viewer is a custom Web Component built in vanilla TypeScript. 7KB gzipped. We chose
+          Canvas over PDF.js or iframes for three reasons:
+        </p>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>No downloads</strong> — images are drawn to Canvas, not served as attachable files</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>Watermark security</strong> — overlay is composited per frame, can't be removed via DevTools</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>Full control</strong> — we own the interaction loop, making analytics trivial</li>
+        </ul>
+        <p>
+          Shadow DOM encapsulation prevents the host page's CSS or JS from interfering with the
+          viewer. Pages are lazy-loaded — only the visible page and its neighbors are decoded.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Step 4: Tracking engagement</h2>
+        <p>
+          When a page becomes visible, an IntersectionObserver starts a timer. It tracks:
+        </p>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Page number</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Duration (seconds the page was in viewport)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Scroll depth (what % of the page was visible)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Device type (desktop, mobile, tablet)</li>
+        </ul>
+        <p>
+          On page change, tab blur, or navigation away, the viewer POSTs metrics to
+          <code class="text-accent font-mono text-sm">POST /v1/viewer/:token/track</code>:
+        </p>
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">// Viewer sends per-page metrics</span>
+{
+  "page": 3,
+  "duration": 45,
+  "scrollDepth": 0.92,
+  "email": "viewer@company.com",
+  "device": "desktop"
+}</pre>
+        </div>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Step 5: Server-side aggregation</h2>
+        <p>
+          The server stores per-page engagement in the views table:
+        </p>
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">// views.pageDetails (JSON column)</span>
+[
+  {"page": 1, "seconds": 12, "scrollDepth": 1.0},
+  {"page": 2, "seconds": 45, "scrollDepth": 0.92},
+  {"page": 3, "seconds": 8,  "scrollDepth": 0.15}
+]
+
+<span class="text-text-tertiary">// Completion rate = pages with 3+ seconds / total pages</span>
+completionRate = engagedPages / totalPages</pre>
+        </div>
+        <p>
+          We use a 3-second threshold for "engagement." Scrolling past a page takes 1-2 seconds,
+          so anything under 3 seconds is likely a skim, not a read.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">The analytics API</h2>
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">GET /v1/links/:id/analytics</span>
+
+{
+  "total_views": 47,
+  "unique_viewers": 12,
+  "avg_completion_rate": 0.82,
+  "viewers": [
+    {
+      "email": "alice@acme.com",
+      "views": 3,
+      "completion_rate": 0.95,
+      "avg_duration_seconds": 420,
+      "pages_viewed": 19,
+      "device": "desktop"
+    },
+    {
+      "email": "bob@acme.com",
+      "views": 1,
+      "completion_rate": 0.35,
+      "avg_duration_seconds": 89,
+      "pages_viewed": 7,
+      "device": "mobile"
+    }
+  ]
+}</pre>
+        </div>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">What this enables</h2>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>Sales:</strong> "Alice read 19/20 slides. Bob skipped pricing. He needs a custom demo."</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>Fundraising:</strong> "Partner X viewed twice, 40 minutes total. Partner Y abandoned at page 3."</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>Education:</strong> "Maria completed 100%. Tom only read 25%. He needs support."</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>Content:</strong> "Pages 6-8 get skipped by 80% of readers. Move the important stuff earlier."</li>
+        </ul>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Architecture decisions</h2>
+        <p>
+          <strong>Why Poppler, not MuPDF?</strong> Poppler is MIT licensed. MuPDF is AGPL, which
+          would require open-sourcing any modifications — a dealbreaker for an MIT-licensed project.
+        </p>
+        <p>
+          <strong>Why WebP?</strong> 30% smaller than JPEG, 50% smaller than PNG, no perceptible
+          quality loss at 85%. For a 20-page deck, that's ~1.6 MB instead of ~8 MB.
+        </p>
+        <p>
+          <strong>Why Canvas, not PDF.js?</strong> PDF.js gives you a viewer but you lose control.
+          Canvas lets us composite watermarks per frame and own the entire interaction loop for
+          analytics.
+        </p>
+        <p>
+          <strong>Why 3-second threshold?</strong> Scrolling past a page takes 1-2 seconds.
+          Below 3 seconds is noise. Above 3 seconds means the viewer actually stopped to read.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Try it yourself</h2>
+        <p>
+          CloakShare is open source. Explore the rendering pipeline, viewer code, and analytics
+          queries at <a href="https://github.com/cloakshare/cloakshare" class="text-accent hover:underline">github.com/cloakshare/cloakshare</a>.
+        </p>
+        <p>
+          Or try the hosted version at <a href="https://cloakshare.dev" class="text-accent hover:underline">cloakshare.dev</a> —
+          upload a PDF and share the link. Your dashboard will show per-page engagement per viewer.
+        </p>
+      </div>
+    </div>
+  </article>
+</Base>

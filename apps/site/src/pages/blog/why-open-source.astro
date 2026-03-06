@@ -1,0 +1,135 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="Why We Open-Sourced CloakShare" description="The reasoning behind making CloakShare MIT licensed and self-hostable. Trust, licensing, and the open-core business model.">
+  <article class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <p class="text-xs text-text-tertiary font-mono mb-4">March 6, 2026</p>
+      <h1 class="font-mono font-bold text-3xl md:text-4xl text-foreground mb-6 leading-tight">
+        Why We Open-Sourced CloakShare
+      </h1>
+
+      <div class="prose-cloak space-y-6 text-text-secondary font-sans leading-relaxed">
+        <p>
+          CloakShare is a secure document sharing API. You upload a file, get a tokenized link
+          back, and the recipient views it in a watermarked, tracked, expiring viewer. Per-page
+          analytics, email gates, password protection, webhooks — the whole stack.
+        </p>
+        <p>
+          We open-sourced the entire thing under MIT. Here's why.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">The trust problem</h2>
+        <p>
+          If you're routing sensitive documents through a third-party service — pitch decks with
+          financial projections, contracts with confidential terms, medical records — you need to
+          trust that service completely. Not "we promise we're secure" trust. "You can read every
+          line of code that touches your data" trust.
+        </p>
+        <p>
+          Open source is the only way to deliver that. You can audit the rendering pipeline, the
+          storage layer, the authentication flow, the watermarking logic. If something looks wrong,
+          you can file an issue. Or fix it yourself.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Why MIT, not AGPL</h2>
+        <p>
+          Papermark (the closest open-source alternative) uses AGPL. That means if you modify
+          their code and deploy it — even internally — you're legally required to open-source
+          your changes. For a startup embedding document sharing into their product, that's a
+          non-starter. Legal teams see AGPL and kill the integration.
+        </p>
+        <p>
+          MIT has no such restriction. Fork CloakShare, modify it, embed it in your proprietary
+          product, deploy it on your own servers. No strings attached. We believe the best way to
+          build adoption is to remove friction, not add licensing anxiety.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Why API-first</h2>
+        <p>
+          DocSend is a GUI. Papermark is a GUI. PandaDoc has an API, but it's secondary to their
+          UI-first workflow. None of them let you do this:
+        </p>
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">$</span> curl -X POST https://api.cloakshare.dev/v1/links \
+    -H "Authorization: Bearer ck_live_xxx" \
+    -F file=@proposal.pdf \
+    -F watermark=true \
+    -F expires_in=7d
+
+<span class="text-accent">{"secure_url": "https://view.cloakshare.dev/s/lnk_xK9mP2"}</span></pre>
+        </div>
+        <p>
+          One API call. Secure link. Done. If you're building an LMS that shares course materials,
+          a deal room that distributes term sheets, or an investor portal that tracks deck engagement
+          — you need an API, not a dashboard.
+        </p>
+        <p>
+          We also ship an embeddable viewer as an npm package. Drop
+          <code class="text-accent font-mono text-sm">&lt;cloak-viewer src="/deck.pdf" watermark="{{email}}" email-gate&gt;</code>
+          into any web app and you have a secure document viewer. No iframe, no redirect.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Why self-hostable</h2>
+        <p>
+          Healthcare companies can't send patient documents through a third-party cloud. Law firms
+          handling merger documents need data sovereignty. Government contractors have FedRAMP
+          requirements. For all of these, the answer is the same: run it on your own infrastructure.
+        </p>
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">$</span> git clone https://github.com/cloakshare/cloakshare.git
+<span class="text-text-tertiary">$</span> cd cloakshare
+<span class="text-text-tertiary">$</span> docker compose up -d
+
+<span class="text-accent">CloakShare running on http://localhost:3000</span></pre>
+        </div>
+        <p>
+          SQLite database, local file storage, 1GB RAM. That's the entire footprint. Plug in your
+          own S3-compatible storage (MinIO, AWS S3, Backblaze B2, Cloudflare R2) when you're ready.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">The business model</h2>
+        <p>
+          Open core. The self-hosted version is free forever and includes everything: PDF rendering,
+          office document conversion, video transcoding, watermarks, email gates, analytics,
+          webhooks, teams, the full secure viewer.
+        </p>
+        <p>
+          The cloud version at <a href="https://cloakshare.dev" class="text-accent hover:underline">cloakshare.dev</a>
+          adds managed infrastructure, CDN delivery, analytics dashboard, webhook retries, custom
+          domains, email notifications, and a free tier to get started (50 links, 500 views per month).
+        </p>
+        <p>
+          We're not hiding features behind a paywall. We're selling convenience. If you want to run
+          Poppler and FFmpeg on your own servers and manage your own database backups — go for it.
+          If you'd rather upload a file and get a link back without thinking about infrastructure,
+          that's what the cloud tier is for.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">What we've built so far</h2>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> REST API with full CRUD for links, webhooks, teams, and analytics</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Node.js SDK (<code class="text-accent font-mono text-sm">@cloakshare/sdk</code>), Python SDK, Go SDK</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Embeddable viewer Web Component (<code class="text-accent font-mono text-sm">@cloakshare/viewer</code>)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> React wrapper (<code class="text-accent font-mono text-sm">@cloakshare/react</code>)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> PDF, Office docs, images, and video (HLS streaming)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Dynamic watermarks with template variables</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> 8 webhook events with HMAC-SHA256 signatures</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Docker self-hosting with SQLite and any S3-compatible storage</li>
+        </ul>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Get involved</h2>
+        <p>
+          The code is at <a href="https://github.com/cloakshare/cloakshare" class="text-accent hover:underline">github.com/cloakshare/cloakshare</a>.
+          Star it, fork it, open an issue, submit a PR. We label beginner-friendly issues with
+          <code class="text-accent font-mono text-sm">good first issue</code> if you want to contribute.
+        </p>
+        <p>
+          Or just try it: <a href="https://cloakshare.dev" class="text-accent hover:underline">cloakshare.dev</a>.
+          Upload a document, get a secure link, send it to someone. See the analytics roll in.
+        </p>
+      </div>
+    </div>
+  </article>
+</Base>

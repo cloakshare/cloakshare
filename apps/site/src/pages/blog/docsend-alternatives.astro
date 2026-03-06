@@ -1,0 +1,199 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="Best DocSend Alternatives for Developers in 2026" description="Compare open-source and commercial DocSend alternatives. Find the right secure document sharing solution for your workflow.">
+  <article class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <p class="text-xs text-text-tertiary font-mono mb-4">March 6, 2026</p>
+      <h1 class="font-mono font-bold text-3xl md:text-4xl text-foreground mb-6 leading-tight">
+        Best DocSend Alternatives for Developers in 2026
+      </h1>
+      <div class="prose-cloak space-y-6 text-text-secondary font-sans leading-relaxed">
+        <p>
+          DocSend was acquired by Dropbox in 2022, and the product hasn't been kind to developers since. Pricing climbed to <span class="text-accent font-mono text-sm">$45/user/month</span>, their API was deprecated, and the platform shifted toward enterprise sales teams. If you need programmatic document sharing, watermarking, tracking, and expiring links — and you want to control your own infrastructure — you need alternatives.
+        </p>
+        <p>
+          Here's an honest breakdown of the best DocSend alternatives for developers in 2026, covering open-source projects you can self-host and commercial solutions for when you want managed infrastructure.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">1. CloakShare — Open Source, API-First</h2>
+        <p>
+          <a href="https://cloakshare.dev" class="text-accent hover:underline">CloakShare</a> is an open-source (MIT) secure document delivery API built for developers. Create tracked, watermarked, expiring links programmatically via REST API or npm package. Self-hostable with Docker.
+        </p>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> MIT licensed — fully open source, fork and self-host freely</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> REST API with Node.js, Python, and Go SDKs</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Embeddable viewer npm package (<code class="text-accent font-mono text-sm">@cloakshare/viewer</code>)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Dynamic watermarks, email gates, password protection, per-page analytics</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Video support with HLS streaming</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Webhooks (8 events, HMAC-SHA256 signed)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Docker compose up and you're running</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">−</span> Newer project — smaller community than incumbents</li>
+        </ul>
+        <p>
+          <strong>Pricing:</strong> Free tier (50 links, 500 views/mo). Starter $29/mo. Self-hosting is free forever.
+        </p>
+        <p>
+          <strong>Best for:</strong> Developers who need programmatic control, want to embed document sharing into their own product, or need to self-host for compliance.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">2. Papermark — Open Source, UI-First</h2>
+        <p>
+          Papermark is an open-source (AGPL) document sharing platform with a polished web UI. Similar feature set to DocSend — tracking, sharing, analytics — but designed around a dashboard, not an API.
+        </p>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Polished web interface — easier for non-technical users</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Document controls (download blocking, expiration, watermarks)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Established open-source community</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">−</span> Limited API — can't easily automate document flows</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">−</span> AGPL license requires open-sourcing any modifications</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">−</span> No embeddable viewer or npm package</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">−</span> Cloud starts at $59/month</li>
+        </ul>
+        <p>
+          <strong>Pricing:</strong> Free to self-host (AGPL). Cloud at $59/mo.
+        </p>
+        <p>
+          <strong>Best for:</strong> Teams that want a DocSend-like UI without vendor lock-in and don't need programmatic access.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">3. PandaDoc — Commercial, Full Workflow</h2>
+        <p>
+          PandaDoc is a commercial document workflow platform. Covers creation, signing, payment collection, and tracking in one tool. Built for sales and legal teams, not developers.
+        </p>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Full workflow — templates, e-signatures, payments, all integrated</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Strong API for integrations</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Mature platform with enterprise support</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">−</span> $35/user/month — adds up fast</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">−</span> Overkill if you only need document sharing + tracking</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">−</span> No self-hosting, full vendor lock-in</li>
+        </ul>
+        <p>
+          <strong>Pricing:</strong> $35/user/month billed annually.
+        </p>
+        <p>
+          <strong>Best for:</strong> Sales teams that need the full document + signature + payment workflow.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">4. Digify — Commercial, Enterprise DRM</h2>
+        <p>
+          Digify is a closed-source document sharing platform focused on DRM for enterprises. Heavy-duty security controls, but priced and scoped for large organizations.
+        </p>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Enterprise-grade DRM and compliance features</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">−</span> Custom enterprise pricing (typically $5K+/month)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">−</span> No self-hosting, closed source, full vendor lock-in</li>
+        </ul>
+        <p>
+          <strong>Best for:</strong> Large enterprises with heavy compliance requirements and budget to match.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">5. Google Drive — Free, But No Security</h2>
+        <p>
+          Google Drive is fine for internal collaboration. But it has no analytics, no watermarking, no expiring links, and no way to know if someone forwarded your document. It's not a DocSend replacement.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Comparison Table</h2>
+        <div class="my-8 overflow-x-auto">
+          <table class="w-full border-collapse text-sm">
+            <thead>
+              <tr class="border-b border-border">
+                <th class="text-left py-3 px-3 text-foreground font-mono font-medium">Feature</th>
+                <th class="text-left py-3 px-3 text-foreground font-mono font-medium">CloakShare</th>
+                <th class="text-left py-3 px-3 text-foreground font-mono font-medium">Papermark</th>
+                <th class="text-left py-3 px-3 text-foreground font-mono font-medium">PandaDoc</th>
+                <th class="text-left py-3 px-3 text-foreground font-mono font-medium">Digify</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-border">
+                <td class="py-3 px-3 text-text-secondary">Open Source</td>
+                <td class="py-3 px-3 text-accent">MIT</td>
+                <td class="py-3 px-3 text-accent">AGPL</td>
+                <td class="py-3 px-3 text-text-tertiary">No</td>
+                <td class="py-3 px-3 text-text-tertiary">No</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="py-3 px-3 text-text-secondary">REST API</td>
+                <td class="py-3 px-3 text-accent">Yes</td>
+                <td class="py-3 px-3 text-text-tertiary">Limited</td>
+                <td class="py-3 px-3 text-accent">Yes</td>
+                <td class="py-3 px-3 text-text-tertiary">Limited</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="py-3 px-3 text-text-secondary">npm Package</td>
+                <td class="py-3 px-3 text-accent">Yes</td>
+                <td class="py-3 px-3 text-text-tertiary">No</td>
+                <td class="py-3 px-3 text-text-tertiary">No</td>
+                <td class="py-3 px-3 text-text-tertiary">No</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="py-3 px-3 text-text-secondary">Self-Hostable</td>
+                <td class="py-3 px-3 text-accent">Yes</td>
+                <td class="py-3 px-3 text-accent">Yes</td>
+                <td class="py-3 px-3 text-text-tertiary">No</td>
+                <td class="py-3 px-3 text-text-tertiary">No</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="py-3 px-3 text-text-secondary">Watermarks</td>
+                <td class="py-3 px-3 text-accent">Dynamic</td>
+                <td class="py-3 px-3 text-accent">Yes</td>
+                <td class="py-3 px-3 text-text-tertiary">No</td>
+                <td class="py-3 px-3 text-accent">Yes</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="py-3 px-3 text-text-secondary">Video Support</td>
+                <td class="py-3 px-3 text-accent">HLS</td>
+                <td class="py-3 px-3 text-text-tertiary">No</td>
+                <td class="py-3 px-3 text-text-tertiary">No</td>
+                <td class="py-3 px-3 text-text-tertiary">No</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="py-3 px-3 text-text-secondary">Per-Page Analytics</td>
+                <td class="py-3 px-3 text-accent">Yes</td>
+                <td class="py-3 px-3 text-accent">Yes</td>
+                <td class="py-3 px-3 text-accent">Yes</td>
+                <td class="py-3 px-3 text-accent">Yes</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="py-3 px-3 text-text-secondary">E-Signatures</td>
+                <td class="py-3 px-3 text-text-tertiary">No</td>
+                <td class="py-3 px-3 text-text-tertiary">No</td>
+                <td class="py-3 px-3 text-accent">Yes</td>
+                <td class="py-3 px-3 text-accent">Yes</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-3 text-text-secondary">Starting Price</td>
+                <td class="py-3 px-3 text-accent">Free</td>
+                <td class="py-3 px-3 text-text-secondary">$59/mo</td>
+                <td class="py-3 px-3 text-text-secondary">$35/user/mo</td>
+                <td class="py-3 px-3 text-text-secondary">$5K+/mo</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Which one should you pick?</h2>
+        <p>
+          <strong>Use CloakShare if</strong> you're a developer building a product that needs secure document sharing, you want an API, or you value owning your infrastructure. It's the only option that combines MIT licensing, a full REST API with SDKs, an embeddable viewer component, and Docker-based self-hosting.
+        </p>
+        <p>
+          <strong>Use Papermark if</strong> you prefer a web UI over APIs and manage documents manually. AGPL is fine for internal self-hosting. Good if you don't need programmatic access.
+        </p>
+        <p>
+          <strong>Use PandaDoc if</strong> you're a sales or legal team that needs signatures, payment collection, and the full document workflow. You're not price-sensitive and don't need self-hosting.
+        </p>
+        <p>
+          <strong>Skip Digify unless</strong> you have enterprise compliance requirements and a budget to match.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">The bottom line</h2>
+        <p>
+          DocSend's acquisition made the need for alternatives clear. For developers, <a href="https://cloakshare.dev" class="text-accent hover:underline">CloakShare</a> is the strongest option: open-source API, embeddable viewer, self-hostable, and a free tier to get started. Check out the <a href="https://github.com/cloakshare/cloakshare" class="text-accent hover:underline">source code on GitHub</a>.
+        </p>
+      </div>
+    </div>
+  </article>
+</Base>

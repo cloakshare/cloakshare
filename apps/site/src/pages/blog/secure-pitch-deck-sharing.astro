@@ -1,0 +1,109 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="How to Share Your Pitch Deck Without Losing Control" description="Track who views your deck, see which slides hold attention, watermark every page, and set expiry. Secure pitch deck sharing for fundraising.">
+  <article class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <p class="text-xs text-text-tertiary font-mono mb-4">March 6, 2026</p>
+      <h1 class="font-mono font-bold text-3xl md:text-4xl text-foreground mb-6 leading-tight">
+        How to Share Your Pitch Deck Without Losing Control
+      </h1>
+
+      <div class="prose-cloak space-y-6 text-text-secondary font-sans leading-relaxed">
+        <p>
+          You've spent months on your pitch deck. Market analysis, traction metrics, financial
+          projections, the unfair advantage slide you rewrote twelve times. Now you're sending
+          it to 30 VCs.
+        </p>
+        <p>
+          Here's what you don't know: which ones actually opened it, who forwarded it to their
+          partners, and whether your financials are sitting in the inbox of a competitor's CEO.
+          PDF attachments and Google Drive links give you zero visibility.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">What investors actually do with your deck</h2>
+        <p>
+          Investors forward decks. It's not personal — it's how diligence works. They send it
+          to partners for internal review, share it with domain experts, and sometimes forward
+          it to portfolio companies building in your space. This is normal. But you should
+          know it's happening.
+        </p>
+        <p>
+          Most founders never get that visibility. They send the deck into the void and wait
+          for replies that never come, wondering if the deck even landed.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">What you need</h2>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>Email verification</strong> — Know exactly who viewed your deck. Verified identity, not a guess.</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>Per-slide analytics</strong> — Which slides held attention? Did they skip to traction or read sequentially?</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>Watermarks</strong> — Viewer's email on every page. A deterrent against casual forwarding.</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>Expiry</strong> — Deck expires the day your round closes. Control the window.</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>Instant notifications</strong> — Know the moment someone opens your deck. Follow up while they're thinking about it.</li>
+        </ul>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">How it works with CloakShare</h2>
+        <p>
+          Upload your deck once. Get a secure link back. Send to investors. Watch analytics in real-time.
+        </p>
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">$</span> curl -X POST https://api.cloakshare.dev/v1/links \
+    -H "Authorization: Bearer ck_live_xxx" \
+    -F file=@pitch-deck.pdf \
+    -F expires_in="30d" \
+    -F watermark=true \
+    -F require_email=true
+
+<span class="text-accent">{"secure_url": "https://view.cloakshare.dev/s/lnk_aBcDeF9"}</span></pre>
+        </div>
+        <p>
+          You send that link to an investor. They click it, enter their email (verified), and
+          start reading. Every page is watermarked with their email and timestamp. Meanwhile,
+          your dashboard shows:
+        </p>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>3:15 PM:</strong> investor@sequoia.com opened the deck</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>3:17 PM:</strong> Jumped to slide 4 (market opportunity)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>3:22 PM:</strong> 5 minutes on slide 6 (traction metrics)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>3:27 PM:</strong> Finished. Total time: 12 minutes. Completion: 95%</li>
+        </ul>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Reading the signals</h2>
+        <p>
+          The analytics tell you everything about investor interest:
+        </p>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>5 min on traction, skipped financials:</strong> They like the market. Lead with unit economics next call.</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>30 seconds total, 2 pages:</strong> Not interested. Don't follow up. Move on.</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>Opened twice, weeks apart:</strong> They're reconsidering. Good time for a warm follow-up.</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong>New email from a different domain opened it:</strong> They forwarded internally. It's in partner review.</li>
+        </ul>
+        <p>
+          Every founder fundraising has gut instinct. CloakShare turns that instinct into data.
+          Stop wasting time on lukewarm leads and focus on the investors who actually engaged.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Free tier covers a seed round</h2>
+        <p>
+          Most founders send their deck to 20-50 investors. CloakShare's free tier gives you
+          50 links and 500 views per month. Send 40 decks, get 3-4 opens each — you're at
+          120-160 views. Comfortably in free territory.
+        </p>
+        <p>
+          There's also a self-hosted option. Clone the repo, run
+          <code class="text-accent font-mono text-sm">docker compose up</code>, and you have
+          unlimited decks and views on your own server. Useful if you're running a fund or
+          managing a deal room.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Try it</h2>
+        <p>
+          Sign up free at <a href="https://cloakshare.dev" class="text-accent hover:underline">cloakshare.dev</a>.
+          Upload a deck, get a secure link, send it to your first investor today. You'll never
+          go back to emailing PDFs.
+        </p>
+      </div>
+    </div>
+  </article>
+</Base>
