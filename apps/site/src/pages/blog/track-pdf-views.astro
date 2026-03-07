@@ -1,0 +1,127 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="How to Track Who Viewed Your PDF in 2026" description="Four ways to track who opened and read your PDF — from email receipts to API-first analytics. Compare methods, costs, and reliability.">
+  <article class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <p class="text-xs text-text-tertiary font-mono mb-4">March 6, 2026</p>
+      <h1 class="font-mono font-bold text-3xl md:text-4xl text-foreground mb-6 leading-tight">
+        How to Track Who Viewed Your PDF in 2026
+      </h1>
+
+      <div class="prose-cloak space-y-6 text-text-secondary font-sans leading-relaxed">
+        <p>
+          You sent a proposal three days ago. No reply. Did they open it? Did they read past the
+          first page? Did they forward it to someone else? You have no idea — because PDFs are
+          black holes. Once you hit send, you lose all visibility.
+        </p>
+        <p>
+          This guide covers four approaches to tracking PDF views in 2026, from free hacks to
+          purpose-built tools. Each has trade-offs in reliability, cost, and depth of analytics.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">1. Email read receipts</h2>
+        <p>
+          The simplest approach: request a read receipt when you email the PDF. Most email clients
+          (Outlook, Thunderbird, Apple Mail) support the <code class="text-accent font-mono text-sm">Disposition-Notification-To</code> header.
+        </p>
+        <p>
+          The problem? Recipients can decline the receipt. Gmail ignores them entirely for consumer
+          accounts. And even when they work, you only know the email was opened — not whether the
+          attachment was viewed, which pages were read, or how long they spent on each section.
+        </p>
+        <p>
+          <strong class="text-foreground">Verdict:</strong> Free, but unreliable. You get a binary "opened/not opened" signal
+          at best, and nothing at worst.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">2. Google Drive activity dashboard</h2>
+        <p>
+          Upload your PDF to Google Drive, share it as a link, and check the Activity panel. Drive
+          shows who viewed the file and when — but only if the viewer is signed into a Google account
+          and you shared it with their specific email address.
+        </p>
+        <p>
+          Limitations are significant: no page-level analytics, no time-on-page data, no completion
+          tracking. If you share a link publicly or the viewer opens it in an incognito window, Drive
+          records nothing. And the viewer can download the file, removing any future tracking.
+        </p>
+        <p>
+          <strong class="text-foreground">Verdict:</strong> Free, but limited to Google ecosystem. No depth beyond "viewed on
+          this date." Downloads kill all future visibility.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">3. DocSend</h2>
+        <p>
+          DocSend (now owned by Dropbox) is the most well-known document tracking tool. Upload a PDF,
+          get a trackable link, and see per-page analytics in a dashboard. It works well for sales
+          teams and fundraising founders who need to know exactly which slides investors spent time on.
+        </p>
+        <p>
+          The cost is the issue. The Standard plan is $45/user/month, and watermarks require the
+          Advanced plan at $150+/user/month. For a 3-person team that needs basic tracking, you're
+          looking at $135-$450/month. The free trial limits you to 100 total visits. And there's no
+          API — everything is manual through the web UI.
+        </p>
+        <p>
+          <strong class="text-foreground">Verdict:</strong> Reliable tracking with good analytics, but expensive and
+          GUI-only. No way to integrate into your own product.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">4. CloakShare (API-first tracking)</h2>
+        <p>
+          CloakShare is an open-source API for secure document sharing. Upload a PDF, get a tokenized
+          link with built-in analytics. Every view is tracked with page-level detail: which pages
+          were seen, how long the viewer spent on each one, completion rate, and return visits.
+        </p>
+        <p>
+          The difference from DocSend is the delivery model. CloakShare is an API, not a GUI. You
+          create links programmatically, embed them in your own product, and pull analytics via
+          REST endpoints. It's MIT licensed and self-hostable — run it on your own server for
+          unlimited usage, or use the cloud version with a free tier of 50 links and 500 views
+          per month.
+        </p>
+
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <p class="text-xs text-text-tertiary font-mono mb-3">Create a tracked link</p>
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">$</span> curl -X POST https://api.cloakshare.dev/v1/links \
+    -H "Authorization: Bearer ck_live_xxx" \
+    -F file=@proposal.pdf \
+    -F expires_in="7d" \
+    -F require_email=true</pre>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <p class="text-xs text-text-tertiary font-mono mb-3">Check who viewed it</p>
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">$</span> curl https://api.cloakshare.dev/v1/links/lnk_xK9mP2/analytics \
+    -H "Authorization: Bearer ck_live_xxx"</pre>
+        </div>
+
+        <p>
+          The analytics endpoint returns total views, unique viewers, per-page dwell time, completion
+          percentage, and a list of sessions with timestamps and email addresses (if email gating is
+          enabled). You can also receive real-time webhook notifications when someone opens your link.
+        </p>
+        <p>
+          <strong class="text-foreground">Verdict:</strong> Free tier available, API-first, self-hostable. Best option if
+          you need to integrate tracking into your own workflow or product.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Which approach should you use?</h2>
+        <p>
+          It depends on your use case. If you're sending one-off proposals and just want a rough
+          signal, Google Drive's activity panel is free and good enough. If you're a sales team
+          sharing decks all day and budget isn't a concern, DocSend works. If you're a developer
+          building document sharing into a product, or a startup that needs analytics without the
+          $45/user/month price tag, CloakShare gives you the most flexibility.
+        </p>
+        <p>
+          The key question is whether you need to know <em>that</em> someone opened your PDF,
+          or <em>how</em> they read it. For the first, email receipts and Drive are fine. For the
+          second, you need a purpose-built tool.
+        </p>
+      </div>
+    </div>
+  </article>
+</Base>

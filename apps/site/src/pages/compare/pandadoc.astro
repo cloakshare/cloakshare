@@ -1,0 +1,83 @@
+---
+import Base from '../../layouts/Base.astro';
+import ComparisonTable from '../../components/ComparisonTable.astro';
+
+const rows = [
+  { feature: 'API-first', cloak: 'Yes', other: 'Secondary' },
+  { feature: 'Open source', cloak: 'MIT', other: 'No' },
+  { feature: 'Self-hostable', cloak: 'Yes', other: 'No' },
+  { feature: 'Video sharing', cloak: 'HLS streaming', other: 'No' },
+  { feature: 'Per-seat pricing', cloak: 'No', other: '$19-49/user/mo' },
+  { feature: 'Dynamic watermarks', cloak: 'Yes', other: 'No' },
+  { feature: 'Canvas-based viewer', cloak: 'Yes', other: 'No' },
+  { feature: 'Webhooks', cloak: 'Yes', other: 'Yes' },
+  { feature: 'E-signatures', cloak: 'No', other: 'Yes' },
+  { feature: 'Proposals & templates', cloak: 'No', other: 'Yes' },
+  { feature: 'Embeddable viewer', cloak: 'npm package (free)', other: 'No' },
+  { feature: 'Email gate', cloak: 'Yes', other: 'No' },
+  { feature: 'Page-level analytics', cloak: 'Yes', other: 'Basic' },
+  { feature: 'Starting price', cloak: '$0 (free tier)', other: '$19/user/mo' },
+];
+---
+
+<Base title="Cloak vs PandaDoc — Lightweight PandaDoc Alternative for Document Sharing" description="Compare Cloak and PandaDoc for secure document sharing. Cloak is API-first, open source, self-hostable, with video support and no per-seat pricing." canonical="/compare/pandadoc">
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="font-mono font-bold text-4xl text-foreground mb-4">Cloak vs PandaDoc</h1>
+      <p class="text-text-secondary font-sans mb-12 leading-relaxed max-w-2xl">
+        PandaDoc is a document automation platform built for proposals, contracts, and e-signatures
+        at $19-49/user/month. Cloak is a lighter, developer-focused alternative purpose-built for
+        secure document sharing with analytics, watermarking, and video support.
+      </p>
+
+      <ComparisonTable competitor="PandaDoc" rows={rows} />
+
+      <div class="mt-12 space-y-6">
+        <div class="bg-surface border border-accent/30 rounded-lg p-6">
+          <h2 class="font-mono font-medium text-accent mb-3">Document sharing vs document automation</h2>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            PandaDoc is a proposal and contract tool with document sharing bolted on. Cloak is
+            purpose-built for secure document and video sharing with page-level analytics, dynamic
+            watermarking, email gating, and link expiry. If you just need to share documents securely
+            and track engagement, Cloak does it better with less complexity.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">API-first vs GUI-first</h2>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            PandaDoc has an API, but it's secondary to their drag-and-drop UI workflow. Cloak is
+            built API-first for developers. Create secure links, manage documents, and track views
+            programmatically. Embed the viewer directly in your app with a lightweight npm package.
+            Automate document sharing from your CRM, onboarding flow, or internal tools.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">No per-seat pricing</h2>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            PandaDoc charges $19-49 per user per month. A team of 10 on their Business plan costs
+            $490/month. Cloak uses flat tier pricing with no per-seat charges. Your entire team
+            shares the same plan whether you have 2 people or 20.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">What PandaDoc does better</h2>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            PandaDoc excels at e-signatures, document templates, and proposal building. If your
+            workflow revolves around sending contracts for signature or generating proposals from
+            templates, PandaDoc is the better tool. If you need secure document sharing with
+            analytics, watermarking, and video support, Cloak is simpler and cheaper.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-12 text-center">
+        <a href="https://app.cloakshare.dev/register" class="px-6 py-2.5 bg-accent text-background font-mono font-semibold text-sm rounded-md hover:bg-accent-hover transition-colors">
+          Try Cloak free
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

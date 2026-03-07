@@ -1,0 +1,178 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="Best Self-Hosted Document Sharing Tools in 2026" description="Compare 5 self-hosted document sharing platforms: CloakShare, Papermark, Nextcloud, OnlyOffice, and Stirling PDF. Licenses, features, and trade-offs.">
+  <article class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <p class="text-xs text-text-tertiary font-mono mb-4">March 6, 2026</p>
+      <h1 class="font-mono font-bold text-3xl md:text-4xl text-foreground mb-6 leading-tight">
+        Best Self-Hosted Document Sharing Tools in 2026
+      </h1>
+
+      <div class="prose-cloak space-y-6 text-text-secondary font-sans leading-relaxed">
+        <p>
+          Not every team wants to send their documents through a third-party SaaS platform. Whether
+          it's compliance requirements, data sovereignty, or just wanting control over your
+          infrastructure, self-hosting your document sharing stack is a valid choice.
+        </p>
+        <p>
+          This guide compares five open-source tools you can run on your own server. Each solves a
+          different problem, so we'll be specific about what each one does well and where it falls short.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">1. CloakShare</h2>
+        <p>
+          <strong class="text-foreground">License:</strong> MIT<br />
+          <strong class="text-foreground">What it is:</strong> An API for secure document and video sharing with tracking, watermarks, and analytics.<br />
+          <strong class="text-foreground">Deploy:</strong> Docker Compose (single command)
+        </p>
+        <p>
+          CloakShare is built API-first. You upload documents and videos via REST endpoints, get back
+          tokenized secure links, and track engagement with page-level analytics. The viewer renders
+          documents on a canvas element (no downloads), overlays dynamic watermarks with the viewer's
+          email and timestamp, and reports dwell time per page.
+        </p>
+        <p>
+          It also supports HLS video streaming with watermark overlays and watch-time analytics.
+          The rendering pipeline uses Poppler for PDF-to-image conversion and Sharp for optimization,
+          all processed asynchronously in a background worker.
+        </p>
+        <p>
+          <strong class="text-foreground">Best for:</strong> Developers building document sharing into their own products,
+          teams that need API access to analytics, anyone who needs video + document support in one tool.
+        </p>
+        <p>
+          <strong class="text-foreground">What it lacks:</strong> No built-in collaboration features (commenting, editing).
+          No GUI for uploading documents — it's an API, so you need to integrate it or use curl.
+          The dashboard exists but is focused on analytics, not document management.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">2. Papermark</h2>
+        <p>
+          <strong class="text-foreground">License:</strong> AGPL-3.0<br />
+          <strong class="text-foreground">What it is:</strong> A DocSend alternative with a full web UI for uploading, sharing, and tracking documents.<br />
+          <strong class="text-foreground">Deploy:</strong> Docker or Vercel
+        </p>
+        <p>
+          Papermark is the closest open-source equivalent to DocSend. It has a polished web interface
+          for uploading PDFs, creating data rooms, adding watermarks, and viewing per-page analytics.
+          The experience is designed for non-technical users — upload a file, get a link, share it.
+        </p>
+        <p>
+          It has strong traction with $900K+ ARR on their cloud offering, which means active development
+          and a growing feature set. Custom branding and data rooms are available on paid tiers.
+        </p>
+        <p>
+          <strong class="text-foreground">Best for:</strong> Teams that want a DocSend replacement with a familiar GUI
+          workflow. Fundraising, sales, and deal rooms.
+        </p>
+        <p>
+          <strong class="text-foreground">What it lacks:</strong> No video support. The AGPL license means if you modify
+          the source and serve it to users, you must release your changes. API access exists but
+          the product is UI-first. Self-hosting requires more infrastructure (Postgres, Redis, S3).
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">3. Nextcloud</h2>
+        <p>
+          <strong class="text-foreground">License:</strong> AGPL-3.0<br />
+          <strong class="text-foreground">What it is:</strong> A file sync and sharing platform (the self-hosted Dropbox/Google Drive).<br />
+          <strong class="text-foreground">Deploy:</strong> Docker, Snap, bare metal
+        </p>
+        <p>
+          Nextcloud is the Swiss Army knife of self-hosted productivity. File sync, calendar, contacts,
+          video calls, office document editing (via OnlyOffice or Collabora integration), and more. It
+          has a massive ecosystem of apps and a huge community.
+        </p>
+        <p>
+          For document sharing specifically, you can create share links with passwords and expiry dates.
+          The built-in viewer handles PDFs, images, and videos. Nextcloud is the most mature option
+          on this list with years of development and enterprise deployments.
+        </p>
+        <p>
+          <strong class="text-foreground">Best for:</strong> Organizations that need a full file management platform, not
+          just document sharing. Teams replacing Google Workspace or Dropbox entirely.
+        </p>
+        <p>
+          <strong class="text-foreground">What it lacks:</strong> No per-page analytics. No dynamic watermarks. No
+          engagement tracking (who read which page, for how long). Share links are basic — password
+          protection and expiry, but no email gating or view tracking. It's a file platform, not a
+          document analytics tool.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">4. OnlyOffice</h2>
+        <p>
+          <strong class="text-foreground">License:</strong> AGPL-3.0<br />
+          <strong class="text-foreground">What it is:</strong> A collaborative office suite (docs, sheets, presentations) with sharing capabilities.<br />
+          <strong class="text-foreground">Deploy:</strong> Docker
+        </p>
+        <p>
+          OnlyOffice is focused on document creation and collaboration, not sharing and tracking. It
+          excels at real-time co-editing with excellent Microsoft Office compatibility. The document
+          server can integrate with Nextcloud, ownCloud, or run standalone.
+        </p>
+        <p>
+          Sharing is handled through its workspace module — you can create share links and manage
+          permissions. But the emphasis is on internal collaboration, not external distribution
+          with analytics.
+        </p>
+        <p>
+          <strong class="text-foreground">Best for:</strong> Teams that need Google Docs-style collaboration on their own
+          servers. Organizations with heavy document editing workflows.
+        </p>
+        <p>
+          <strong class="text-foreground">What it lacks:</strong> No document tracking or analytics. No watermarks. No
+          engagement metrics. Sharing is a secondary feature — OnlyOffice is a collaboration tool,
+          not a distribution tool.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">5. Stirling PDF</h2>
+        <p>
+          <strong class="text-foreground">License:</strong> MIT<br />
+          <strong class="text-foreground">What it is:</strong> A self-hosted PDF manipulation toolkit (merge, split, compress, convert, watermark).<br />
+          <strong class="text-foreground">Deploy:</strong> Docker
+        </p>
+        <p>
+          Stirling PDF is a fantastic utility tool. It handles PDF operations that would otherwise
+          require Adobe Acrobat or sketchy online converters: merge files, split pages, add static
+          watermarks, compress, convert formats, OCR, and more. The web UI is clean and
+          straightforward.
+        </p>
+        <p>
+          It's included here because "watermark" and "document sharing" searches often surface it.
+          But Stirling PDF is a processing tool, not a sharing platform. It modifies files locally —
+          there's no link sharing, no viewer, no tracking.
+        </p>
+        <p>
+          <strong class="text-foreground">Best for:</strong> Teams that need PDF manipulation without uploading files to
+          third-party services. Batch processing workflows.
+        </p>
+        <p>
+          <strong class="text-foreground">What it lacks:</strong> No document sharing. No link generation. No analytics.
+          No viewer. It processes PDFs; it doesn't distribute them.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Summary</h2>
+        <p>
+          These tools solve fundamentally different problems:
+        </p>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Need API-first sharing + video + analytics?</strong> CloakShare</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Need a DocSend-style GUI with analytics?</strong> Papermark</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Need a full file sync platform?</strong> Nextcloud</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Need collaborative editing?</strong> OnlyOffice</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Need PDF processing tools?</strong> Stirling PDF</li>
+        </ul>
+        <p>
+          If your primary need is <em>sharing documents externally with tracking</em>, the real choice
+          is between CloakShare and Papermark. CloakShare if you want API access and video support
+          with an MIT license. Papermark if you want a polished UI and don't mind AGPL.
+        </p>
+        <p>
+          If your need is broader — file management, collaboration, or PDF processing — Nextcloud,
+          OnlyOffice, and Stirling PDF each have clear strengths that the sharing-focused tools don't.
+        </p>
+      </div>
+    </div>
+  </article>
+</Base>

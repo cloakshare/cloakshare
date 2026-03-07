@@ -1,0 +1,117 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="How to Watermark Documents Before Sharing" description="Static vs dynamic watermarks, why they matter for shared documents, and how to apply them automatically with an API. Honest security trade-offs included.">
+  <article class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <p class="text-xs text-text-tertiary font-mono mb-4">March 6, 2026</p>
+      <h1 class="font-mono font-bold text-3xl md:text-4xl text-foreground mb-6 leading-tight">
+        How to Watermark Documents Before Sharing
+      </h1>
+
+      <div class="prose-cloak space-y-6 text-text-secondary font-sans leading-relaxed">
+        <p>
+          Watermarking a document before you share it serves two purposes: deterrence and traceability.
+          A visible watermark discourages the recipient from redistributing the document. And if it
+          does get leaked, a unique watermark per viewer tells you exactly who shared it.
+        </p>
+        <p>
+          This guide covers why watermarks matter, the difference between static and dynamic
+          approaches, and how to automate them with an API.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Why watermark shared documents?</h2>
+        <p>
+          Every time you share a confidential document — a pitch deck, a contract draft, a financial
+          report — you're trusting the recipient not to forward it. Watermarks don't prevent
+          forwarding, but they change the calculus:
+        </p>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Deterrence:</strong> A visible "Confidential — shared with jane@acme.com" watermark makes the viewer think twice before screenshotting or forwarding</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Traceability:</strong> If a document leaks, a unique watermark per viewer tells you the source</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Legal standing:</strong> In IP disputes, watermarked documents establish a chain of custody and demonstrate that confidentiality was expected</li>
+        </ul>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Static vs dynamic watermarks</h2>
+        <p>
+          A <strong class="text-foreground">static watermark</strong> is baked into the document before sharing. Every
+          recipient sees the same text — usually "Confidential" or a company name. You can apply
+          these with tools like Adobe Acrobat, Stirling PDF, or even Python libraries like PyPDF.
+        </p>
+        <p>
+          The limitation is obvious: if every copy has the same watermark, you can't trace a leak
+          back to a specific viewer.
+        </p>
+        <p>
+          A <strong class="text-foreground">dynamic watermark</strong> is generated per viewer at the time of viewing. It
+          typically includes the viewer's email address, the current date, and a session identifier.
+          Each person who opens the document sees their own identity on every page. This makes
+          forwarding immediately attributable.
+        </p>
+        <p>
+          Dynamic watermarks require a viewing layer — you can't bake them into a PDF attachment
+          because you don't know who will open it. Instead, the document is served through a
+          web-based viewer that renders the watermark in real time.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">How CloakShare handles watermarks</h2>
+        <p>
+          CloakShare renders documents as images on a canvas element. When watermarking is enabled,
+          the viewer overlays text on the canvas using template variables that resolve per session:
+        </p>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Viewer's verified email address</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Current date and time</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Unique session identifier</li>
+        </ul>
+        <p>
+          The watermark is rendered at the canvas level — it's not an HTML overlay that can be
+          removed with browser DevTools. The viewer composites the document image and the watermark
+          text into a single canvas output.
+        </p>
+        <p>
+          To create a watermarked link via API:
+        </p>
+
+        <div class="bg-surface border border-border rounded-lg p-5 my-8">
+          <pre class="text-sm font-mono text-text-secondary overflow-x-auto"><span class="text-text-tertiary">$</span> curl -X POST https://api.cloakshare.dev/v1/links \
+    -H "Authorization: Bearer ck_live_xxx" \
+    -F file=@contract.pdf \
+    -F watermark=true \
+    -F require_email=true</pre>
+        </div>
+
+        <p>
+          When someone opens this link, they're prompted for their email. After verification, every
+          page displays a semi-transparent watermark with their email, the date, and the session ID.
+          The watermark text is customizable — you can set it to any string, or use the default
+          template variables.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">A note on security</h2>
+        <p>
+          Let's be honest: canvas-based watermarks are a deterrent, not DRM. A determined attacker
+          can still take a photo of their screen, use a screen recorder, or attempt to manipulate the
+          canvas API. No web-based watermark is undefeatable.
+        </p>
+        <p>
+          What watermarks do is raise the cost of leaking. A casual screenshot now contains the
+          leaker's email. A forwarded link triggers email verification for the new viewer. The
+          combination of watermarks, email gating, and view tracking creates enough friction that
+          most people won't bother — and enough evidence that you'll know if they do.
+        </p>
+        <p>
+          If you need actual DRM (hardware-level copy protection), you're looking at enterprise
+          solutions like Vitrium or Locklizard that use custom viewers and OS-level hooks. Those
+          come with significant trade-offs in user experience and deployment complexity.
+        </p>
+        <p>
+          For most use cases — pitch decks, contracts, proposals, internal reports — a visible
+          dynamic watermark combined with access controls is the right balance of security and
+          usability.
+        </p>
+      </div>
+    </div>
+  </article>
+</Base>

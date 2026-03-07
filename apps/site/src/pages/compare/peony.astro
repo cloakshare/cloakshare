@@ -1,0 +1,82 @@
+---
+import Base from '../../layouts/Base.astro';
+import ComparisonTable from '../../components/ComparisonTable.astro';
+
+const rows = [
+  { feature: 'API-first', cloak: 'Yes', other: 'No' },
+  { feature: 'Open source', cloak: 'MIT', other: 'No' },
+  { feature: 'Self-hostable', cloak: 'Yes', other: 'No' },
+  { feature: 'Video sharing', cloak: 'HLS streaming', other: 'No' },
+  { feature: 'AI assistant', cloak: 'No', other: 'Yes' },
+  { feature: 'Per-seat pricing', cloak: 'No', other: '$40/user/mo' },
+  { feature: 'Dynamic watermarks', cloak: 'Yes', other: 'Basic' },
+  { feature: 'Embeddable viewer', cloak: 'npm package (free)', other: 'No' },
+  { feature: 'Webhooks', cloak: 'Yes', other: 'No' },
+  { feature: 'Canvas-based viewer', cloak: 'Yes', other: 'No' },
+  { feature: 'Email gate', cloak: 'Yes', other: 'Yes' },
+  { feature: 'Page-level analytics', cloak: 'Yes', other: 'Yes' },
+  { feature: 'Password protection', cloak: 'Yes', other: 'Yes' },
+  { feature: 'Starting price', cloak: '$0 (free tier)', other: '$0 (free tier)' },
+];
+---
+
+<Base title="Cloak vs Peony — Open-Source Peony Alternative" description="Compare Cloak and Peony for secure document sharing. Cloak is API-first, open source, self-hostable, with video support and no per-seat pricing." canonical="/compare/peony">
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="font-mono font-bold text-4xl text-foreground mb-4">Cloak vs Peony</h1>
+      <p class="text-text-secondary font-sans mb-12 leading-relaxed max-w-2xl">
+        Peony is an AI-native document sharing platform that launched in August 2025. It offers an
+        AI assistant that answers recipient questions about your documents. Cloak is an API-first
+        alternative that's open source, self-hostable, supports video, and has no per-seat pricing.
+      </p>
+
+      <ComparisonTable competitor="Peony" rows={rows} />
+
+      <div class="mt-12 space-y-6">
+        <div class="bg-surface border border-accent/30 rounded-lg p-6">
+          <h2 class="font-mono font-medium text-accent mb-3">Open source vs closed SaaS</h2>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            Cloak's core is MIT licensed and fully self-hostable. Deploy it on your own infrastructure
+            for complete data sovereignty, audit the source code, and extend it however you need.
+            Peony is a closed-source SaaS with no self-hosting option and no public source code.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">AI document assistant</h2>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            Peony's standout feature is its AI assistant that lets recipients ask questions about
+            shared documents and get instant answers. This is a genuinely useful capability that
+            Cloak does not offer. If AI-powered Q&amp;A on your documents is a priority, Peony
+            is worth evaluating for that specific use case.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">Performance</h2>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            During Peony's Hacker News launch, users reported document load times of 5 to 8 seconds.
+            Cloak pre-renders document pages as optimized WebP images via a background worker, so
+            viewers load near-instantly. The canvas-based viewer streams individual page images
+            rather than loading an entire PDF in the browser.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">No per-seat pricing</h2>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            Peony charges $40 per user per month. A team of 10 costs $400/month. Cloak uses flat
+            tier pricing that covers your entire team regardless of size. The Growth plan at
+            $99/month includes 2,500 links, 25,000 views, and video support for unlimited users.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-12 text-center">
+        <a href="https://app.cloakshare.dev/register" class="px-6 py-2.5 bg-accent text-background font-mono font-semibold text-sm rounded-md hover:bg-accent-hover transition-colors">
+          Try Cloak free
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

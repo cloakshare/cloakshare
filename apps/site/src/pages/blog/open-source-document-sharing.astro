@@ -1,0 +1,231 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="Open Source Document Sharing Platforms Compared (2026)" description="Honest comparison of open-source DocSend alternatives: CloakShare, Papermark, and Nextcloud. Licenses, features, and when to choose each one.">
+  <article class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <p class="text-xs text-text-tertiary font-mono mb-4">March 6, 2026</p>
+      <h1 class="font-mono font-bold text-3xl md:text-4xl text-foreground mb-6 leading-tight">
+        Open Source Document Sharing Platforms Compared (2026)
+      </h1>
+
+      <div class="prose-cloak space-y-6 text-text-secondary font-sans leading-relaxed">
+        <p>
+          If you want the core features of DocSend — secure links, viewer analytics, watermarks —
+          without the $45-150/user/month price tag, open-source alternatives exist. Some are direct
+          competitors. Others solve adjacent problems. This guide compares the real options, including
+          license implications that matter if you're building a commercial product.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">CloakShare</h2>
+        <p>
+          <strong class="text-foreground">License:</strong> MIT<br />
+          <strong class="text-foreground">Approach:</strong> API-first<br />
+          <strong class="text-foreground">Stack:</strong> TypeScript, Hono, SQLite/Turso, S3-compatible storage
+        </p>
+        <p>
+          CloakShare is a REST API for secure document and video sharing. Upload a file, get a
+          tokenized link with email gating, dynamic watermarks, expiry, and per-page analytics.
+          Documents are rendered as canvas images (no download). Videos stream via HLS with
+          watermark overlays and watch-time tracking.
+        </p>
+        <p>
+          The API-first design means CloakShare is built for integration. There's no drag-and-drop
+          upload page — you create links via API calls and embed the viewer in your own product.
+          A dashboard provides analytics visualization, but the primary interface is the API.
+        </p>
+        <p>
+          <strong class="text-foreground">Strengths:</strong> MIT license (use it commercially without restrictions), video
+          support, lightweight deployment (single Docker container + SQLite), API-driven automation.
+        </p>
+        <p>
+          <strong class="text-foreground">Limitations:</strong> No built-in GUI for document upload. Requires technical
+          integration. Younger project with a smaller community than Papermark or Nextcloud.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Papermark</h2>
+        <p>
+          <strong class="text-foreground">License:</strong> AGPL-3.0<br />
+          <strong class="text-foreground">Approach:</strong> UI-first<br />
+          <strong class="text-foreground">Stack:</strong> Next.js, Postgres, Redis, S3
+        </p>
+        <p>
+          Papermark is the most established open-source DocSend alternative. It has a full web
+          interface for uploading documents, creating share links, building data rooms, and viewing
+          per-page analytics. The experience mirrors DocSend closely — upload a PDF, customize the
+          link settings, share it, and watch the analytics roll in.
+        </p>
+        <p>
+          The project has significant traction with $900K+ ARR on their cloud platform, which
+          translates to active development, regular feature releases, and a growing user base. Custom
+          domains, branding, and advanced data room features are available on paid tiers.
+        </p>
+        <p>
+          <strong class="text-foreground">Strengths:</strong> Polished UI, strong community, proven business model, data
+          room support, custom branding on paid plans.
+        </p>
+        <p>
+          <strong class="text-foreground">Limitations:</strong> AGPL license (see below for implications), no video support,
+          heavier infrastructure requirements for self-hosting (Postgres + Redis + S3), primarily
+          designed as a standalone product rather than an embeddable API.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Nextcloud</h2>
+        <p>
+          <strong class="text-foreground">License:</strong> AGPL-3.0<br />
+          <strong class="text-foreground">Approach:</strong> File platform<br />
+          <strong class="text-foreground">Stack:</strong> PHP, MySQL/Postgres
+        </p>
+        <p>
+          Nextcloud is a self-hosted file management platform — think Dropbox or Google Drive on
+          your own server. It supports document sharing through share links with passwords and
+          expiry dates. The ecosystem includes office editing (via OnlyOffice/Collabora), calendar,
+          contacts, and hundreds of apps.
+        </p>
+        <p>
+          It's listed here because people searching for open-source document sharing often find
+          Nextcloud first. But it solves a different problem. Nextcloud is about file storage and
+          collaboration, not secure external sharing with tracking.
+        </p>
+        <p>
+          <strong class="text-foreground">Strengths:</strong> Massive ecosystem, years of enterprise deployment, full file
+          management platform, huge community.
+        </p>
+        <p>
+          <strong class="text-foreground">Limitations:</strong> No per-page analytics. No dynamic watermarks. No engagement
+          tracking. Share links are basic (password + expiry). Not designed for the "share externally
+          and track who reads what" use case.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">License comparison: MIT vs AGPL</h2>
+        <p>
+          This matters more than most people think, especially if you're building a commercial product.
+        </p>
+        <p>
+          <strong class="text-foreground">MIT (CloakShare)</strong> — Do whatever you want. Use it in proprietary products,
+          modify it without releasing changes, embed it in your SaaS, sell it. The only requirement
+          is including the copyright notice. This is the most permissive open-source license.
+        </p>
+        <p>
+          <strong class="text-foreground">AGPL (Papermark, Nextcloud)</strong> — If you modify the source code and serve it
+          to users over a network, you must release your modifications under AGPL. This means if
+          you fork Papermark, add custom features, and run it as a SaaS for your customers, your
+          entire modified codebase must be open-sourced. For internal use only, AGPL is effectively
+          the same as MIT. For commercial SaaS products, it's a significant constraint.
+        </p>
+        <p>
+          Many companies avoid AGPL dependencies in commercial software specifically because of
+          this network copyleft provision. If you're building a product that includes document sharing
+          as a feature, the license choice matters.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Feature comparison</h2>
+
+        <div class="overflow-x-auto my-8">
+          <table class="w-full text-sm border border-border">
+            <thead>
+              <tr class="bg-surface border-b border-border">
+                <th class="text-left font-mono font-medium text-foreground p-3">Feature</th>
+                <th class="text-left font-mono font-medium text-foreground p-3">CloakShare</th>
+                <th class="text-left font-mono font-medium text-foreground p-3">Papermark</th>
+                <th class="text-left font-mono font-medium text-foreground p-3">Nextcloud</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-border">
+                <td class="p-3 text-foreground">License</td>
+                <td class="p-3 text-accent">MIT</td>
+                <td class="p-3">AGPL</td>
+                <td class="p-3">AGPL</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="p-3 text-foreground">Secure links</td>
+                <td class="p-3">Yes</td>
+                <td class="p-3">Yes</td>
+                <td class="p-3">Basic</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="p-3 text-foreground">Per-page analytics</td>
+                <td class="p-3">Yes</td>
+                <td class="p-3">Yes</td>
+                <td class="p-3">No</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="p-3 text-foreground">Dynamic watermarks</td>
+                <td class="p-3">Yes</td>
+                <td class="p-3">Yes</td>
+                <td class="p-3">No</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="p-3 text-foreground">Email gating</td>
+                <td class="p-3">Yes</td>
+                <td class="p-3">Yes</td>
+                <td class="p-3">No</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="p-3 text-foreground">Video support</td>
+                <td class="p-3 text-accent">Yes (HLS)</td>
+                <td class="p-3">No</td>
+                <td class="p-3">Playback only</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="p-3 text-foreground">REST API</td>
+                <td class="p-3">Primary interface</td>
+                <td class="p-3">Available</td>
+                <td class="p-3">Available</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="p-3 text-foreground">Web UI upload</td>
+                <td class="p-3">Dashboard only</td>
+                <td class="p-3">Full UI</td>
+                <td class="p-3">Full UI</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="p-3 text-foreground">Data rooms</td>
+                <td class="p-3">No</td>
+                <td class="p-3">Yes</td>
+                <td class="p-3">Folders</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="p-3 text-foreground">File management</td>
+                <td class="p-3">No</td>
+                <td class="p-3">No</td>
+                <td class="p-3">Yes</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="p-3 text-foreground">Deploy complexity</td>
+                <td class="p-3">Low (Docker + SQLite)</td>
+                <td class="p-3">Medium (PG + Redis + S3)</td>
+                <td class="p-3">Medium-High</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">When to choose each one</h2>
+
+        <p>
+          <strong class="text-foreground">Choose CloakShare if:</strong> You're a developer building document or video sharing
+          into your own product. You need an API, not a GUI. You want MIT licensing for commercial
+          flexibility. You prefer lightweight infrastructure (SQLite, single container).
+        </p>
+        <p>
+          <strong class="text-foreground">Choose Papermark if:</strong> You want a ready-made DocSend replacement with a
+          polished web interface. Your team uploads documents manually and shares links. You need
+          data rooms for fundraising or deal flow. AGPL is acceptable for your use case.
+        </p>
+        <p>
+          <strong class="text-foreground">Choose Nextcloud if:</strong> Your primary need is file storage and internal
+          collaboration, not external document tracking. You want a complete productivity platform.
+          Document sharing is a secondary feature alongside file sync, calendar, and editing.
+        </p>
+        <p>
+          There's no single "best" option — it depends entirely on whether you need an API, a GUI,
+          or a file platform. The good news is that all three are free to self-host and actively
+          maintained.
+        </p>
+      </div>
+    </div>
+  </article>
+</Base>

@@ -1,0 +1,114 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="For Developers — CloakShare" description="Add secure document sharing to your app with CloakShare's REST API. Upload, share, track. MIT licensed, self-hostable, with SDKs for Node.js, Python, and Go." canonical="/for/developers">
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-4xl mx-auto">
+      <p class="font-mono text-accent text-xs uppercase tracking-widest mb-4">Use Case</p>
+      <h1 class="font-mono font-bold text-4xl text-foreground mb-4">For Developers</h1>
+      <p class="text-text-secondary font-sans text-lg mb-16 leading-relaxed max-w-2xl">
+        The document sharing API you'd build yourself — if you had the time. Embed secure
+        document and video sharing into your product with a REST API, SDKs, and an embeddable
+        viewer component.
+      </p>
+
+      <div class="grid gap-8 md:grid-cols-2">
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <div class="w-10 h-10 bg-accent/15 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+            </svg>
+          </div>
+          <h3 class="font-mono font-medium text-foreground mb-2">REST API</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            One API call to upload a file and get a secure viewer link. Full CRUD for
+            links, webhooks, teams, and analytics.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <div class="w-10 h-10 bg-accent/15 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 7.5l-2.25-1.313M21 7.5v2.25m0-2.25l-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3l2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75l2.25-1.313M12 21.75V19.5m0 2.25l-2.25-1.313m0-16.875L12 2.25l2.25 1.313M21 14.25v2.25l-2.25 1.313m-13.5 0L3 16.5v-2.25" />
+            </svg>
+          </div>
+          <h3 class="font-mono font-medium text-foreground mb-2">SDKs and npm packages</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            Node.js SDK, Python SDK, Go SDK. Plus @cloakshare/viewer Web Component
+            and @cloakshare/react wrapper.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <div class="w-10 h-10 bg-accent/15 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21.75 17.25v-.228a4.5 4.5 0 00-.12-1.03l-2.268-9.64a3.375 3.375 0 00-3.285-2.602H7.923a3.375 3.375 0 00-3.285 2.602l-2.268 9.64a4.5 4.5 0 00-.12 1.03v.228m19.5 0a3 3 0 01-3 3H5.25a3 3 0 01-3-3m19.5 0a3 3 0 00-3-3H5.25a3 3 0 00-3 3m16.5 0h.008v.008h-.008v-.008zm-3 0h.008v.008h-.008v-.008z" />
+            </svg>
+          </div>
+          <h3 class="font-mono font-medium text-foreground mb-2">Self-hostable</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            Docker Compose, SQLite, any S3-compatible storage. Run on your own
+            infrastructure for data sovereignty. 1GB RAM, any VPS.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <div class="w-10 h-10 bg-accent/15 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+          </div>
+          <h3 class="font-mono font-medium text-foreground mb-2">MIT licensed</h3>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            Fork it, modify it, embed it in your proprietary product. No AGPL
+            restrictions. No licensing anxiety.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-16 bg-surface border border-accent/30 rounded-lg p-8">
+        <h2 class="font-mono font-medium text-accent mb-4">Built for integration</h2>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3">
+            <svg class="w-4 h-4 text-accent flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-sm text-text-secondary font-sans">Full REST API with OpenAPI documentation</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <svg class="w-4 h-4 text-accent flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-sm text-text-secondary font-sans">Webhook events with HMAC-SHA256 signatures</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <svg class="w-4 h-4 text-accent flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-sm text-text-secondary font-sans">Embeddable viewer — drop a Web Component into any app</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <svg class="w-4 h-4 text-accent flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-sm text-text-secondary font-sans">No per-seat pricing — flat tiers for your whole team</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <svg class="w-4 h-4 text-accent flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-sm text-text-secondary font-sans">Video support — HLS streaming through the same API</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="mt-12 text-center">
+        <a href="https://app.cloakshare.dev/register" class="px-6 py-2.5 bg-accent text-background font-mono font-semibold text-sm rounded-md hover:bg-accent-hover transition-colors">
+          Get API Key
+        </a>
+        <p class="text-xs text-text-tertiary font-sans mt-3">Free tier: 50 links, 500 views per month</p>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,102 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="How to Track Investor Deck Engagement in 2026" description="Track which slides investors spend time on, who returned for a second look, and who forwarded your deck. A practical guide to pitch deck analytics.">
+  <article class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <p class="text-xs text-text-tertiary font-mono mb-4">March 6, 2026</p>
+      <h1 class="font-mono font-bold text-3xl md:text-4xl text-foreground mb-6 leading-tight">
+        How to Track Investor Deck Engagement in 2026
+      </h1>
+
+      <div class="prose-cloak space-y-6 text-text-secondary font-sans leading-relaxed">
+        <p>
+          You're fundraising. You send your pitch deck to 30 investors. Three respond. What happened
+          with the other 27? Did they open it? Did they get past the cover slide? Did they spend
+          five minutes on your traction page or close the tab after ten seconds?
+        </p>
+        <p>
+          Without analytics, fundraising is a black box. You optimize your deck based on gut
+          instinct and the feedback of the three investors who bothered to reply. Pitch deck
+          analytics change that — they give you data on every viewer, every session, every slide.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">What to track</h2>
+        <p>
+          Not all metrics are equally useful. Here's what actually matters when sharing a pitch deck:
+        </p>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Opens:</strong> Did the investor click the link at all?</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Time per slide:</strong> Which sections held attention? Which got skipped?</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Completion rate:</strong> Did they view the whole deck or drop off at slide 4?</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Return visits:</strong> Did they come back for a second look? This is a strong signal of interest.</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Forwarding:</strong> Did the investor share your deck with a partner? New email addresses viewing your link tell you this.</li>
+        </ul>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Tools for pitch deck analytics</h2>
+
+        <p>
+          <strong class="text-foreground">DocSend ($45/user/month)</strong> — The incumbent. DocSend popularized pitch deck
+          tracking and is widely used in VC circles. The analytics are solid: per-page time, viewer
+          identity, download tracking. The Standard plan at $45/user/month covers most needs, but
+          watermarks and advanced analytics require the $150+/month Advanced plan. The free trial
+          limits you to 100 total visits across all documents.
+        </p>
+        <p>
+          <strong class="text-foreground">Papermark ($29/month)</strong> — An open-source DocSend alternative with a polished
+          UI. The paid plan includes custom branding, data rooms, and per-page analytics. Self-hosting
+          is available under AGPL. Good option if you want a familiar GUI workflow at a lower price point.
+        </p>
+        <p>
+          <strong class="text-foreground">CloakShare (free tier available)</strong> — API-first document sharing with
+          per-page analytics. The free tier includes 50 links and 500 views per month — enough for
+          most fundraising rounds. Self-host for unlimited usage. The trade-off is that it's
+          API-oriented, so there's no drag-and-drop upload UI (though the dashboard shows analytics).
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">How to read the signals</h2>
+        <p>
+          Raw data is useless without interpretation. Here's what engagement patterns typically mean
+          in a fundraising context:
+        </p>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">5+ minutes on traction/financials:</strong> Genuine interest. They're evaluating the numbers. Follow up within 24 hours.</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">30 seconds total, exited on slide 2:</strong> Not a fit. Don't waste a follow-up email — or send a brief "any questions?" and move on.</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Two separate sessions, days apart:</strong> They're reconsidering or showing it to a partner. This is one of the strongest buying signals.</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">New email address viewed your link:</strong> The deck was forwarded. If it went to a partner at the same firm, that's great. If it went to an unknown domain, your deal memo is circulating.</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Skipped the team slide:</strong> They care about the business, not the bios. Consider moving team info to an appendix.</li>
+        </ul>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Free tier comparison</h2>
+        <p>
+          If you're a solo founder or early-stage team, cost matters. Here's how the free options compare:
+        </p>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">DocSend:</strong> Free trial with 100 total visits, then $45/month minimum. No permanent free tier.</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Papermark:</strong> Open-source self-host is free (AGPL). Cloud free tier is limited.</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">CloakShare:</strong> 50 links and 500 views/month on the free tier. Self-host (MIT) for unlimited.</li>
+        </ul>
+        <p>
+          For a typical fundraising round where you share with 30-50 investors, CloakShare's free
+          tier covers the entire process. DocSend's 100-visit limit can run out quickly if investors
+          revisit or forward your deck.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">The bottom line</h2>
+        <p>
+          Pitch deck analytics won't get you funded — your business will. But they eliminate the
+          information asymmetry that makes fundraising so frustrating. Instead of guessing who's
+          interested, you know. Instead of following up blindly, you follow up with context. And
+          instead of iterating your deck based on three data points, you iterate based on thirty.
+        </p>
+        <p>
+          Pick the tool that fits your workflow and budget. If you're already using DocSend and it
+          works, keep using it. If you're cost-conscious or need API access, CloakShare and Papermark
+          are strong alternatives. The important thing is to track something — anything is better than
+          sending PDFs into the void.
+        </p>
+      </div>
+    </div>
+  </article>
+</Base>

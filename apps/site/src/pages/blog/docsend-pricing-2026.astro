@@ -1,0 +1,163 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="DocSend Pricing in 2026: What You're Really Paying" description="DocSend pricing breakdown for 2026: per-seat costs, hidden limits, feature gating, and real-world team costs. Plus alternatives at every price point.">
+  <article class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <p class="text-xs text-text-tertiary font-mono mb-4">March 6, 2026</p>
+      <h1 class="font-mono font-bold text-3xl md:text-4xl text-foreground mb-6 leading-tight">
+        DocSend Pricing in 2026: What You're Really Paying
+      </h1>
+
+      <div class="prose-cloak space-y-6 text-text-secondary font-sans leading-relaxed">
+        <p>
+          DocSend is the most recognized name in secure document sharing. It pioneered pitch deck
+          analytics and has a strong foothold with sales teams, VCs, and fundraising founders. But
+          the pricing has gotten complicated — and expensive — since Dropbox acquired it in 2021.
+        </p>
+        <p>
+          Here's a clear breakdown of what DocSend actually costs in 2026, what's gated behind
+          each tier, and when it makes sense to look elsewhere.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Current DocSend pricing tiers</h2>
+
+        <p>
+          <strong class="text-foreground">Personal — $10/user/month</strong><br />
+          Limited to a single user. Basic document sharing with visitor analytics. No team features,
+          no data rooms, no watermarks. Works for individual founders sending a few decks, but you'll
+          hit feature limits quickly.
+        </p>
+        <p>
+          <strong class="text-foreground">Standard — $45/user/month (billed annually)</strong><br />
+          The most common tier. Includes team workspaces, data rooms, NDA integration, and detailed
+          per-page analytics. This is where most sales teams and fundraising founders land. But
+          watermarks, custom branding, and advanced permissions are not included.
+        </p>
+        <p>
+          <strong class="text-foreground">Advanced — $150+/user/month</strong><br />
+          Adds watermarks, white-labeling, advanced security controls, and priority support. Pricing
+          varies by contract. This is the tier you need if watermarking is a requirement — which
+          means a 3-person team pays $450/month minimum just to put viewer emails on shared documents.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">The hidden costs</h2>
+
+        <p>
+          <strong class="text-foreground">Per-seat pricing adds up fast.</strong> DocSend charges per user, not per workspace.
+          Every team member who needs to send or view analytics needs their own seat. A 3-person
+          sales team on Standard pays $135/month. A 12-person team pays $540/month — that's $6,480/year
+          for document sharing alone.
+        </p>
+        <p>
+          <strong class="text-foreground">Feature gating on watermarks.</strong> Watermarking — arguably the most important
+          security feature for shared documents — is locked behind the Advanced tier. On Standard,
+          you get analytics but no deterrence against forwarding. To get both, you're paying 3x more.
+        </p>
+        <p>
+          <strong class="text-foreground">Visit limits on free trials.</strong> DocSend's free trial caps you at 100 total
+          visits across all documents. For a fundraising founder sharing with 30 investors who
+          might each view the deck multiple times, that limit can be exhausted in days.
+        </p>
+        <p>
+          <strong class="text-foreground">Dropbox killed Send and Track.</strong> In March 2025, Dropbox shut down its
+          Send and Track feature, which offered lighter document analytics for Dropbox Business
+          users. The message was clear: if you want tracking, pay for DocSend separately. This
+          removed the budget-friendly middle ground for Dropbox customers.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Real-world cost examples</h2>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">Solo founder, basic tracking:</strong> $10/month (Personal) — workable but limited</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">3-person sales team, Standard:</strong> $135/month ($1,620/year)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">3-person team needing watermarks:</strong> $450+/month ($5,400+/year)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">12-person team, Standard:</strong> $540/month ($6,480/year)</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> <strong class="text-foreground">12-person team, Advanced:</strong> $1,800+/month ($21,600+/year)</li>
+        </ul>
+        <p>
+          A G2 reviewer noted paying $780/month for a small team — roughly $9,360/year — calling
+          it "the most expensive tool in our stack per feature."
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Alternatives at every price point</h2>
+
+        <div class="overflow-x-auto my-8">
+          <table class="w-full text-sm border border-border">
+            <thead>
+              <tr class="bg-surface border-b border-border">
+                <th class="text-left font-mono font-medium text-foreground p-3">Tool</th>
+                <th class="text-left font-mono font-medium text-foreground p-3">Pricing</th>
+                <th class="text-left font-mono font-medium text-foreground p-3">Watermarks</th>
+                <th class="text-left font-mono font-medium text-foreground p-3">Analytics</th>
+                <th class="text-left font-mono font-medium text-foreground p-3">Self-host</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-border">
+                <td class="p-3 font-mono text-accent">CloakShare</td>
+                <td class="p-3">Free tier, $29-299/mo</td>
+                <td class="p-3">All tiers</td>
+                <td class="p-3">Per-page</td>
+                <td class="p-3">Yes (MIT)</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="p-3 font-mono text-foreground">Papermark</td>
+                <td class="p-3">Free OSS, $29-99/mo</td>
+                <td class="p-3">Paid tiers</td>
+                <td class="p-3">Per-page</td>
+                <td class="p-3">Yes (AGPL)</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="p-3 font-mono text-foreground">PandaDoc</td>
+                <td class="p-3">$19-49/user/mo</td>
+                <td class="p-3">No</td>
+                <td class="p-3">Basic</td>
+                <td class="p-3">No</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="p-3 font-mono text-foreground">Peony</td>
+                <td class="p-3">$40/user/mo</td>
+                <td class="p-3">Yes</td>
+                <td class="p-3">Per-page</td>
+                <td class="p-3">No</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="p-3 font-mono text-foreground">DocSend</td>
+                <td class="p-3">$10-150+/user/mo</td>
+                <td class="p-3">Advanced only</td>
+                <td class="p-3">Per-page</td>
+                <td class="p-3">No</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">When DocSend still makes sense</h2>
+        <p>
+          To be fair, DocSend isn't overpriced for everyone. It makes sense if:
+        </p>
+        <ul class="list-none space-y-2 my-4">
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Your investors or clients already know DocSend and trust the viewer experience</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> You're an enterprise team where $150/user/month is a rounding error in the budget</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> You need the NDA integration and compliance certifications that come with the Advanced tier</li>
+          <li class="flex items-start gap-2"><span class="text-accent text-xs mt-1">+</span> Your workflow is entirely manual (no API integration needed)</li>
+        </ul>
+        <p>
+          For everyone else — startups, small teams, developers building document sharing into
+          products — the per-seat cost and feature gating make it hard to justify. The alternatives
+          have caught up in features while staying at a fraction of the price.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">The bottom line</h2>
+        <p>
+          DocSend is a good product with aggressive pricing. If you're already on it and the cost
+          isn't a concern, there's no urgent reason to switch. But if you're evaluating options
+          for the first time, or if that $45-150/user/month line item is getting hard to justify
+          in budget reviews, it's worth looking at what's changed in the market since DocSend
+          was your only option.
+        </p>
+      </div>
+    </div>
+  </article>
+</Base>
