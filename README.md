@@ -356,3 +356,10 @@ Good first issues are labeled [`good first issue`](https://github.com/cloakshare
 ## License
 
 MIT — use CloakShare however you want. Free forever for self-hosting.
+
+---
+
+## Also By Us
+
+- **[AuditKit](https://github.com/AuditKitDev/auditkit)** — Open-source tamper-proof audit logging for B2B SaaS. SHA-256 hash chaining, Merkle proofs, SOC 2 exports. AGPLv3.
+- **[SiteCrawlIQ](https://github.com/AuditKitDev/sitecrawliq)** — AI-powered SEO + GEO/AEO audit platform. Tracks AI citations across ChatGPT, Perplexity, Claude, and Gemini.
