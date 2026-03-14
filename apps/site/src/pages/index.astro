@@ -313,4 +313,161 @@ import Tutorial from '../components/Tutorial.astro';
     </div>
   </section>
 
+  <!-- FAQ -->
+  <section class="py-20 px-6 border-t border-border-subtle">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-center font-mono font-semibold text-2xl text-foreground mb-4">Frequently asked questions</h2>
+      <p class="text-center text-text-secondary font-sans mb-12 max-w-xl mx-auto">Common questions about CloakShare, security, and pricing.</p>
+
+      <div class="space-y-6">
+        <details class="group bg-surface border border-border rounded-lg overflow-hidden">
+          <summary class="flex items-center justify-between cursor-pointer px-6 py-4 font-mono font-medium text-foreground text-sm hover:bg-elevated/50 transition-colors">
+            What is CloakShare?
+            <span class="text-text-tertiary group-open:rotate-45 transition-transform text-lg">+</span>
+          </summary>
+          <div class="px-6 pb-4 text-sm text-text-secondary font-sans leading-relaxed">
+            CloakShare is an open-source API for secure document and video sharing. It gives you tokenized links with dynamic watermarks, page-level analytics, email gating, expiry controls, and HLS video streaming. You can self-host it with Docker or use the managed cloud version.
+          </div>
+        </details>
+
+        <details class="group bg-surface border border-border rounded-lg overflow-hidden">
+          <summary class="flex items-center justify-between cursor-pointer px-6 py-4 font-mono font-medium text-foreground text-sm hover:bg-elevated/50 transition-colors">
+            How does canvas rendering prevent copying?
+            <span class="text-text-tertiary group-open:rotate-45 transition-transform text-lg">+</span>
+          </summary>
+          <div class="px-6 pb-4 text-sm text-text-secondary font-sans leading-relaxed">
+            CloakShare renders documents and video frames onto an HTML canvas element instead of using native PDF viewers or standard video players. Because the content is drawn as pixels on a canvas, there is no selectable text or downloadable source file exposed to the browser. The watermark is composited directly into the rendered output, so it cannot be removed without destroying the content.
+          </div>
+        </details>
+
+        <details class="group bg-surface border border-border rounded-lg overflow-hidden">
+          <summary class="flex items-center justify-between cursor-pointer px-6 py-4 font-mono font-medium text-foreground text-sm hover:bg-elevated/50 transition-colors">
+            Is CloakShare really free?
+            <span class="text-text-tertiary group-open:rotate-45 transition-transform text-lg">+</span>
+          </summary>
+          <div class="px-6 pb-4 text-sm text-text-secondary font-sans leading-relaxed">
+            Yes. The core project is MIT-licensed and free to self-host with no limits. The managed cloud plan includes a free tier with 25 links per month, watermarks, and analytics. Paid plans add higher limits, custom domains, video support, webhooks, and team features.
+          </div>
+        </details>
+
+        <details class="group bg-surface border border-border rounded-lg overflow-hidden">
+          <summary class="flex items-center justify-between cursor-pointer px-6 py-4 font-mono font-medium text-foreground text-sm hover:bg-elevated/50 transition-colors">
+            Can I embed the viewer in my own app?
+            <span class="text-text-tertiary group-open:rotate-45 transition-transform text-lg">+</span>
+          </summary>
+          <div class="px-6 pb-4 text-sm text-text-secondary font-sans leading-relaxed">
+            Yes. CloakShare provides an embeddable viewer component that you can add to any web app with an iframe. It includes a PostMessage API for two-way communication between your app and the viewer, so you can control navigation, receive analytics events, and customize the experience. PDF and image embedding is free on all plans.
+          </div>
+        </details>
+
+        <details class="group bg-surface border border-border rounded-lg overflow-hidden">
+          <summary class="flex items-center justify-between cursor-pointer px-6 py-4 font-mono font-medium text-foreground text-sm hover:bg-elevated/50 transition-colors">
+            How is CloakShare different from DocSend?
+            <span class="text-text-tertiary group-open:rotate-45 transition-transform text-lg">+</span>
+          </summary>
+          <div class="px-6 pb-4 text-sm text-text-secondary font-sans leading-relaxed">
+            CloakShare is open-source, API-first, and self-hostable. DocSend is a closed SaaS product with a web UI. CloakShare supports video with HLS streaming, offers canvas-based rendering for stronger copy protection, and has no per-seat pricing. You can integrate it into your own product via the REST API and SDKs, or self-host it on your own infrastructure.
+          </div>
+        </details>
+
+        <details class="group bg-surface border border-border rounded-lg overflow-hidden">
+          <summary class="flex items-center justify-between cursor-pointer px-6 py-4 font-mono font-medium text-foreground text-sm hover:bg-elevated/50 transition-colors">
+            What file types does CloakShare support?
+            <span class="text-text-tertiary group-open:rotate-45 transition-transform text-lg">+</span>
+          </summary>
+          <div class="px-6 pb-4 text-sm text-text-secondary font-sans leading-relaxed">
+            CloakShare supports PDF, DOCX, PPTX, XLSX, PNG, and JPG for documents and images. For video, it supports MP4, MOV, and WebM uploads, which are transcoded to adaptive HLS with 720p and 1080p quality tiers. Office documents are converted server-side using LibreOffice and receive the same security features as PDFs.
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- HowTo JSON-LD -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to secure and share documents with CloakShare",
+    "description": "Three API calls. That's all it takes to secure, share, and track any document or video.",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "position": 1,
+        "name": "Upload via API",
+        "text": "POST your file to /v1/links. PDFs, Office docs, images, or video. Set expiry, watermark, and email gate in one call.",
+        "url": "https://cloakshare.dev/#how-it-works"
+      },
+      {
+        "@type": "HowToStep",
+        "position": 2,
+        "name": "Share the secure link",
+        "text": "Recipients open the link in a browser. They see an email gate, then a watermarked viewer. Documents render to canvas. Videos stream via HLS. No downloads.",
+        "url": "https://cloakshare.dev/#how-it-works"
+      },
+      {
+        "@type": "HowToStep",
+        "position": 3,
+        "name": "Track engagement",
+        "text": "See who viewed it, how long they spent, which pages they read or how much video they watched. Get webhook notifications in real-time.",
+        "url": "https://cloakshare.dev/#how-it-works"
+      }
+    ]
+  })} />
+
+  <!-- FAQPage JSON-LD -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is CloakShare?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "CloakShare is an open-source API for secure document and video sharing. It gives you tokenized links with dynamic watermarks, page-level analytics, email gating, expiry controls, and HLS video streaming. You can self-host it with Docker or use the managed cloud version."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does canvas rendering prevent copying?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "CloakShare renders documents and video frames onto an HTML canvas element instead of using native PDF viewers or standard video players. Because the content is drawn as pixels on a canvas, there is no selectable text or downloadable source file exposed to the browser. The watermark is composited directly into the rendered output, so it cannot be removed without destroying the content."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is CloakShare really free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. The core project is MIT-licensed and free to self-host with no limits. The managed cloud plan includes a free tier with 25 links per month, watermarks, and analytics. Paid plans add higher limits, custom domains, video support, webhooks, and team features."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I embed the viewer in my own app?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. CloakShare provides an embeddable viewer component that you can add to any web app with an iframe. It includes a PostMessage API for two-way communication between your app and the viewer, so you can control navigation, receive analytics events, and customize the experience. PDF and image embedding is free on all plans."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is CloakShare different from DocSend?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "CloakShare is open-source, API-first, and self-hostable. DocSend is a closed SaaS product with a web UI. CloakShare supports video with HLS streaming, offers canvas-based rendering for stronger copy protection, and has no per-seat pricing. You can integrate it into your own product via the REST API and SDKs, or self-host it on your own infrastructure."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What file types does CloakShare support?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "CloakShare supports PDF, DOCX, PPTX, XLSX, PNG, and JPG for documents and images. For video, it supports MP4, MOV, and WebM uploads, which are transcoded to adaptive HLS with 720p and 1080p quality tiers. Office documents are converted server-side using LibreOffice and receive the same security features as PDFs."
+        }
+      }
+    ]
+  })} />
+
 </Base>
