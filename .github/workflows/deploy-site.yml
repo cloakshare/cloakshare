@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'apps/site/**'
+      - 'packages/viewer-core/**'
       - '.github/workflows/deploy-site.yml'
   workflow_dispatch:
 
@@ -24,6 +25,9 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+
+      - name: Build viewer-core (site dependency)
+        run: pnpm --filter @cloakshare/viewer run build
 
       - name: Build site
         run: pnpm --filter @cloak/site run build
