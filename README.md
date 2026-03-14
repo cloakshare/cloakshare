@@ -359,6 +359,12 @@ MIT — use CloakShare however you want. Free forever for self-hosting.
 
 ---
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=cloakshare/cloakshare&type=Date)](https://star-history.com/#cloakshare/cloakshare&Date)
+
+---
+
 ## Also By Us
 
 - **[AuditKit](https://github.com/AuditKitDev/auditkit)** — Open-source tamper-proof audit logging for B2B SaaS. SHA-256 hash chaining, Merkle proofs, SOC 2 exports. AGPLv3.

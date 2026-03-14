@@ -32,7 +32,7 @@ import PricingTable from '../components/PricingTable.astro';
         </div>
       </div>
 
-      <!-- FAQ -->
+      <!-- FAQ with Schema Markup -->
       <div class="mt-16">
         <h2 class="font-mono font-semibold text-xl text-foreground mb-8 text-center">Frequently asked questions</h2>
         <div class="max-w-2xl mx-auto space-y-6">
@@ -53,6 +53,22 @@ import PricingTable from '../components/PricingTable.astro';
           ))}
         </div>
       </div>
+
+      <!-- FAQ Schema JSON-LD -->
+      <script type="application/ld+json" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "What counts as a link?", "acceptedAnswer": { "@type": "Answer", "text": "Each POST /v1/links call creates one link. Revoking or expiring a link does not return a credit." } },
+          { "@type": "Question", "name": "What counts as a view?", "acceptedAnswer": { "@type": "Answer", "text": "Each unique viewer session on a link counts as one view. The same person refreshing does not create a new view within 24 hours." } },
+          { "@type": "Question", "name": "Which plans support video?", "acceptedAnswer": { "@type": "Answer", "text": "Video sharing (MP4, MOV, WebM) with HLS streaming is available on Growth plans and above. Videos are transcoded to 720p and 1080p with adaptive bitrate streaming. Scale plans include unlimited video transcoding." } },
+          { "@type": "Question", "name": "Which file types are supported?", "acceptedAnswer": { "@type": "Answer", "text": "PDF, PNG, JPG, and WebP on all plans. Office documents (DOCX, PPTX, XLSX) on Starter and above. Video files (MP4, MOV, WebM) on Growth and above." } },
+          { "@type": "Question", "name": "Can I self-host CloakShare?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. CloakShare is open source (MIT). Self-host with docker compose up for free. Enable video with ENABLE_VIDEO=true. The cloud version adds CDN delivery, analytics dashboard, webhooks, custom domains, and managed infrastructure." } },
+          { "@type": "Question", "name": "What happens if I exceed my limits?", "acceptedAnswer": { "@type": "Answer", "text": "Free tier has hard caps. Paid tiers have overage billing. You can set spending caps in your dashboard." } },
+          { "@type": "Question", "name": "Can I cancel anytime?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. No contracts, cancel any time. Your links remain active until their expiry date." } },
+          { "@type": "Question", "name": "Do you offer annual billing?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Save 20% with annual billing. Contact us for enterprise agreements." } }
+        ]
+      })} />
     </div>
   </section>
 </Base>
