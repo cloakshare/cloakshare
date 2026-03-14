@@ -14,6 +14,24 @@ import AuditLog from './pages/AuditLog';
 import DashboardLayout from './components/DashboardLayout';
 import './index.css';
 
+// Initialize PostHog if configured
+const posthogKey = import.meta.env.VITE_POSTHOG_KEY;
+const posthogHost = import.meta.env.VITE_POSTHOG_HOST || 'https://us.i.posthog.com';
+
+if (posthogKey) {
+  import('posthog-js').then(({ default: posthog }) => {
+    posthog.init(posthogKey, {
+      api_host: posthogHost,
+      capture_pageview: true,
+      capture_pageleave: true,
+    });
+    window.posthog = posthog;
+  }).catch(() => {
+    // PostHog failed to load - continue without analytics
+  });
+}
+
+
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   if (loading) return <div className="flex h-screen items-center justify-center bg-background"><div className="w-6 h-6 border-2 border-border border-t-accent rounded-full animate-spin" /></div>;

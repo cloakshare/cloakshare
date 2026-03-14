@@ -148,7 +148,7 @@ export async function createTestLink(
   } = options;
 
   const formData = new FormData();
-  formData.append('file', new Blob([buffer], { type: contentType }), filename);
+  formData.append('file', new Blob([new Uint8Array(buffer)], { type: contentType }), filename);
   if (requireEmail) formData.append('require_email', 'true');
   if (password) formData.append('password', password);
   if (maxViews) formData.append('max_views', String(maxViews));

@@ -600,7 +600,7 @@ function setupVideoControls(sess: VerifyResponse, totalDur: number) {
   // Anti-download protections
   video.addEventListener('contextmenu', (e) => e.preventDefault());
   video.disablePictureInPicture = true;
-  video.controlsList?.add('nodownload');
+  (video as any).controlsList?.add('nodownload');
 
   // Auto-hide controls after 3s of inactivity (especially for touch/mobile)
   let controlsTimer: ReturnType<typeof setTimeout> | null = null;

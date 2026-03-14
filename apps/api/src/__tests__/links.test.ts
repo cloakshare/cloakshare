@@ -78,7 +78,7 @@ describe('Links API', () => {
 
     it('rejects request without auth with 401', async () => {
       const formData = new FormData();
-      formData.append('file', new Blob([minimalPng()], { type: 'image/png' }), 'test.png');
+      formData.append('file', new Blob([new Uint8Array(minimalPng())], { type: 'image/png' }), 'test.png');
 
       const res = await app.request('/v1/links', {
         method: 'POST',
