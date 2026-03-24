@@ -1,0 +1,53 @@
+# Copy this to .github/workflows/semantic-release.yml in each product repo.
+# Auto-creates versioned GitHub Releases on every push to main.
+# Uses conventional commits to determine version bumps:
+#   fix: -> patch (1.0.1)
+#   feat: -> minor (1.1.0)
+#   feat!: or BREAKING CHANGE: -> major (2.0.0)
+
+name: Semantic Release
+
+on:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install semantic-release
+        run: npm install -g semantic-release @semantic-release/changelog @semantic-release/git
+
+      - name: Create release config
+        run: |
+          cat > .releaserc.json << 'RELEASERC'
+          {
+            "branches": ["main", "master"],
+            "plugins": [
+              "@semantic-release/commit-analyzer",
+              "@semantic-release/release-notes-generator",
+              ["@semantic-release/changelog", { "changelogFile": "CHANGELOG.md" }],
+              ["@semantic-release/git", {
+                "assets": ["CHANGELOG.md"],
+                "message": "chore(release): ${nextRelease.version} [skip ci]"
+              }],
+              "@semantic-release/github"
+            ]
+          }
+          RELEASERC
+
+      - name: Run semantic-release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
