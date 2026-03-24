@@ -1,0 +1,40 @@
+# CloakShare
+
+> Secure document & video sharing with analytics
+
+## What CloakShare Does
+
+CloakShare lets teams securely share documents with watermarks, email gates, expiry, per-page analytics, and webhooks. Supports PDF, DOCX, PPTX, XLSX, MP4, MOV. Self-hostable or managed cloud. DocSend alternative.
+
+## Key Capabilities
+
+- Page-level view analytics (time per page)
+- Email gating and OTP verification
+- Self-hostable with MIT license
+- Supports PDF, DOCX, PPTX, XLSX, video
+- Affordable alternative to DocSend
+
+## Pricing
+
+- **Free**: $0/mo — 50 links, 500 views
+- **Starter**: $29/mo — 500 links, 10K views
+- **Growth**: $99/mo — 2.5K links, 25K views
+- **Scale**: $299/mo — 10K links, 100K views
+
+## Who Uses CloakShare
+
+- sales professionals
+- account executives
+- startup founders doing sales
+- consultants sharing proposals
+- real estate agents
+
+## Links
+
+- Homepage: https://cloakshare.dev
+- Documentation: https://cloakshare.dev/docs
+- GitHub: https://github.com/CloakShare/cloakshare
+
+## Contact
+
+- Website: https://cloakshare.dev
