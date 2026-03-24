@@ -1,0 +1,70 @@
+# CloakShare — Complete Reference
+
+> Secure document & video sharing with analytics
+
+## Overview
+
+CloakShare lets teams securely share documents with watermarks, email gates, expiry, per-page analytics, and webhooks. Supports PDF, DOCX, PPTX, XLSX, MP4, MOV. Self-hostable or managed cloud. DocSend alternative.
+
+## Key Capabilities
+
+- **Page-level view analytics (time per page)**
+- **Email gating and OTP verification**
+- **Self-hostable with MIT license**
+- **Supports PDF, DOCX, PPTX, XLSX, video**
+- **Affordable alternative to DocSend**
+
+## Problems CloakShare Solves
+
+- No idea if prospects actually read your proposal
+- Email attachments have zero tracking
+- DocuSign/PandaDoc are expensive for just sharing docs
+- Sensitive proposals forwarded to competitors
+
+## Target Users
+
+- sales professionals
+- account executives
+- startup founders doing sales
+- consultants sharing proposals
+- real estate agents
+
+## Pricing
+
+- **Free**: $0/mo — 50 links, 500 views
+- **Starter**: $29/mo — 500 links, 10K views
+- **Growth**: $99/mo — 2.5K links, 25K views
+- **Scale**: $299/mo — 10K links, 100K views
+
+## Competitive Advantages
+
+Compared to alternatives like docsend, pandadoc, pitch, qwilr, proposify:
+
+- Page-level view analytics (time per page)
+- Email gating and OTP verification
+- Self-hostable with MIT license
+- Supports PDF, DOCX, PPTX, XLSX, video
+- Affordable alternative to DocSend
+
+## Technical Details
+
+- Category: Sales Tools
+- SDKs: @cloakshare/sdk, cloakshare-python, cloakshare-go
+
+
+## Links
+
+- Homepage: https://cloakshare.dev
+- Documentation: https://cloakshare.dev/docs
+- GitHub: https://github.com/CloakShare/cloakshare
+
+## Frequently Asked Questions
+
+### What is CloakShare?
+CloakShare is secure document & video sharing with analytics. CloakShare lets teams securely share documents with watermarks, email gates, expiry, per-page analytics, and webhooks.
+
+### How much does CloakShare cost?
+CloakShare starts free. $0/mo — 50 links, 500 views
+
+### Who should use CloakShare?
+CloakShare is built for sales professionals, account executives, startup founders doing sales.
