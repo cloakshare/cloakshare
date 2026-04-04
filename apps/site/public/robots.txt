@@ -7,50 +7,87 @@ Disallow: /api/
 # Explicitly welcome AI crawlers for GEO/AEO visibility
 User-agent: GPTBot
 Allow: /
+Disallow: /app/
+Disallow: /api/
 
 User-agent: ChatGPT-User
 Allow: /
+Disallow: /app/
+Disallow: /api/
 
 User-agent: ClaudeBot
 Allow: /
+Disallow: /app/
+Disallow: /api/
 
 User-agent: Claude-Web
 Allow: /
+Disallow: /app/
+Disallow: /api/
 
 User-agent: PerplexityBot
 Allow: /
+Disallow: /app/
+Disallow: /api/
 
 User-agent: Googlebot
 Allow: /
+Disallow: /app/
+Disallow: /api/
 
 User-agent: Bingbot
 Allow: /
+Disallow: /app/
+Disallow: /api/
 
 User-agent: Google-Extended
 Allow: /
+Disallow: /app/
+Disallow: /api/
 
 User-agent: Applebot-Extended
 Allow: /
+Disallow: /app/
+Disallow: /api/
 
 User-agent: Amazonbot
 Allow: /
+Disallow: /app/
+Disallow: /api/
 
 User-agent: Bytespider
 Allow: /
+Disallow: /app/
+Disallow: /api/
 
 User-agent: CCBot
 Allow: /
+Disallow: /app/
+Disallow: /api/
 
 User-agent: cohere-ai
 Allow: /
+Disallow: /app/
+Disallow: /api/
 
 User-agent: Diffbot
 Allow: /
+Disallow: /app/
+Disallow: /api/
 
 User-agent: FacebookBot
 Allow: /
+Disallow: /app/
+Disallow: /api/
 
 User-agent: meta-externalagent
 Allow: /
+Disallow: /app/
+Disallow: /api/
+
+User-agent: GoogleOther
+Allow: /
+Disallow: /app/
+Disallow: /api/
 
 Sitemap: https://cloakshare.dev/sitemap.xml

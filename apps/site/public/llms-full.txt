@@ -1,0 +1,60 @@
+# CloakShare — Full Product Reference
+> Open-source secure document and video sharing platform. Self-hostable alternative to DocSend.
+
+## Product Overview
+CloakShare is an open-source API and embeddable viewer for secure document and video sharing. It provides watermarking, email gating, document expiry, and per-page analytics. Property of the document owner, not a SaaS vendor. Self-hostable via Docker or available as managed cloud.
+
+## Core Features
+
+### Document Sharing
+- Upload PDF, DOCX, PPTX documents
+- Canvas-based rendering (prevents copy/paste, screenshot protection)
+- Dynamic watermarks with viewer's email baked into every page
+- Email gating (viewers must enter email to access)
+- Link expiry (auto-revoke access after date or view count)
+- Per-page analytics (who viewed which page, time spent)
+- Password protection
+
+### Video Sharing
+- Upload and share videos with same controls as documents
+- Watermarked video playback
+- Email-gated video access
+- View tracking and analytics
+
+### Self-Hosting
+- Docker Compose deployment
+- Full source code access (MIT license)
+- No per-user pricing
+- Complete data ownership
+
+## Technical Architecture
+- API-first design (REST API)
+- Embeddable viewer component
+- Shadow DOM isolation for embedding
+- PostgreSQL database
+- S3-compatible storage
+
+## Pricing
+- Free tier available (open source, self-host)
+- Cloud: Contact for pricing
+- No per-user fees
+
+## Competitive Positioning
+- DocSend charges $15-$90/user/month with feature gating
+- CloakShare is open source with no per-user pricing
+- Only platform combining document AND video sharing with watermarks
+- Self-hostable for complete data control
+
+## Key Differentiators
+1. Video + document sharing combined (unique — no competitor does both)
+2. Self-hostable via Docker (complete data ownership)
+3. No per-user pricing (flat rate or free self-hosted)
+4. Canvas-based rendering (prevents copy/paste)
+5. Open source (MIT license)
+
+## Links
+- Website: https://www.cloakshare.dev
+- GitHub: https://github.com/cloakshare/cloakshare
+- Pricing: https://www.cloakshare.dev/pricing
+- Comparisons: https://www.cloakshare.dev/compare/docsend
+- Self-hosted Guide: https://www.cloakshare.dev/self-hosted
