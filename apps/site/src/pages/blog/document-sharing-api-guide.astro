@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro';
 ---
 
-<Base title="The Developer's Guide to Building Secure Document Sharing into Your App" description="Technical guide to integrating Cloak's document sharing API. Create secure links, set watermarks and expiry, track analytics via webhooks, and use the Node.js SDK." type="article" publishedAt="2026-02-28" canonical="/blog/document-sharing-api-guide">
+<Base title="Secure Document Sharing API: Watermarks, Expiry, View Tracking (10-Min Setup)" description="Build secure document sharing into your app: tokenized links, dynamic watermarks, expiry rules, view-tracking webhooks, and Node.js SDK. Working integration in under 10 minutes with copy-paste examples." type="article" publishedAt="2026-02-28" canonical="/blog/document-sharing-api-guide">
   <article class="pt-32 pb-20 px-6">
     <div class="max-w-3xl mx-auto">
       <p class="text-xs text-text-tertiary font-mono mb-4">February 28, 2026</p>
@@ -13,7 +13,7 @@ import Base from '../../layouts/Base.astro';
       <div class="prose-cloak space-y-6 text-text-secondary font-sans leading-relaxed">
         <p>
           If your application handles sensitive documents — investor updates, legal contracts,
-          training materials, sales proposals — you need more than a file upload and a public URL.
+          <a href="/use-cases/training-content" class="text-accent hover:underline">training materials</a>, <a href="/use-cases/proposal-tracking" class="text-accent hover:underline">sales proposals</a> — you need more than a file upload and a public URL.
           You need watermarks, view tracking, access controls, and expiry. Cloak's API lets you
           add all of this with a few REST calls or our Node.js SDK. This guide covers the core
           integration patterns.
