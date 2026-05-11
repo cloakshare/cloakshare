@@ -1,0 +1,63 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="404 — Not Found" description="That page doesn't exist. Here's what most CloakShare visitors are looking for.">
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto text-center">
+      <p class="text-xs font-mono uppercase tracking-[0.2em] text-accent">404</p>
+      <h1 class="mt-3 font-mono font-bold text-4xl md:text-5xl text-foreground tracking-tight">
+        That document expired.
+      </h1>
+      <p class="mt-4 text-lg text-text-secondary font-sans leading-relaxed">
+        Or the URL changed. Or it never existed. Here&apos;s what most visitors are looking for.
+      </p>
+
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a
+          href="https://app.cloakshare.dev/register"
+          class="inline-block bg-accent text-background font-mono font-semibold px-5 py-2.5 rounded-md hover:bg-accent-hover transition-colors"
+        >
+          Try CloakShare Free
+        </a>
+        <a
+          href="/pricing"
+          class="inline-block border border-border text-foreground font-mono font-medium px-5 py-2.5 rounded-md hover:border-accent/40 transition-colors"
+        >
+          See Pricing
+        </a>
+        <a
+          href="/"
+          class="inline-block border border-border text-foreground font-mono font-medium px-5 py-2.5 rounded-md hover:border-accent/40 transition-colors"
+        >
+          Home
+        </a>
+      </div>
+
+      <div class="mt-14 grid gap-6 sm:grid-cols-2 text-left">
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="text-xs font-mono uppercase tracking-wider text-text-tertiary">Compare</h2>
+          <ul class="mt-3 space-y-1.5 text-sm font-sans">
+            <li><a href="/compare/docsend" class="text-text-secondary hover:text-foreground transition-colors">vs DocSend</a></li>
+            <li><a href="/compare/papermark" class="text-text-secondary hover:text-foreground transition-colors">vs Papermark</a></li>
+            <li><a href="/compare/pandadoc" class="text-text-secondary hover:text-foreground transition-colors">vs PandaDoc</a></li>
+            <li><a href="/compare/peony" class="text-text-secondary hover:text-foreground transition-colors">vs Peony</a></li>
+            <li><a href="/compare/digify" class="text-text-secondary hover:text-foreground transition-colors">vs Digify</a></li>
+            <li><a href="/compare/dealroom" class="text-text-secondary hover:text-foreground transition-colors">vs DealRoom</a></li>
+          </ul>
+        </div>
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="text-xs font-mono uppercase tracking-wider text-text-tertiary">Top Reads</h2>
+          <ul class="mt-3 space-y-1.5 text-sm font-sans">
+            <li><a href="/blog/send-pdf-that-expires" class="text-text-secondary hover:text-foreground transition-colors">Send PDFs That Actually Expire</a></li>
+            <li><a href="/blog/track-sales-proposal-engagement" class="text-text-secondary hover:text-foreground transition-colors">Track Sales Proposal Engagement</a></li>
+            <li><a href="/blog/pitch-deck-analytics" class="text-text-secondary hover:text-foreground transition-colors">Pitch Deck Analytics</a></li>
+            <li><a href="/blog/watermark-documents-before-sharing" class="text-text-secondary hover:text-foreground transition-colors">Watermark Documents</a></li>
+            <li><a href="/blog/docsend-alternatives" class="text-text-secondary hover:text-foreground transition-colors">DocSend Alternatives</a></li>
+            <li><a href="/blog" class="text-accent hover:underline">All articles →</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

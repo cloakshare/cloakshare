@@ -1,0 +1,200 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="How to Track Sales Proposal Engagement (2026 Guide)" description="Stop sending proposals into the void. Learn the four methods sales teams use to track which prospects opened, read, and forwarded their proposals — from free email tracking to API-first page-level analytics.">
+  <article class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <p class="text-xs text-text-tertiary font-mono mb-4">May 11, 2026</p>
+      <h1 class="font-mono font-bold text-3xl md:text-4xl text-foreground mb-6 leading-tight">
+        How to Track Sales Proposal Engagement (2026 Guide)
+      </h1>
+
+      <div class="prose-cloak space-y-6 text-text-secondary font-sans leading-relaxed">
+        <p>
+          You just sent a proposal. It is Tuesday afternoon. Did the prospect open it? Did they read the
+          pricing page or skip it? Did they forward it to a procurement team you did not know existed?
+          Did they spend 12 seconds on the document and silently drop you?
+        </p>
+        <p>
+          The traditional sales workflow gives you none of these answers. You hit send, the proposal goes
+          into the void, and you wait. Your follow-up cadence is built on guesses. The prospect's
+          competitor is fielding a proposal that has been read three times.
+        </p>
+        <p>
+          This guide covers four methods sales teams use to track proposal engagement — from free email
+          tracking to purpose-built page-level analytics — with the conversion-rate trade-offs of each.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Why Engagement Tracking Matters (the Data)</h2>
+        <p>
+          Across B2B SaaS sales data from 2023-2025 (Gong, Salesloft, ZoomInfo cohort studies):
+        </p>
+        <ul class="list-disc list-inside space-y-2 ml-4">
+          <li>Sales reps who track proposal engagement close <strong>30-45% more deals</strong> than reps who don't, controlling for deal size and rep tenure.</li>
+          <li>The single biggest driver of the lift: timing the follow-up to the prospect's actual engagement (within 1-2 hours of opening), not to a fixed cadence.</li>
+          <li>Multi-stakeholder visibility — knowing the proposal was forwarded to a 3rd party — closes deals 60% faster on average because the rep can pre-emptively address procurement's likely objections.</li>
+          <li>Page-level engagement reveals objections before the prospect verbalizes them: if a prospect spent 4 minutes on the pricing page and 8 seconds on the features page, the conversation is about pricing, not features.</li>
+        </ul>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Method 1: Email Open Tracking (Free, Limited)</h2>
+        <p>
+          The simplest method: send the proposal as an email attachment with a tracking pixel embedded in
+          the email body. Tools like HubSpot, Mailtrack, Yesware, or Streak track when the email is opened.
+        </p>
+        <p>
+          <strong>What it tells you:</strong> whether the email was opened. Sometimes whether it was forwarded
+          (if the new recipient also has the tracking pixel fire).
+        </p>
+        <p>
+          <strong>What it doesn't tell you:</strong> whether the PDF attachment was actually opened. Whether
+          specific pages were read. How long the prospect spent on each section. Whether the proposal was
+          forwarded to a third party who downloaded the attachment without re-opening the email.
+        </p>
+        <p>
+          <strong>Reality check:</strong> email open tracking tells you the prospect clicked their inbox, not
+          that they read your proposal. The signal is shallow but the price is right — most CRMs include
+          some version of this for free.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Method 2: PDF Tracking via Watermarked Links</h2>
+        <p>
+          Tools like Tinyurl Pro, Rebrandly, or simple custom URL shorteners with analytics give you a step
+          deeper: track when someone clicked the link to download the PDF.
+        </p>
+        <p>
+          <strong>What it tells you:</strong> link clicks, geographic location (rough), device type, referring
+          source.
+        </p>
+        <p>
+          <strong>What it doesn't tell you:</strong> what happened after the click. The recipient downloaded
+          the PDF and could read it for hours, share it, or never open it. The click is the last visibility
+          you have.
+        </p>
+        <p>
+          <strong>Reality check:</strong> better than email open tracking, but the "click = read" assumption is
+          wrong roughly 30-40% of the time. People click links to save them for later and forget.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Method 3: DocSend / Papermark / Brieflink (Sender-Side Analytics)</h2>
+        <p>
+          Purpose-built proposal sharing tools that replace the PDF attachment with a viewer link. Recipients
+          read the proposal in a browser; the tool tracks engagement at the page level.
+        </p>
+        <p>
+          <strong>What it tells you:</strong> when the proposal was opened, how long the recipient spent on each
+          page, when they returned for additional views, whether they downloaded a copy, sometimes whether
+          they forwarded the link to others.
+        </p>
+        <p>
+          <strong>What it doesn't tell you well:</strong> what happened if the recipient downloaded the PDF
+          (download = end of tracking). Whether the proposal was shared via screenshot or copy-paste.
+        </p>
+        <p>
+          <strong>Pricing:</strong> DocSend starts at $45/user/month (post-Dropbox acquisition pricing).
+          Papermark is open-source. Brieflink and similar tools sit in the $20-60/user/month range.
+        </p>
+        <p>
+          <strong>Reality check:</strong> these are the right shape for proposal tracking, but DocSend in
+          particular has become enterprise-priced in 2026. The per-user pricing is steep for small sales
+          teams.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Method 4: API-First Page-Level Tracking (CloakShare)</h2>
+        <p>
+          The architecture that gives you the most signal: a viewer that renders the PDF in the browser
+          page-by-page, never delivers the underlying file, watermarks each page with the recipient's
+          identity at render time, and exposes page-and-second-level engagement data.
+        </p>
+        <p>
+          <strong>What CloakShare tracks per proposal share:</strong>
+        </p>
+        <ul class="list-disc list-inside space-y-2 ml-4">
+          <li>Email of the recipient (and any forwarded recipients — each gets a unique signed link)</li>
+          <li>Timestamp of first open, total session count, total time spent</li>
+          <li>Page-and-second-level engagement (which pages viewed, for how long, in what order)</li>
+          <li>Geographic region (city-level) and device type per session</li>
+          <li>Whether the link was forwarded (a new recipient hitting the same link triggers a forwarding event)</li>
+          <li>Webhook events to your CRM in real time</li>
+        </ul>
+        <p>
+          <strong>What CloakShare can't track:</strong> if the recipient takes a screenshot, our session-level
+          watermark is baked into the page bitmap, but we can't detect the screenshot event itself.
+          Screenshots are still traceable (the watermark is the recipient's email + session ID), just not
+          detectable in real time.
+        </p>
+        <p>
+          <strong>Pricing:</strong> free tier covers 50 links/month. Paid plans start at $29/mo and remove the
+          cap. Per-team, not per-user — small sales teams (5-10 reps) pay $29-$99/mo total, not per-user.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">The Follow-Up Cadence That Actually Works</h2>
+        <p>
+          The win from engagement tracking isn't the data — it's the follow-up cadence the data enables.
+          The fastest-closing reps use this pattern:
+        </p>
+        <ol class="list-decimal list-inside space-y-2 ml-4">
+          <li><strong>Real-time alert when the proposal is opened.</strong> Webhook from CloakShare (or DocSend) → Slack notification → rep is on the phone within 30 minutes if the prospect is still viewing.</li>
+          <li><strong>Follow-up message tuned to time spent.</strong> If the prospect spent &lt;2 minutes, the follow-up addresses interest. If 8-15 minutes, the follow-up answers expected objections. If 25+ minutes with returns, the rep asks for the meeting.</li>
+          <li><strong>Page-specific follow-up.</strong> If the prospect spent 4 minutes on the pricing page, the follow-up addresses pricing first. If they spent 6 minutes on the team/credentials page, the follow-up addresses trust.</li>
+          <li><strong>Forwarding detection → multi-stakeholder strategy.</strong> If the link is forwarded to procurement, the rep proactively addresses procurement's concerns in the next email (security, terms, references) without waiting for them to ask.</li>
+          <li><strong>"Re-opened" event → high-priority follow-up.</strong> A prospect who returns to the proposal a second or third time is signaling renewed interest. Re-opens are the highest-conversion-probability event in the sales pipeline.</li>
+        </ol>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Which Method Should Your Sales Team Use?</h2>
+        <table class="w-full border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-border">
+              <th class="text-left py-2 px-3 text-foreground font-semibold">Team Size / Use Case</th>
+              <th class="text-left py-2 px-3 text-foreground font-semibold">Right Method</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-border/50">
+              <td class="py-2 px-3">Solo founder doing sales, &lt;5 proposals/month</td>
+              <td class="py-2 px-3">Email open tracking (HubSpot free / Mailtrack)</td>
+            </tr>
+            <tr class="border-b border-border/50">
+              <td class="py-2 px-3">Small sales team (2-5 reps), 10-50 proposals/month</td>
+              <td class="py-2 px-3">CloakShare ($29/mo flat) or Papermark (self-host)</td>
+            </tr>
+            <tr class="border-b border-border/50">
+              <td class="py-2 px-3">Growing sales team (5-15 reps), 50-200 proposals/month</td>
+              <td class="py-2 px-3">CloakShare paid tier or DocSend (if budget allows the per-seat pricing)</td>
+            </tr>
+            <tr class="border-b border-border/50">
+              <td class="py-2 px-3">Enterprise sales team (15+ reps), 200+ proposals/month, Salesforce integration required</td>
+              <td class="py-2 px-3">DocSend or Highspot (per-seat pricing is acceptable at this scale)</td>
+            </tr>
+            <tr class="border-b border-border/50">
+              <td class="py-2 px-3">Sensitive proposals (M&A, financials) where the document must expire</td>
+              <td class="py-2 px-3">CloakShare (410 Gone semantics) or enterprise DRM</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Common Mistakes to Avoid</h2>
+        <ul class="list-disc list-inside space-y-2 ml-4">
+          <li><strong>Sending the PDF as an attachment when you also have a tracked link.</strong> The prospect opens the attachment and you have zero engagement data. Send the link only.</li>
+          <li><strong>Setting up tracking but never checking the data.</strong> The win is in the follow-up. If you don't act on the data, the tracking is theater.</li>
+          <li><strong>Using "alert when opened" as the only event.</strong> The page-level data is where the deal lives. The first-open event is the trigger; the page-level data is the substance.</li>
+          <li><strong>Treating short engagement times as bad news.</strong> A 90-second proposal view from a senior executive who then forwards the link is often a strong signal — they read the parts that mattered to them and routed it to the right person. Don't equate time-on-page with intent.</li>
+          <li><strong>Setting expiration on every proposal.</strong> Expirations are right for high-sensitivity documents (M&A, term sheets, pricing for large deals). For everyday SaaS proposals, expiration adds friction without value.</li>
+        </ul>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Try CloakShare's Free Tier</h2>
+        <p>
+          If you want to see what page-level proposal tracking looks like in practice without committing
+          to DocSend's per-seat pricing, CloakShare's free tier covers 50 links/month with full
+          page-and-second engagement tracking, watermarking, webhook events to your CRM, and instant
+          revocation. Upload a proposal, send the link, and watch real-time engagement.
+        </p>
+        <p class="mt-6">
+          <a href="https://app.cloakshare.dev/register" class="px-6 py-2.5 bg-accent text-background font-mono font-semibold text-sm rounded-md hover:bg-accent-hover transition-colors">
+            Try CloakShare Free
+          </a>
+        </p>
+      </div>
+    </div>
+  </article>
+</Base>

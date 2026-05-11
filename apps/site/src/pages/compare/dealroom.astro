@@ -1,0 +1,89 @@
+---
+import Base from '../../layouts/Base.astro';
+import ComparisonTable from '../../components/ComparisonTable.astro';
+
+const rows = [
+  { feature: 'API-first', cloak: 'Yes', other: 'No' },
+  { feature: 'Open source', cloak: 'MIT', other: 'No' },
+  { feature: 'Self-hostable', cloak: 'Yes', other: 'No' },
+  { feature: 'Video sharing', cloak: 'HLS streaming', other: 'No' },
+  { feature: 'Self-serve sign-up', cloak: 'Yes', other: 'Demo / sales call required' },
+  { feature: 'Pricing transparency', cloak: 'Published', other: 'Quote-only' },
+  { feature: 'Monthly billing', cloak: 'Yes', other: 'Annual contract' },
+  { feature: 'Bulk upload data rooms', cloak: 'Yes (API)', other: 'Yes' },
+  { feature: 'Per-investor analytics', cloak: 'Yes', other: 'Yes' },
+  { feature: 'Forensic watermarks', cloak: 'Yes (per-session)', other: 'Yes' },
+  { feature: 'Email-gated access', cloak: 'Yes', other: 'Yes' },
+  { feature: 'Domain-restricted access', cloak: 'Yes', other: 'Yes' },
+  { feature: 'Q&A workflow inside data room', cloak: 'No', other: 'Yes (flagship)' },
+  { feature: 'Bidder/investor pipeline tracking', cloak: 'No', other: 'Yes' },
+  { feature: 'Webhooks for engagement events', cloak: 'Yes', other: 'Limited' },
+  { feature: 'Embeddable viewer', cloak: 'npm package (free)', other: 'No' },
+  { feature: 'Custom domains', cloak: 'Yes', other: 'Enterprise tier' },
+  { feature: 'Starting price', cloak: '$0 (free tier)', other: 'Custom (typically $500-$2,000+/mo)' },
+];
+---
+
+<Base title="Cloak vs DealRoom — Lighter, Cheaper, Open-Source Data Room Alternative" description="Compare Cloak and DealRoom for M&A and investor data rooms. API-first, open source, self-hostable, monthly billing, starts free — vs DealRoom's annual contracts and quoted pricing." canonical="/compare/dealroom">
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="font-mono font-bold text-4xl text-foreground mb-4">Cloak vs DealRoom</h1>
+      <p class="text-text-secondary font-sans mb-12 leading-relaxed max-w-2xl">
+        DealRoom is a full M&A platform with Q&A workflow, bidder pipeline tracking, and AI document analysis built around the deal-managing flow. Cloak is the lighter API-first option for teams that need secure document sharing with analytics and watermarks but don't need DealRoom's full deal-orchestration platform — at a fraction of the cost.
+      </p>
+
+      <ComparisonTable competitor="DealRoom" rows={rows} />
+
+      <div class="mt-12 space-y-6">
+        <div class="bg-surface border border-accent/30 rounded-lg p-6">
+          <h2 class="font-mono font-medium text-accent mb-3">When DealRoom is the right choice</h2>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            If you are running a sell-side M&A process with multiple bidders, the Q&A workflow inside the data room (organize bidder questions by topic, assign to subject matter experts, track answer turnaround time, redact confidential answers per bidder) is a real workflow advantage. DealRoom's bidder pipeline tracking, AI document analysis, and integration with M&A advisor workflows are mature. For active deal teams running multiple deals at once, the platform pays for itself.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">When Cloak is the right choice</h2>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            For investor data rooms during fundraising, board distribution, due diligence on a single deal, or any use case where you need secure document sharing with analytics and watermarks but don't need full deal-management workflow, Cloak is dramatically cheaper and simpler. Self-serve sign-up, monthly billing, no annual commitment. Most fundraising rounds, customer due diligence, and partnership data rooms fit this pattern.
+        </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">API-first vs GUI-orchestrated</h2>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            DealRoom requires manual orchestration through the web UI for most workflows. Cloak lets you create data rooms, upload documents, and provision investor access from your own backend with a single API call. Automate data room creation from your CRM, generate access links per investor on demand, or embed engagement analytics directly in your investor relations dashboard.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">Pricing comparison</h2>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            DealRoom is enterprise-quoted, typically $500-$2,000+/month with annual contracts and a sales-led purchase. Cloak's free tier covers 50 links/month — enough for most fundraising rounds. The Starter plan is $29/month and Growth is $99/month with 25,000 views, video support, and webhook integrations. For a single fundraising round, the Cloak free tier is genuinely free; for ongoing investor relations or repeated due diligence cycles, $99/month covers most teams indefinitely.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">Open source &amp; self-hostable</h2>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            Cloak's core is MIT licensed and self-hostable. Run it on your own infrastructure for complete data sovereignty — useful for legal, financial, and regulated-industry data rooms where third-party SaaS hosting is a non-starter. DealRoom is a closed-source SaaS with no self-hosting option.
+          </p>
+        </div>
+
+        <div class="bg-surface border border-border rounded-lg p-6">
+          <h2 class="font-mono font-medium text-foreground mb-3">Honest verdict</h2>
+          <p class="text-sm text-text-secondary font-sans leading-relaxed">
+            For active sell-side M&A with multiple bidders and Q&A coordination, DealRoom is the better fit despite the price. For everything else (fundraising data rooms, customer due diligence, board distribution, partnership data rooms, investor relations document sharing), Cloak delivers the secure-sharing-with-analytics-and-watermarks core at 5-20x lower cost with self-serve onboarding and monthly billing.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-12 text-center">
+        <a href="https://app.cloakshare.dev/register" class="px-6 py-2.5 bg-accent text-background font-mono font-semibold text-sm rounded-md hover:bg-accent-hover transition-colors">
+          Try Cloak free
+        </a>
+        <p class="text-xs text-text-tertiary font-sans mt-3">Free tier includes 50 links/month — enough for a typical fundraising round</p>
+      </div>
+    </div>
+  </section>
+</Base>

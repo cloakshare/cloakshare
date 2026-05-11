@@ -93,8 +93,26 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://cloakshare.dev/compare/dealroom</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 
   <!-- Blog posts -->
+  <url>
+    <loc>https://cloakshare.dev/blog/track-sales-proposal-engagement</loc>
+    <lastmod>2026-05-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cloakshare.dev/blog/send-pdf-that-expires</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
   <url>
     <loc>https://cloakshare.dev/blog/docsend-alternatives</loc>
     <lastmod>2026-03-26</lastmod>

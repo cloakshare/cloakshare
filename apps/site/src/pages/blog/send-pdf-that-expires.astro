@@ -1,0 +1,176 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="How to Send a PDF That Expires (2026 Guide)" description="Send a PDF that auto-revokes after a date, view count, or recipient action. Compare four methods — free password tricks, Adobe DRM, Google Drive expiring links, and API-first auto-revoke." canonical="/blog/send-pdf-that-expires">
+  <article class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <p class="text-xs text-text-tertiary font-mono mb-4">May 10, 2026</p>
+      <h1 class="font-mono font-bold text-3xl md:text-4xl text-foreground mb-6 leading-tight">
+        How to Send a PDF That Expires (Auto-Revoke After X Days)
+      </h1>
+
+      <div class="prose-cloak space-y-6 text-text-secondary font-sans leading-relaxed">
+        <p>
+          You're about to send a confidential document — a pitch deck, a contract draft, a financial
+          model, a legal brief — and you want the recipient to be able to read it for a few days, then
+          have it stop working. Maybe because the deal closes (and you don't want the deck circulating
+          afterward). Maybe because the financials get stale. Maybe because the recipient was supposed
+          to either accept or pass within a window.
+        </p>
+        <p>
+          PDFs do not expire by default. Once a recipient has the file, they have it forever. This
+          guide covers four practical approaches to making a PDF effectively expire — from free hacks
+          to purpose-built tools — with the trade-offs of each.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Method 1: A Password That Stops Working (Free, Imperfect)</h2>
+        <p>
+          The cheapest approach: password-protect the PDF, then change the password on a date you choose.
+          The recipient can open the file with the original password, but if they save it and try to
+          re-open after the password rotation, they're locked out — unless they cached the file
+          unprotected, which most viewers do.
+        </p>
+        <p>
+          <strong>How:</strong> Adobe Acrobat → Tools → Protect → Encrypt with Password. Set the
+          password and send. On the expiration date, you do nothing on your end (the password stays
+          set on their copy). Effective only against recipients who didn't save an unprotected copy
+          while the password was active.
+        </p>
+        <p>
+          <strong>Reality check:</strong> any halfway-determined recipient can save an unprotected
+          version while the document is open. This method is a deterrent, not a control.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Method 2: Adobe Acrobat DRM with Expiration Date</h2>
+        <p>
+          Adobe Acrobat Pro has a feature called "Restrict Editing" with expiration enforcement, and
+          Adobe LiveCycle Rights Management (now part of Adobe Experience Manager) has full DRM with
+          server-enforced expiration. The DRM-tier products check a remote server every time the
+          document is opened; if the document is expired, the viewer refuses to render content.
+        </p>
+        <p>
+          <strong>How:</strong> Adobe LiveCycle / AEM Rights Management is enterprise-only and
+          typically priced in the thousands per month. Adobe Acrobat Pro's "Restrict Editing"
+          expiration is weaker — relies on the recipient using Adobe Reader (other PDF viewers
+          can ignore the expiration metadata).
+        </p>
+        <p>
+          <strong>Reality check:</strong> the enterprise DRM works as advertised but the price tag
+          is meaningful. Adobe Reader can be bypassed with non-Adobe viewers (Foxit, Preview, Chrome's
+          built-in PDF viewer) for the consumer-tier expiration. Practical only when you can require
+          recipients to use a specific viewer — typically only enterprise contexts.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Method 3: Google Drive / OneDrive Expiring Share Links</h2>
+        <p>
+          Google Drive (Google Workspace plans) and Microsoft OneDrive both let you set expiration
+          dates on share links. After the expiration date, the link returns "Access denied" — the
+          underlying file isn't deleted, just inaccessible to the link.
+        </p>
+        <p>
+          <strong>How:</strong> Upload the PDF to Drive or OneDrive. Right-click → Share → "Anyone
+          with the link can view" → set expiration. Send the link instead of the file itself.
+        </p>
+        <p>
+          <strong>Reality check:</strong> works well for low-stakes documents where you control which
+          recipients click which links. Two limitations: (1) anyone with the link can download the PDF
+          before expiration, defeating the purpose; (2) Google Drive's "make a copy" option is
+          available unless you specifically restrict download/copy/print, and many users don't notice
+          the option to disable it. For documents that actually need to expire — not just disappear
+          from a link — this isn't sufficient.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Method 4: API-First Auto-Revoke (CloakShare and Similar)</h2>
+        <p>
+          The reliable approach for documents that need to actually expire: use a tool that renders
+          the PDF in a browser-based viewer (instead of letting recipients download the file), tracks
+          access at the link level, and revokes the link on a schedule.
+        </p>
+        <p>
+          <strong>How CloakShare does it:</strong> upload the PDF; the viewer renders pages as canvas
+          images on demand (recipients never receive the underlying PDF file); set link expiration to
+          a date or a view count; on expiration, the link's viewer endpoint returns 410 Gone.
+          Recipients see "This document is no longer available." There is no PDF file on their
+          machine to fall back to.
+        </p>
+        <p>
+          <strong>What this catches that the other methods don't:</strong>
+        </p>
+        <ul class="list-disc list-inside space-y-2 ml-4">
+          <li>Recipients can't download a copy that survives expiration (the file is never delivered).</li>
+          <li>Forward-the-link doesn't extend the document's life — the link is the access control.</li>
+          <li>You can revoke a link instantly if a deal falls through, regardless of the original expiration date.</li>
+          <li>Watermarks (the recipient's email + session ID) are baked into every page rendered, so even screenshots are traceable.</li>
+        </ul>
+        <p>
+          <strong>Reality check:</strong> this method has the strongest practical expiration semantics
+          available short of full enterprise DRM. The trade-off: recipients view the document in a
+          browser instead of downloading it, which some recipients find unfamiliar. For B2B
+          recipients (investors, customers, internal stakeholders) this is rarely an issue; for
+          consumer recipients more accustomed to email attachments, expect a small fraction of pushback.
+        </p>
+        <p>
+          <strong>Pricing:</strong> CloakShare's free tier covers 50 links/month with expiration
+          support. Paid plans start at $29/month and remove the link cap. Other tools in this category
+          (DocSend, Papermark, Brieflink) offer similar capabilities at varying price points; the
+          $45-$65/user/month tier is common for the GUI-first tools.
+        </p>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Which Method Should You Use?</h2>
+        <table class="w-full border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-border">
+              <th class="text-left py-2 px-3 text-foreground font-semibold">Use Case</th>
+              <th class="text-left py-2 px-3 text-foreground font-semibold">Method</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-border/50">
+              <td class="py-2 px-3">Low-stakes document, internal team, just want a soft deterrent</td>
+              <td class="py-2 px-3">Password rotation (Method 1)</td>
+            </tr>
+            <tr class="border-b border-border/50">
+              <td class="py-2 px-3">Enterprise context where you can require Adobe Reader or AEM DRM</td>
+              <td class="py-2 px-3">Adobe DRM (Method 2)</td>
+            </tr>
+            <tr class="border-b border-border/50">
+              <td class="py-2 px-3">Casual sharing on Google Workspace, low confidentiality</td>
+              <td class="py-2 px-3">Google Drive expiring links (Method 3)</td>
+            </tr>
+            <tr class="border-b border-border/50">
+              <td class="py-2 px-3">Pitch decks, contracts, financials, legal documents — anything that genuinely needs to expire</td>
+              <td class="py-2 px-3">API-first auto-revoke (Method 4)</td>
+            </tr>
+            <tr class="border-b border-border/50">
+              <td class="py-2 px-3">High-stakes IP, regulatory documents, legal briefs with strict access logs</td>
+              <td class="py-2 px-3">Method 4 + watermarking + view tracking</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Common Mistakes to Avoid</h2>
+        <ul class="list-disc list-inside space-y-2 ml-4">
+          <li><strong>Sending the file as an email attachment, then "expiring" it</strong> — once the file is sent, it's permanent. Send a link to a viewer instead.</li>
+          <li><strong>Using "self-destructing" services that delete the file from a server</strong> — the recipient already downloaded it. The "self-destruct" is theater.</li>
+          <li><strong>Setting an expiration date but allowing downloads</strong> — same problem. Block download for any document that needs to actually expire.</li>
+          <li><strong>Forgetting to revoke when a deal closes</strong> — most expirations are date-based, but the right time to revoke is "as soon as the recipient no longer needs access," which is often before the original expiration date.</li>
+        </ul>
+
+        <h2 class="font-mono font-medium text-xl text-foreground mt-10 mb-4">Try CloakShare's Free Tier</h2>
+        <p>
+          If you want to see what API-first auto-revoke looks like in practice, CloakShare's free
+          tier covers 50 expiring links per month with full per-page tracking, watermarking, and
+          instant revocation. Upload a PDF, set the expiration, send the link. When the date hits
+          (or you click revoke), the link returns 410 Gone and the recipient sees a clear "no longer
+          available" page.
+        </p>
+        <p class="mt-6">
+          <a href="https://app.cloakshare.dev/register" class="px-6 py-2.5 bg-accent text-background font-mono font-semibold text-sm rounded-md hover:bg-accent-hover transition-colors">
+            Try CloakShare Free
+          </a>
+        </p>
+      </div>
+    </div>
+  </article>
+</Base>
