@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/cloakshare/cloakshare/compare/v1.0.0...v1.1.0) (2026-05-12)
+
+
+### Features
+
+* **tools:** free cryptographically secure password generator ([aa5ce29](https://github.com/cloakshare/cloakshare/commit/aa5ce29373131a18762c9af6a980fee3c2356358)), closes [very-hi#volume](https://github.com/very-hi/issues/volume)
+
 # 1.0.0 (2026-03-24)
 
 
