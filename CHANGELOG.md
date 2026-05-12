@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/cloakshare/cloakshare/compare/v1.1.0...v1.2.0) (2026-05-12)
+
+
+### Features
+
+* **funnel:** add Free tools link to marketing nav ([dfc04de](https://github.com/cloakshare/cloakshare/commit/dfc04de0150392458641fd80fa083556e8016db1))
+
 # [1.1.0](https://github.com/cloakshare/cloakshare/compare/v1.0.0...v1.1.0) (2026-05-12)
 
 
