@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { auth as authApi, setActiveOrgId, getActiveOrgId } from './api';
+import { identifyUser, resetAnalytics } from './analytics';
 
 interface Org {
   id: string;
@@ -50,6 +51,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             orgs: u.orgs || [],
           };
           setUser(userData);
+          identifyUser(u.id, u.email, u.plan);
           if (!getActiveOrgId() && u.default_org_id) {
             setActiveOrgId(u.default_org_id);
             setOrgId(u.default_org_id);
@@ -97,6 +99,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try { await authApi.logout(); } catch {}
     localStorage.removeItem('cloak_api_key');
     setActiveOrgId(null);
+    resetAnalytics();
     setUser(null);
     setOrgId(null);
   };

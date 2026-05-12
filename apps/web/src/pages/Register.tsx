@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
 import { ApiError } from '../lib/api';
+import { trackSignup } from '../lib/analytics';
 
 export default function Register() {
   const [email, setEmail] = useState('');
@@ -19,6 +20,7 @@ export default function Register() {
 
     try {
       const key = await register(email, password);
+      trackSignup(email, 'free');
       setApiKey(key);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Registration failed');

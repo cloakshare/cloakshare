@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
 import { ApiError } from '../lib/api';
+import { trackLogin } from '../lib/analytics';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -18,6 +19,7 @@ export default function Login() {
 
     try {
       await login(email, password);
+      trackLogin(email);
       navigate('/dashboard');
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Login failed');

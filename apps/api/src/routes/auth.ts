@@ -9,8 +9,10 @@ import { Errors, errorResponse, successResponse } from '../lib/errors.js';
 import { sessionAuth } from '../middleware/session.js';
 import { logger } from '../lib/logger.js';
 import { logAudit, auditorFromContext } from '../services/audit.js';
+import { notifySignup } from '../services/notifications.js';
 import { API_KEY_LIVE_PREFIX, API_KEY_TEST_PREFIX } from '@cloak/shared';
 import { randomBytes } from 'crypto';
+import { count, desc, max } from 'drizzle-orm';
 import type { Variables } from '../lib/types.js';
 
 const auth = new Hono<{ Variables: Variables }>();
@@ -113,6 +115,13 @@ auth.post('/register', async (c) => {
   });
 
   logger.info({ userId, email: email.toLowerCase() }, 'User registered');
+
+  // Fire-and-forget Slack notification
+  notifySignup({
+    email: email.toLowerCase(),
+    plan: 'free',
+    orgName: name || email.split('@')[0],
+  }).catch(() => {});
 
   return successResponse(c, {
     user: {
@@ -362,6 +371,70 @@ auth.delete('/api-keys/:id', sessionAuth, async (c) => {
   }
 
   return successResponse(c, { id: keyId, revoked: true });
+});
+
+// ============================================
+// ADMIN: SYSADMIN USER ENDPOINTS
+// ============================================
+
+// Admin guard middleware - checks user.plan === 'admin' or email in ADMIN_EMAILS env
+function isAdmin(user: { email: string; plan: string }): boolean {
+  const adminEmails = process.env.ADMIN_EMAILS?.split(',').map(e => e.trim().toLowerCase()) || [];
+  return user.plan === 'admin' || adminEmails.includes(user.email.toLowerCase());
+}
+
+auth.get('/users/recent', sessionAuth, async (c) => {
+  const user = c.get('user') as { id: string; email: string; plan: string };
+  if (!isAdmin(user)) {
+    return errorResponse(c, Errors.forbidden('Admin access required'));
+  }
+
+  const limit = Math.min(parseInt(c.req.query('limit') || '20', 10), 100);
+
+  const recentUsers = await db
+    .select({
+      id: users.id,
+      email: users.email,
+      name: users.name,
+      plan: users.plan,
+      createdAt: users.createdAt,
+    })
+    .from(users)
+    .orderBy(desc(users.createdAt))
+    .limit(limit)
+    .all();
+
+  return successResponse(c, {
+    users: recentUsers.map((u) => ({
+      id: u.id,
+      email: u.email,
+      name: u.name,
+      plan: u.plan,
+      created_at: u.createdAt,
+    })),
+  });
+});
+
+auth.get('/users/stats', sessionAuth, async (c) => {
+  const user = c.get('user') as { id: string; email: string; plan: string };
+  if (!isAdmin(user)) {
+    return errorResponse(c, Errors.forbidden('Admin access required'));
+  }
+
+  const [totalResult] = await db
+    .select({ total: count() })
+    .from(users)
+    .all();
+
+  const [latestResult] = await db
+    .select({ lastSignup: max(users.createdAt) })
+    .from(users)
+    .all();
+
+  return successResponse(c, {
+    total_users: totalResult?.total || 0,
+    last_signup_at: latestResult?.lastSignup || null,
+  });
 });
 
 export default auth;

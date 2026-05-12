@@ -1,0 +1,77 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const title = 'Free Security & Sharing Tools — CloakShare';
+const description =
+  'Free cryptographically secure password generator and security utilities. Runs in your browser. No signup, no logs.';
+
+const tools = [
+  {
+    href: '/tools/password-generator',
+    title: 'Password Generator',
+    description:
+      'Cryptographically secure passwords with real-time strength meter (entropy + crack-time estimates). No network, no logs, no signup.',
+    badge: 'Most popular',
+  },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  url: 'https://cloakshare.dev/tools',
+  name: 'Free Security Tools',
+  description,
+};
+---
+
+<Base title={title} description={description} canonical="/tools">
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />
+
+  <main class="pt-32 pb-16 px-6">
+    <div class="max-w-4xl mx-auto">
+      <section class="text-center mb-12">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/30 bg-accent-muted text-xs text-accent font-mono mb-4">
+          <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+          Free · No signup · Runs in your browser
+        </div>
+        <h1 class="text-4xl md:text-5xl font-mono font-bold text-foreground tracking-tight mb-4">
+          Free security tools
+        </h1>
+        <p class="text-lg text-text-secondary font-sans max-w-2xl mx-auto">
+          Quick utilities for generating secrets and validating security. Use them standalone — or pair them with CloakShare for one-time tracked sharing.
+        </p>
+      </section>
+
+      <section class="grid sm:grid-cols-2 gap-5 mb-12">
+        {tools.map((tool) => (
+          <a
+            href={tool.href}
+            class="rounded-2xl border border-border-subtle bg-surface p-6 hover:border-accent/40 transition-colors group block"
+          >
+            <div class="flex items-start justify-between mb-3">
+              <h2 class="text-xl font-mono font-bold text-foreground">{tool.title}</h2>
+              {tool.badge && (
+                <span class="text-[10px] uppercase tracking-wider rounded-full bg-accent/10 text-accent px-2 py-1 font-mono">{tool.badge}</span>
+              )}
+            </div>
+            <p class="text-sm text-text-secondary mb-4 font-sans">{tool.description}</p>
+            <span class="text-sm font-mono text-accent">Open tool →</span>
+          </a>
+        ))}
+      </section>
+
+      <section class="rounded-2xl border border-accent/30 bg-accent-muted/50 p-8 text-center">
+        <h2 class="text-2xl font-mono font-bold text-foreground mb-3">More than a tool</h2>
+        <p class="text-text-secondary mb-6 max-w-xl mx-auto font-sans">
+          CloakShare is the open-source API for secure document and video sharing. Tokenized links, dynamic watermarks, page-level analytics, expiry. Pair the password generator with one-time tracked sharing.
+        </p>
+        <a
+          href="/"
+          class="inline-flex items-center gap-1 px-6 py-3 rounded-lg bg-accent text-background font-mono hover:bg-accent-hover transition-colors"
+        >
+          See CloakShare →
+        </a>
+      </section>
+    </div>
+  </main>
+</Base>
