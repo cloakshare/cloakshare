@@ -6,6 +6,11 @@
 
 CloakShare is an API-first platform for sharing documents and videos securely. It renders documents on HTML5 Canvas (not DOM text), making content resistant to copy/paste, downloading, and screenshot tools. Each viewer gets a dynamically watermarked copy with their email embedded. It tracks per-page engagement, supports HLS video streaming, and integrates into any app via Web Components or React.
 
+## Free Tools (no signup required)
+
+- Password Generator: /tools/password-generator — Cryptographically secure passwords via crypto.getRandomValues() with real-time entropy + crack-time estimates against bcrypt @ 10,000 H/s. 5-tier strength meter, charset/length options. Browser-side only; no network requests.
+- All free tools: /tools
+
 ## Key Capabilities
 
 - **Canvas-Based Rendering**: Documents render on HTML5 Canvas, not as selectable DOM text. Prevents easy copying, printing, and downloading.
