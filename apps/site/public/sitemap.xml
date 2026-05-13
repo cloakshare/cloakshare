@@ -259,6 +259,9 @@
   <url><loc>https://cloakshare.dev/compare/sizle</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://cloakshare.dev/compare/flippingbook</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 
+  <!-- Pillar posts -->
+  <url><loc>https://cloakshare.dev/blog/secure-document-sharing-playbook-2026</loc><lastmod>2026-05-12</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+
   <!-- Free tools -->
   <url><loc>https://cloakshare.dev/tools</loc><lastmod>2026-05-11</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
   <url><loc>https://cloakshare.dev/tools/password-generator</loc><lastmod>2026-05-11</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
