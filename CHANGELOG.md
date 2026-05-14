@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/cloakshare/cloakshare/compare/v1.2.0...v1.3.0) (2026-05-14)
+
+
+### Features
+
+* **site:** add fundraising + sales landing pages, docsend calculator, sitemap ([a68eaf6](https://github.com/cloakshare/cloakshare/commit/a68eaf6fe713e27deb498bf0a12cc60166610c40))
+
 # [1.2.0](https://github.com/cloakshare/cloakshare/compare/v1.1.0...v1.2.0) (2026-05-12)
 
 
